@@ -1,0 +1,802 @@
+[
+    {
+        "name": "located in or next to body of water",
+        "p": "P206",
+        "values": []
+    },
+    {
+        "name": "start time",
+        "p": "P580",
+        "values": []
+    },
+    {
+        "name": "end time",
+        "p": "P582",
+        "values": []
+    },
+    {
+        "name": "located in the administrative territorial entity",
+        "p": "P131",
+        "values": []
+    },
+    {
+        "name": "capital of",
+        "p": "P1376",
+        "values": []
+    },
+    {
+        "name": "depicted by",
+        "p": "P1299",
+        "values": []
+    },
+    {
+        "name": "postal code",
+        "p": "P281",
+        "values": []
+    },
+    {
+        "name": "significant event",
+        "p": "P793",
+        "values": []
+    },
+    {
+        "name": "twinned administrative body",
+        "p": "P190",
+        "values": []
+    },
+    {
+        "name": "located in time zone",
+        "p": "P421",
+        "values": []
+    },
+    {
+        "name": "elevation above sea level",
+        "p": "P2044",
+        "values": []
+    },
+    {
+        "name": "highest point",
+        "p": "P610",
+        "values": []
+    },
+    {
+        "name": "located in/on physical feature",
+        "p": "P706",
+        "values": []
+    },
+    {
+        "name": "continent",
+        "p": "P30",
+        "values": []
+    },
+    {
+        "name": "official language",
+        "p": "P37",
+        "values": []
+    },
+    {
+        "name": "country",
+        "p": "P17",
+        "values": []
+    },
+    {
+        "name": "coordinate location",
+        "p": "P625",
+        "values": []
+    },
+    {
+        "name": "head of government",
+        "p": "P6",
+        "values": []
+    },
+    {
+        "name": "member of political party",
+        "p": "P102",
+        "values": []
+    },
+    {
+        "name": "political alignment",
+        "p": "P1387",
+        "values": []
+    },
+    {
+        "name": "member of",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "academic degree",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "political ideology",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "position held",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "field of work",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "facet of",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "subclass of",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "occupation",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "performer",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "platform",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "native language",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "languages spoken written or signed",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "writing language",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "movement",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "industry",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "instrument",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "affiliation",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "genre",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "country",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "sex or gender",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "sexual orientation",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "political alignment",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "follows",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "instance of",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "employer",
+        "p": "",
+        "values": []
+    },
+    {
+        "name": "position held",
+        "p": "P39",
+        "values": []
+    },
+    {
+        "name": "candidacy in election",
+        "p": "P3602",
+        "values": []
+    },
+    {
+        "name": "work location",
+        "p": "P937",
+        "values": []
+    },
+    {
+        "name": "part of",
+        "p": "P361",
+        "values": []
+    },
+    {
+        "name": "place of publication",
+        "p": "P291",
+        "values": []
+    },
+    {
+        "name": "record label",
+        "p": "P264",
+        "values": []
+    },
+    {
+        "name": "distributed by",
+        "p": "P750",
+        "values": []
+    },
+    {
+        "name": "ethnic group",
+        "p": "P172",
+        "values": []
+    },
+    {
+        "name": "significant event",
+        "p": "P793",
+        "values": []
+    },
+    {
+        "name": "headquarters location",
+        "p": "P159",
+        "values": []
+    },
+    {
+        "name": "operating area",
+        "p": "P2541",
+        "values": []
+    },
+    {
+        "name": "main subject",
+        "p": "P921",
+        "values": []
+    },
+    {
+        "name": "religion or world view",
+        "p": "P140",
+        "values": []
+    },
+    {
+        "name": "religious order",
+        "p": "P611",
+        "values": []
+    },
+    {
+        "name": "given name",
+        "p": "P735",
+        "values": []
+    },
+    {
+        "name": "family name",
+        "p": "P734",
+        "values": []
+    },
+    {
+        "name": "writing system",
+        "p": "P282",
+        "values": []
+    },
+    {
+        "name": "office held by head of government",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "head of state",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "geographic coordinate system",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "inferred from coordinate location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "GlobeCoordinate",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "country of registry",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "basin country",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "cuisine",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "indigenous to",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in the administrative territorial entity",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "applies to jurisdiction",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "culture",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "territory claimed by",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "country of citizenship",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "country for sport",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "country of origin",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of creation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of formation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "indigenous to",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of discovery",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "place of birth",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "filming location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "production company",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "ancestral home",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "indigenous to",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "drainage basin",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "mountain range",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "performed at",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in the statistical territorial entity",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "recorded at studio or venue",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "recording location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "significant place",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of the point of view",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "filming location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of creation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "anatomical location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "valid in place",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in protected area",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located on street or square",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "work location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "location of discovery",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in or next to body of water",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in/on physical feature",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located in the administrative territorial entity",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "coordinate location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "headquarters location",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "office held by head of the organization",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "office held by head of state",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "head of government",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "lowest point",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "focal height",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "topographic prominence",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "highest point",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "vertical depth",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "height",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "significant person",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "commissioned by",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "owned by",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "closest approach",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "feast day",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "significant place",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "date of resignation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "located on street or square",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "street number",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "conscription number",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "postal code",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "directions",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "PO Box",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "depicted by",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "present in work",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "notation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "capital of",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "end time",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "date of resignation",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "earliest end date",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "end cause",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "date of official closure",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "work period (end)",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "service retirement",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "temporal range end",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "end period",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "dissolved, abolished or demolished date",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "discontinued date",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "computes solution to",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "latest start date",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "age estimated by a dating method",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "temporal range start",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "latest date",
+        "p": "",
+        "value": []
+    },
+    {
+        "name": "earliest date",
+        "p": "P1319",
+        "value": []
+    },
+    {
+        "name": "first flight",
+        "p": "P606",
+        "value": []
+    },
+    {
+        "name": "time of discovery or invention",
+        "p": "P575",
+        "value": []
+    },
+    {
+        "name": "start period",
+        "p": "P2031",
+        "value": []
+    },
+    {
+        "name": "inception",
+        "p": "P571",
+        "value": []
+    },
+    {
+        "name": "service entry",
+        "p": "P729",
+        "value": []
+    },
+    {
+        "name": "valid in period",
+        "p": "P1264",
+        "value": []
+    },
+    {
+        "name": "time period",
+        "p": "P2348",
+        "value": []
+    },
+    {
+        "name": "start of covered period",
+        "p": "P7103",
+        "value": []
+    }
+]
