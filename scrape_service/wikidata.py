@@ -16,7 +16,6 @@ async def wikidata_linked(Q,magic=[]):
     data = []
     propry = []
     q_dict = await aio_get_entity_dict_from_api(Q)
-    print("dict:",q_dict)
     q_ = WikidataItem(q_dict)
     claim_groups = q_.get_truthy_claim_groups()
     for claim in q_dict["claims"]:

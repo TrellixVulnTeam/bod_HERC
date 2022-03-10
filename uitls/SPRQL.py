@@ -13,7 +13,6 @@ class SPRQL:
         if sparql is None:
             sparql = self.sparql
         da = {}
-        # print(self.url)
         async with sem_SPRQL:
             for i in range(i):
                 a = []
@@ -30,8 +29,6 @@ class SPRQL:
                                     a.append(item)
                                 return a
                             else:
-                                print(await r.text())
-                                print( r.headers)
                                 for header in  r.headers:
                                     if "Retry-After" == header[0]:
                                         try:

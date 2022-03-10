@@ -7,10 +7,9 @@ async def sprql_dbpedia():
 
 
 
-async def wikidata_linked(Q):
+async def wikidata_linked(Q,mps={}):
     outpuy =[]
     q_dict = await aio_get_entity_dict_from_api(Q)
-    print("dict:",q_dict)
     q_ = WikidataItem(q_dict)
     claim_groups = q_.get_truthy_claim_groups()
     for claim in q_dict["claims"]:
@@ -21,7 +20,7 @@ async def wikidata_linked(Q):
                     if isinstance(claim.mainsnak.datavalue , GlobeCoordinate):
                         value = claim.mainsnak.datavalue.value
                         print("GlobeCoordinate")
-                    if isinstance(claim.mainsnak.datavalue , Time):
+                    elif isinstance(claim.mainsnak.datavalue , Time):
                         value = claim.mainsnak.datavalue.value
                         outpuy.append({
                             "type":"time",
@@ -29,7 +28,7 @@ async def wikidata_linked(Q):
                             "value":value['time']
                         })
                         continue
-                    if isinstance(claim.mainsnak.datavalue , WikibaseEntityId):
+                    elif isinstance(claim.mainsnak.datavalue , WikibaseEntityId):
                         value = claim.mainsnak.datavalue.value
                         outpuy.append({
                             "type":"wikidata_item",
@@ -37,6 +36,8 @@ async def wikidata_linked(Q):
                             "value":value['id']
                         })
                         continue
+                    elif claim.property_id in mps.keys():
+                        print(claim)
                 except:
                     pass
     return outpuy
