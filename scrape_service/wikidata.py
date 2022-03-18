@@ -1,10 +1,22 @@
+import asyncio
+import time
 from uitls.SPRQL import SPRQL
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.linked_data_interface import aio_get_entity_dict_from_api
 from qwikidata.datavalue import WikibaseEntityId,Time,Quantity,GlobeCoordinate
+
+import motor.motor_asyncio
 data_sprql = SPRQL(url = "https://query.wikidata.org/bigdata/namespace/wdq/sparql")
+
+
+myclient = motor.motor_asyncio.AsyncIOMotorClient()
+
+scrap = myclient.scrap
+wikidataDb = scrap.wikidata
+
 async def sprql_wikidata(qurry):
    return await data_sprql.run(qurry)
+
 
 def Get_Q(Q):
     Q = Q.replace(
@@ -12,11 +24,37 @@ def Get_Q(Q):
     Q =  Q.replace(
         "http://www.wikidata.org/entity/", "")
     return Q
-async def wikidata_linked(Q,magic=[]):
-    data = []
-    propry = []
-    q_dict = await aio_get_entity_dict_from_api(Q)
+
+from qwikidata import typedefs
+WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
+async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL,session=None) -> typedefs.EntityDict:
+    url = "{}/{}.json".format(base_url, entity_id)
+    for i in range(100):
+        async with session.post(url) as response:
+                    if response.ok:
+                        entity_dict_full = await response.json()
+                    else:
+                        continue
+
+                    # remove redundant top level keys
+                    returned_entity_id = next(iter(entity_dict_full["entities"]))
+                    entity_dict = entity_dict_full["entities"][returned_entity_id]
+                    return entity_dict
+    raise None
+
+async def __aio_get_entity_dict_from_api(Q,session=None):
+    q_dict = wikidataDb.find_one({'title': Q})
+    if (q_dict is None) or ("daedtime" not in  q_dict.keys()):
+        q_dict = await aio_get_entity_dict_from_api2(Q,session=session)
+        q_dict["daedtime"] = (86400*30) + int(time.time())
+        wikidataDb.insert_one(q_dict)
     q_ = WikidataItem(q_dict)
+    return q_ ,q_dict
+
+async def wikidata_linked(Q,magic=[],session=None):
+    dos = []
+    data = []
+    q_ ,q_dict = await __aio_get_entity_dict_from_api(Q,session=session)
     claim_groups = q_.get_truthy_claim_groups()
     for claim in q_dict["claims"]:
         claims = claim_groups[claim]
@@ -35,11 +73,13 @@ async def wikidata_linked(Q,magic=[]):
                         continue
                     elif claim.property_id in magic:
                         value = claim.mainsnak.datavalue.value
-                        data.append({claim.property_id:value['id']})
-                        propry.append({claim.property_id:value['id']})
+                        if "formatter_URL" in magic[claim.property_id].keys():
+                            for formatter_URL in magic[claim.property_id]["formatter_URL"]:
+                                url = formatter_URL.replace("$1",value)
+                                dos.append(url)
                 except:
                     pass
-    return data, propry
+    return data, dos
 
 
 SPARQL_all_website = """

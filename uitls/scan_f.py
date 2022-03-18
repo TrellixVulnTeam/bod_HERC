@@ -1,5 +1,6 @@
 
 import os
+import sys
 from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 
@@ -151,34 +152,27 @@ def feed_search_links(soup, url):
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
                 elif link.get("type") in "json":
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif link.get("rel") in "alternate":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif link.get("rel") in "self":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                # elif link.has_attr('rel') and link.get("rel") in "alternate":
+                    # links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                # elif   link.has_attr('rel') and  link.get("rel") in "self":
+                    # links.append({"type":"feed","href":urljoin(url,  link["href"])})
+            # elif link.has_attr('rel') and link.has_attr('href') :
+            #      if   link.has_attr('rel') and  link.get("rel") in "self":
+            #         links.append({"type":"feed","href":urljoin(url,  link["href"])})
             elif link.has_attr('href'):
                 o = urlparse(link["href"])
-                if "rss" in o.path:
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif "atom" in o.path:
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif "json" in o.path:
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
                 ext = os.path.splitext(o.path)[1]
                 if ext == ".xml":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                if ext == ".json":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                if ext == ".xhtml":
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
                 if ext == ".rss":
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
                 if ext == ".atom":
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif link.get("rel") in "self":
-                    last_a_tag = soup.find("a", rel="hub")
-                    if last_a_tag is not None:
-                        if link.get("href"):
-                            links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
+                # elif  link.has_attr('rel') and  link.get("rel") in "self":
+                    # last_a_tag = soup.find("a", rel="hub")
+                    # if last_a_tag is not None:
+                        # if link.get("href"):
+                            # links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
         link_tags = soup.find_all("a")
         for link in link_tags:
             if link.has_attr('href') and link.has_attr('type'):
@@ -186,86 +180,71 @@ def feed_search_links(soup, url):
                     links.append({"type":"feed","href":urljoin(url, link["href"])})
                 elif link.get("type") in "atom":
                     links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif link.get("type") in "json":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                elif link.get("rel") in "self":
-                    links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                # elif link.get("rel") in "self":
+                #     links.append({"type":"feed","href":urljoin(url,  link["href"])})
             elif link.has_attr('href'):
                     o = urlparse(link["href"])
-                    if "rss" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "atom" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "json" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
                     ext = os.path.splitext(o.path)[1].lower()
                     if ext == ".xml":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".json":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".xhtml":
                         links.append({"type":"feed","href":urljoin(url,  link["href"])})
                     if ext == ".rss":
                         links.append({"type":"feed","href":urljoin(url,  link["href"])})
                     if ext == ".atom":
                         links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif link.get("rel") in "self":
-                        last_a_tag = soup.find("a", rel="hub")
-                        if last_a_tag is not None:
-                            if link.get("href"):
-                                links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
+                    # elif  link.has_attr('rel') and  link.get("rel") in "self":
+                        # last_a_tag = soup.find("a", rel="hub")
+                        # if last_a_tag is not None:
+                            # if link.get("href"):
+                                # links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
         link_tags = soup.find_all("area")
-        if link.has_attr('href') and link.has_attr('type'):
-            for link in link_tags:
-                if link.get("type") in "rss":
-                    links.append(urljoin(url,  link["href"]))
-                elif link.get("type") in "atom":
-                    links.append(urljoin(url,  link["href"]))
-                elif link.get("type") in "json":
-                    links.append(urljoin(url, link["href"]))
-                elif link.get("rel") in "self":
-                    last_a_tag = soup.find("a", rel="hub")
-                    if last_a_tag is not None:
-                        if link.get("href"):
-                            links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
-        elif link.has_attr('href'):
-                    o = urlparse(link["href"])
-                    if "rss" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "atom" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "json" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    ext = os.path.splitext(o.path)[1].lower()
-                    if ext == ".xml":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".json":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".xhtml":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".rss":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".atom":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-        elif link.has_attr('href'):
-                    o = urlparse(link["href"])
-                    if "rss" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "atom" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    elif "json" in o.path:
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    ext = os.path.splitext(o.path)[1].lower()
-                    if ext == ".xml":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".json":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".xhtml":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".rss":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
-                    if ext == ".atom":
-                        links.append({"type":"feed","href":urljoin(url,  link["href"])})
+        for link in link_tags:
+            if link.has_attr('href') and link.has_attr('type'):
+                for link in link_tags:
+                    if link.get("type") in "rss":
+                        links.append(urljoin(url,  link["href"]))
+                    elif link.get("type") in "atom":
+                        links.append(urljoin(url,  link["href"]))
+                    elif link.get("type") in "json":
+                        links.append(urljoin(url, link["href"]))
+                    # elif  link.has_attr('rel') and  link.get("rel") in "self":
+                        # last_a_tag = soup.find("a", rel="hub")
+                        # if last_a_tag is not None:
+                            # if link.get("href"):
+                                # links.append({"type":"feed","href":urljoin(url, link["href"]),"self":urljoin(url,  last_a_tag["href"])})
+            elif link.has_attr('href'):
+                        o = urlparse(link["href"])
+                        if "rss" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        elif "atom" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        elif "json" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        ext = os.path.splitext(o.path)[1].lower()
+                        if ext == ".xml":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".json":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".rss":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".atom":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+            elif link.has_attr('href'):
+                        o = urlparse(link["href"])
+                        if "rss" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        elif "atom" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        elif "json" in o.path:
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        ext = os.path.splitext(o.path)[1].lower()
+                        if ext == ".xml":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".json":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".rss":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
+                        if ext == ".atom":
+                            links.append({"type":"feed","href":urljoin(url,  link["href"])})
         return links
 
 
@@ -275,18 +254,17 @@ async def scanHTML(text, url_):
     calls = []
     feeds = []
     isGood = False
-    
     try:
         soup = BeautifulSoup(text, 'html.parser')
-        feeds =+ feed_search_cms(soup,url_)
-        feeds =+ feed_search_links(soup,url_)
-        feeds =+ scanHTML(soup,url_)
-        isGood = True
-    except:
-        isGood = False
-    for feed in feeds:
-        if feed["type"] == "feed":
-            calls.append(feed_do(feed))
-        if feed["type"] == "self":
-            calls.append(websub_do(feed))
+        if (soup.find('body') is not None):
+            # feeds =feeds + feed_search_cms(soup,url_)
+            feeds =feeds + feed_search_links(soup,url_)
+            isGood = True
+        return isGood, feeds
+    except BaseException as e:
+        print((e), ":",type(e), ":", url_)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(type(e),exc_type, fname, exc_tb.tb_lineno)
+        return len(feeds)>0, feeds
     return isGood, feeds

@@ -1,10 +1,14 @@
+from uitls.webLmmit import sem_web
 import asyncio
+import os
+import sys
+from tkinter.messagebox import NO
 from traceback import print_tb
 from urllib.parse import urljoin, urlparse
 import aiohttp
 from uitls.AsyncRobot import Robot
 lock_url = []
-lock = asyncio.Lock()
+lock = asyncio.BoundedSemaphore(50)
 headers = {
     "User-Agent": ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) FeedScaner"),
     "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"),
@@ -20,96 +24,203 @@ headers = {
     "TE": ("trailers"),
     "content-length": ("0")
 }
-async def remove_url(url):
-    c= urlparse(url)
-    async with lock:
-        lock_url.remove(c.scheme+'://'+c.netloc)
-async def add_url(url):
-    c= urlparse(url)
-    async with lock:
-        while (c.scheme+'://'+c.netloc) in lock_url:
-            await asyncio.sleep(0.01)
-        lock_url.append(c.scheme+'://'+c.netloc)
 
 
-sem_web = asyncio.BoundedSemaphore(60)  
-async def async_check_if_website_exists(url_from):
-    async with sem_web:
-        # await add_url(url_from)
-        # robot = Robot(urljoin(url_from,"/robots.txt"))
-        # if not await robot.can_fetch(url_from,"*"):
-            # print("cant fetch")
-            # return False, url_from, None, None ,""
-        # wait = await robot.crawl_delay("*")
-        # if wait is not None and wait > 0:
-                # await asyncio.sleep(wait)
-        for i in range(5):
+async def async_check_if_website_exists(url_from, robot, session):
+    for i in range(5):
+        async with sem_web:
+            if robot is not None:
+                print(robot)
+                try:
+                    try:
+                        fetch = await robot.can_fetch("FeedScaner", url_from, session)
+                        if not fetch:
+                            return False, url_from, None, None, "", None
+                    except:
+                        pass
+                    
+                    try:
+                        time_ = await robot.crawl_delay("FeedScaner", session)
+                    except:
+                        time_ = 0
+                    if time_ is not None:
+                        await asyncio.sleep(int(time_))
+                except BaseException as e:
+                    print((e), ":", type(e), ":", url_from)
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(
+                        exc_tb.tb_frame.f_code.co_filename)[1]
+                    print(type(e), exc_type, fname, exc_tb.tb_lineno)
             try:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url_from,ssl=False,headers=headers) as resp:
-                            mine = resp.headers.get('content-type')
-                            text = await  resp.text()
-                            return True, str(resp.url), text, mine  ,"" ,resp.status
+                async with session.get(url_from, ssl=False, headers=headers) as resp:
+                    o = urlparse(str(resp.url))
+                    try:
+                        mine = resp.headers.get('content-type')
+                    except:
+                        mime = ""
+                    try:
+                        text = await resp.text()
+                    except:
+                        text = ""
+                    return True, str(resp.url), text, mine, o.path, resp.status
             except aiohttp.ClientConnectorError as e:
-                print("ClientConnectorError:",e,"url:",url_from)
-                return False, url_from, None, None ,""
-                break
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
+                return False, url_from, None, None, "", None
             except aiohttp.ClientResponseError as e:
-                print("ClientResponseError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
                 continue
             except UnicodeDecodeError as e:
-                print("UnicodeDecodeError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
                 break
             except aiohttp.ClientOSError as e:
-                print("ClientOSError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
                 break
             except aiohttp.ServerDisconnectedError as e:
-                print("ServerDisconnectedError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
                 break
             except asyncio.TimeoutError as e:
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
                 continue
+            except asyncio.exceptions.TimeoutError as e:
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
+                continue
+            except BaseException as e:
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
         # await remove_url(url_from)
-        return False, url_from, None, None ,""
+    return False, url_from, None, None, "", None
 
 
-async def aio_check_if_page_exists(url_from):
-    async with sem_web:
-        # do robots
-        # robot = Robot(urljoin(url_from,"/robots.txt"))
-        # if not await robot.can_fetch(url_from,"*"):
-        #     return False, url_from, None, None  ,""
-        # wait = await robot.crawl_delay("*")
-        # if wait is not None and wait > 0:
-        #         await asyncio.sleep(wait)
-        # do reqeset
-        for i in range(5):
+async def aio_check_if_page_exists(url_from, robot, session):
+    for i in range(5):
+        async with sem_web:
             try:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url_from,ssl=False,headers=headers) as resp:
-                        if resp.ok:
-                            # ok the page is reak
-                            mine = resp.headers.get('content-type')
-                            text = await  resp.text()
-                            return True, str(resp.url), text, mine   ,"" ,resp.status
-                        if resp.status:
-                            return False, url_from, None, None  ,""
+                if robot is not None:
+                    try:
+                        fetch = await robot.can_fetch("FeedScaner", url_from, session)
+                        if not fetch:
+                            return False, url_from, None, None, "", None
+                    except:
+                        pass
+                    
+                    try:
+                        time = await robot.crawl_delay("FeedScaner", session)
+                    except:
+                        time = 0
+                    if (time is not None) and time != 0:
+                        print("time:", time)
+                        await asyncio.sleep(int(time))
+            except BaseException as e:
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
+            try:
+                async with session.get(url_from, ssl=False, headers=headers) as resp:
+                    o = urlparse(str(resp.url))
+                    mine = resp.headers.get('content-type')
+                    text = await resp.text()
+                    if resp.ok:
+                        # ok the page is reak
+                        return True, str(resp.url), text, mine, o.path, resp.status
+                    if resp.status == 404:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    if resp.status == 201:
+                        text = await resp.text()
+                        return True, url_from, text, mine,  o.path, resp.status
+                    if resp.status == 202:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    if resp.status == 203:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 404:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 500:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 501:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 502:
+                        continue
+                    elif resp.status == 503:
+                        continue
+                    elif resp.status == 504:
+                        continue
+                    elif resp.status == 505:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 404:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 506:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 507:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 508:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 510:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 511:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    elif resp.status == 508:
+                        text = await resp.text()
+                        return False, url_from, text, mine, o.path, resp.status
+                    else:
+                        return False, url_from, text, mine, o.path, resp.status
             except aiohttp.ClientConnectorError as e:
-                print("ClientConnectorError:",e,"url:",url_from)
-                return False, url_from, None, None ,""
-                break
+                print((e), ":", type(e), ":", url_from)
+                return False, url_from, None, None, "", None
             except aiohttp.ClientResponseError as e:
-                print("ClientResponseError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
                 break
             except UnicodeDecodeError as e:
-                print("UnicodeDecodeError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
                 break
             except aiohttp.ClientOSError as e:
-                print("ClientOSError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
                 break
             except aiohttp.ServerDisconnectedError as e:
-                print("ServerDisconnectedError:",e,"url:",url_from)
+                print((e), ":", type(e), ":", url_from)
                 break
             except asyncio.TimeoutError as e:
+                print((e), ":", type(e), ":", url_from)
                 continue
+            except BaseException as e:
+                print((e), ":", type(e), ":", url_from)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(type(e), exc_type, fname, exc_tb.tb_lineno)
         # await remove_url(url_from)
-        return False, url_from, None, None  ,""
+    return False, url_from, None, None, "", None

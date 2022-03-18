@@ -65,11 +65,11 @@ def feedCheck_JSON_Feed(contex):
 def feedCheck(contex):
     check, urls = feedCheck_JSON_Feed(contex)
     if check:
-        return check
+        return check , urls
     check, urls = feedCheck_ATOM(contex)
     if check:
-        return check
+        return check  , urls
     check, urls = feedCheck_RSS(contex)
     if check:
-        return check
-    return False
+        return check , urls
+    return False, []
