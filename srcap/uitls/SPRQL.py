@@ -19,6 +19,7 @@ class SPRQL:
         da = {}
         async with sem_web:
             async with sem_SPRQL:
+                print("ffff.1")
                 for i in range(i):
                     a = []
                     try:
