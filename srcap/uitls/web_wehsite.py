@@ -4,7 +4,6 @@ import sys
 import time
 import tldextract
 from rfc3986 import urlparse
-from torch import prelu
 import validators
 from uitls.AsyncRobot import Robot, add_robots, remove_robots
 from uitls.asyncio_c import wait_task
