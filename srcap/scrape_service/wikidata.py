@@ -15,7 +15,7 @@ wikidataDb = scrap.wikidata
 
 async def sprql_wikidata(qurry,session):
     print("ffff")
-   return await data_sprql.run(qurry)
+    return await data_sprql.run(qurry)
 
 
 def Get_Q(Q):
