@@ -13,7 +13,7 @@ class SPRQL:
         self.url = url
         self.key = key
 
-    async def run(self,sparql=None,i=10,session=None) -> None:
+    async def run(self,sparql=None,i=200,session=None) -> None:
         if sparql is None:
             sparql = self.sparql
         da = {}
@@ -33,16 +33,7 @@ class SPRQL:
                                         a.append(item)
                                     return a
                                 else:
-                                    for header in  r.headers:
-                                        if "Retry-After" == header[0]:
-                                            try:
-                                                after = int(header[1])
-                                            except:
-                                                after = 10
-                                            break
-                                    else:
-                                        after = 10
-                                    await asyncio.sleep(after)
+                                    await asyncio.sleep(10)
                                     continue
                     except  BaseException as  e:
                         print("ERROR ",type(e),":",e,":",self.url,":",sparql)
