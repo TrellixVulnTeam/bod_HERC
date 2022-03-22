@@ -265,7 +265,9 @@ async def main():
     timeout = aiohttp.ClientTimeout(total=60)
     print("cats")
     c = aiohttp.TCPConnector(force_close=True,enable_cleanup_closed=True,limit=555,resolver=resolver, ssl=False)
+    print("cats")
     async with aiohttp.ClientSession(connector=c,trust_env=True,timeout=timeout) as session:
+        print("cats")
         await get_wikidata_website(data_wikidata,session)
         print("cats")
         await get_wikidata_feed(data_wikidata,session)
