@@ -25,6 +25,7 @@ class SPRQL:
                     a = []
                     try:
                      async with aiohttp.ClientSession() as session:
+                        print("ddddd.3")
                         async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
                                 print("ffff.3")
                                 if r.ok:
