@@ -31,6 +31,7 @@ class SPRQL:
                                 if r.ok:
                                     print("fffc.4")
                                     data = await r.text()
+                                    print("fffc.5")
                                     print(data)
                                     data = await r.json()
                                     print(data)
