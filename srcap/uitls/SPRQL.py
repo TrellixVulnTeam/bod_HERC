@@ -22,7 +22,7 @@ class SPRQL:
                 for i in range(i):
                     a = []
                     try:
-                        c = aiohttp.TCPConnector(enable_cleanup_closed=False,use_dns_cache=False)
+                        c = aiohttp.TCPConnector()
                         async with aiohttp.ClientSession(connector=c) as session:
                             async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
                                 if r.ok:
@@ -46,14 +46,6 @@ class SPRQL:
                                         after = 10
                                     await asyncio.sleep(after)
                                     continue
-                    except KeyboardInterrupt as k:
-                        exit()
-                    except  json.decoder.JSONDecodeError as  e:
-                                    await asyncio.sleep(after)
-                    except  aiohttp.ClientPayloadError as  e:
-                                    await asyncio.sleep(after)
-                    except  json.decoder.JSONDecodeError as  e:
-                        continue
                     except  BaseException as  e:
                         print("ERROR ",type(e),":",e,":",self.url,":",sparql)
                         exc_type, exc_obj, exc_tb = sys.exc_info()
