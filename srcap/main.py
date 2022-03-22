@@ -263,16 +263,22 @@ async def main():
     data_commoncrawl = {}
     resolver = AsyncResolver2()
     timeout = aiohttp.ClientTimeout(total=60)
-
+    print("cats")
     c = aiohttp.TCPConnector(force_close=True,family=socket.AF_INET,
 enable_cleanup_closed=True,limit=555,resolver=resolver, ssl=False)
     async with aiohttp.ClientSession(connector=c,trust_env=True,timeout=timeout) as session:
         await get_wikidata_website(data_wikidata,session)
+        print("cats")
         await get_wikidata_feed(data_wikidata,session)
+        print("cats")
         await get_wikidata_blog(data_wikidata,session)
+        print("cats")
         await get_other_parameter_scan(data_wikidata,session)
+        print("cats")
         await get_common_crawl_website(data_commoncrawl,session)
+        print("cats")
         await get_web_archive_website_feed(data_commoncrawl,session)
+        print("cats")
 
 
 async def test():
