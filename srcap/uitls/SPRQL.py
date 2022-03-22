@@ -52,6 +52,9 @@ class SPRQL:
                         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                         print(type(e),exc_type, fname, exc_tb.tb_lineno)
                     except:
-                        pass    
+                        exc_type, exc_obj, exc_tb = sys.exc_info()
+                        print("ERROR ",type(exc_obj),":",exc_obj,":",self.url,":",sparql)
+                        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                        print(type(e),exc_type, fname, exc_tb.tb_lineno)
                 await asyncio.sleep(10)
         return []
