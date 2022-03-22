@@ -12,6 +12,8 @@ from uitls.web_wehsite import add_other_parameter, url_add
 from scrape_service.wikidata import Get_Q, SPARQL_all_feeds, SPARQL_all_website, SPARQL_offical_blog, Wikidata_qurry_property, sprql_wikidata
 from scrape_service.commoncrawl import toplevels
 import enlighten
+import gc
+
 
 
 def main():
@@ -25,7 +27,9 @@ async def get_wikidata_website(data_p,session):
     a = []
     print("css")
     datas = await sprql_wikidata(SPARQL_all_website,session)
+    gc.collect()
     print("css")
+    
     pbar = manager.counter(desc='get_wikidata_website', total=len(datas))
     print("css")
     pbar_started = manager.counter(desc='get_wikidata_website started', total=len(datas))
@@ -51,6 +55,7 @@ async def get_wikidata_website(data_p,session):
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 print("ERROR ",(exc_obj), ":", type(exc_obj), exc_type, fname, exc_tb.tb_lineno)
+            gc.collect()
     for data in datas:
         data["item"] = Get_Q(data["item"])
         
@@ -63,7 +68,9 @@ async def get_wikidata_website(data_p,session):
 
 async def get_wikidata_feed(data_p,session):
     a = []
+    gc.collect()
     datas = await sprql_wikidata(SPARQL_all_feeds,session)
+    gc.collect()
     pbar = manager.counter(desc='get_wikidata_feed', total=len(datas))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('red')
@@ -77,6 +84,7 @@ async def get_wikidata_feed(data_p,session):
                     started_bad.update()
             except:
                 started_bad.update()
+            gc.collect()
 
     for data in datas:
         data["item"] = Get_Q(data["item"])
@@ -88,7 +96,9 @@ async def get_wikidata_feed(data_p,session):
 
 async def get_wikidata_blog(data_p,session):
     a = []
+    gc.collect()
     datas = await sprql_wikidata(SPARQL_offical_blog,session)
+    gc.collect()
     pbar = manager.counter(desc='get_wikidata_blog', total=len(datas))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('red')
@@ -102,6 +112,7 @@ async def get_wikidata_blog(data_p,session):
                     started_bad.update()
             except:
                 started_bad.update()
+            gc.collect()
     for data in datas:
         data["item"] = Get_Q(data["item"])
     for data in datas:
@@ -183,6 +194,7 @@ async def get_wikidata_other_parameter(session):
 
 
 async def get_other_parameter_scan(datas,session):
+    gc.collect()
     pbar = manager.counter(desc='get_other_parameter_scan', total=0)
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('red')
@@ -205,6 +217,7 @@ async def get_other_parameter_scan(datas,session):
                             started_bad.update()
                     except:
                         started_bad.update()
+                    gc.collect()
 
             az = []
             if "formatter_URL" in data_p.keys():
