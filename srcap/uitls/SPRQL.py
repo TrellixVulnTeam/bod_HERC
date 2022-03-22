@@ -13,7 +13,7 @@ class SPRQL:
         self.url = url
         self.key = key
 
-    async def run(self,sparql=None,i=200,session=None) -> None:
+    async def run(self,sparql=None,i=200,) -> None:
         if sparql is None:
             sparql = self.sparql
         da = {}
@@ -22,6 +22,7 @@ class SPRQL:
                 for i in range(i):
                     a = []
                     try:
+                     async with aiohttp.ClientSession(connector=c,trust_env=True) as session:
                         async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
                                 if r.ok:
                                     data = await r.json()
