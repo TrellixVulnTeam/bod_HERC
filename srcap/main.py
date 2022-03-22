@@ -275,7 +275,7 @@ async def main():
     resolver = AsyncResolver2()
     timeout = aiohttp.ClientTimeout(total=60)
     print("cats")
-    c = aiohttp.TCPConnector(force_close=True,enable_cleanup_closed=True,limit=555,resolver=resolver, ssl=False)
+    c = aiohttp.TCPConnector(force_close=True,enable_cleanup_closed=True,limit=555, ssl=False)
     print("cats")
     async with aiohttp.ClientSession(connector=c,trust_env=True,timeout=timeout) as session:
         print("cats")
