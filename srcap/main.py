@@ -23,12 +23,19 @@ manager = enlighten.Manager()
 
 async def get_wikidata_website(data_p,session):
     a = []
+    print("css")
     datas = await sprql_wikidata(SPARQL_all_website)
+    print("css")
     pbar = manager.counter(desc='get_wikidata_website', total=len(datas))
+    print("css")
     pbar_started = manager.counter(desc='get_wikidata_website started', total=len(datas))
+    print("css")
     starting_good = pbar.add_subcounter('green')
+    print("css")
     started_bad = pbar.add_subcounter('yellow')
+    print("css")
     started_error = pbar.add_subcounter('red')
+    print("css")
 
     async def k(data, item, data_ps):
             try:
