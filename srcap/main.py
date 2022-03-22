@@ -58,7 +58,7 @@ async def get_wikidata_feed(data_p,session):
     started_bad = pbar.add_subcounter('red')
 
     async def k(data, item, data_ps):
-        async with ab:
+        
             try:
                 if await url_add(data, "wikidata", item, Ps=data_ps,session=session):
                     starting_good.update()
@@ -83,7 +83,7 @@ async def get_wikidata_blog(data_p,session):
     started_bad = pbar.add_subcounter('red')
 
     async def k(data, item, data_ps):
-        async with ab:
+        
             try:
                 if await url_add(data, "wikidata", item, Ps=data_ps,session=session):
                     starting_good.update()
@@ -186,7 +186,7 @@ async def get_other_parameter_scan(datas,session):
 
         async def k(query, data_p):
             async def c(url, data2):
-                async with ab:
+                
                     try:
                         if await url_add(url, "wikidata", data2, Ps={},session=session):
                             starting_good.update()
