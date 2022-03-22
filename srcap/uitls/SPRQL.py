@@ -30,6 +30,8 @@ class SPRQL:
                                 print("ffff.3")
                                 if r.ok:
                                     print("fffc.4")
+                                    data = await r.text()
+                                    print(data)
                                     data = await r.json()
                                     print(data)
                                     ds = data["results"]["bindings"]
