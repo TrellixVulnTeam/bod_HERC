@@ -21,11 +21,14 @@ class SPRQL:
             async with sem_SPRQL:
                 print("ffff.1")
                 for i in range(i):
+                    print("ffff.2")
                     a = []
                     try:
                      async with aiohttp.ClientSession() as session:
                         async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
+                                print("ffff.3")
                                 if r.ok:
+                                    print("fffc.4")
                                     data = await r.json()
                                     ds = data["results"]["bindings"]
                                     for i in ds:
@@ -35,6 +38,7 @@ class SPRQL:
                                         a.append(item)
                                     return a
                                 else:
+                                    print("ffff.4")
                                     await asyncio.sleep(10)
                                     continue
                     except  BaseException as  e:
