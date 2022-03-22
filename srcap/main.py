@@ -33,7 +33,9 @@ async def get_wikidata_website(data_p,session):
     async def k(data, item, data_ps):
             try:
                 pbar_started.update()
+                print("dad")
                 if await url_add(data, "wikidata", item, Ps=data_ps,session=session):
+                    print("mum")
                     starting_good.update()
                 else:
                     started_bad.update()
@@ -44,6 +46,8 @@ async def get_wikidata_website(data_p,session):
                 print("ERROR ",(exc_obj), ":", type(exc_obj), exc_type, fname, exc_tb.tb_lineno)
     for data in datas:
         data["item"] = Get_Q(data["item"])
+        
+    print("DDDSssds")
     for data in datas:
         # await k(data["official_website"], data["item"], data_p)
         a.append(k(data["official_website"], data["item"], data_p))
