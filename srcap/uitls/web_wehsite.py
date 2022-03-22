@@ -10,7 +10,7 @@ from uitls.asyncio_c import wait_task
 from uitls.feedCheck import feedCheck
 from uitls.get import aio_check_if_page_exists, async_check_if_website_exists 
 from uitls.scan_f import scanHTML
-from uitls.web_wehsite import qarry_lmmit
+from uitls.webLmmit import qarry_lmmit
 from scrape_service.wikidata import wikidata_linked, Get_Q, sprql_wikidata
 import motor.motor_asyncio
 from datetime import datetime
