@@ -13,7 +13,7 @@ class SPRQL:
         self.url = url
         self.key = key
 
-    async def run(self,sparql=None,i=200,) -> None:
+    async def run(self,sparql=None,i=200) -> None:
         if sparql is None:
             sparql = self.sparql
         da = {}
