@@ -31,6 +31,7 @@ class SPRQL:
                                 if r.ok:
                                     print("fffc.4")
                                     data = await r.json()
+                                    print(data)
                                     ds = data["results"]["bindings"]
                                     for i in ds:
                                         item = {}
