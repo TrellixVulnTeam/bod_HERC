@@ -3,7 +3,7 @@ import asyncio
 import json
 import os
 import sys
-import aiohttp
+import httpx
 import time
 from uitls.get import sem_web
 sem_SPRQL = asyncio.BoundedSemaphore(300)
@@ -24,29 +24,28 @@ class SPRQL:
                     print("ffff.2")
                     a = []
                     try:
-                     async with aiohttp.ClientSession() as session:
                         print("ddddd.3")
-                        async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
-                                print("ffff.3")
-                                if r.ok:
-                                    print("fffc.4")
-                                    data = await r.content.read() 
-                                    print("fffc.5")
-                                    print(data)
-                                    data = await r.json()
-                                    r.ra
-                                    print(data)
-                                    ds = data["results"]["bindings"]
-                                    for i in ds:
-                                        item = {}
-                                        for c in i.keys():
-                                            item[c] = i[c]["value"]
-                                        a.append(item)
-                                    return a
-                                else:
-                                    print("ffff.4")
-                                    await asyncio.sleep(10)
-                                    continue
+                        r = httpx.post(self.url, data={ 'format': 'json', 'query': sparql})
+                        print("ffff.3")
+                        if r.status_code == 404:
+                            print("fffc.4")
+                            data = r.text
+                            print("fffc.5")
+                            print(data)
+                            data =  r.json()
+                            r.ra
+                            print(data)
+                            ds = data["results"]["bindings"]
+                            for i in ds:
+                                item = {}
+                                for c in i.keys():
+                                    item[c] = i[c]["value"]
+                                a.append(item)
+                            return a
+                        else:
+                            print("ffff.4")
+                            await asyncio.sleep(10)
+                            continue
                     except  BaseException as  e:
                         print("ERROR ",type(e),":",e,":",self.url,":",sparql)
                         exc_type, exc_obj, exc_tb = sys.exc_info()
