@@ -22,7 +22,7 @@ class SPRQL:
                 for i in range(i):
                     a = []
                     try:
-                     async with aiohttp.ClientSession(connector=c,trust_env=True) as session:
+                     async with aiohttp.ClientSession() as session:
                         async with session.post(self.url, data={ 'format': 'json', 'query': sparql}) as r:
                                 if r.ok:
                                     data = await r.json()
