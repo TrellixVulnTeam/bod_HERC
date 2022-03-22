@@ -13,8 +13,8 @@ myclient = motor.motor_asyncio.AsyncIOMotorClient()
 scrap = myclient.scrap
 wikidataDb = scrap.wikidata
 
-async def sprql_wikidata(qurry):
-   return await data_sprql.run(qurry)
+async def sprql_wikidata(qurry,session):
+   return await data_sprql.run(qurry,session=session)
 
 
 def Get_Q(Q):

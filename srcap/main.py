@@ -24,7 +24,7 @@ manager = enlighten.Manager()
 async def get_wikidata_website(data_p,session):
     a = []
     print("css")
-    datas = await sprql_wikidata(SPARQL_all_website)
+    datas = await sprql_wikidata(SPARQL_all_website,session)
     print("css")
     pbar = manager.counter(desc='get_wikidata_website', total=len(datas))
     print("css")
@@ -63,7 +63,7 @@ async def get_wikidata_website(data_p,session):
 
 async def get_wikidata_feed(data_p,session):
     a = []
-    datas = await sprql_wikidata(SPARQL_all_feeds)
+    datas = await sprql_wikidata(SPARQL_all_feeds,session)
     pbar = manager.counter(desc='get_wikidata_feed', total=len(datas))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('red')
@@ -88,7 +88,7 @@ async def get_wikidata_feed(data_p,session):
 
 async def get_wikidata_blog(data_p,session):
     a = []
-    datas = await sprql_wikidata(SPARQL_offical_blog)
+    datas = await sprql_wikidata(SPARQL_offical_blog,session)
     pbar = manager.counter(desc='get_wikidata_blog', total=len(datas))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('red')
@@ -113,7 +113,7 @@ async def get_wikidata_blog(data_p,session):
 async def get_wikidata_other_parameter(session):
     datas_ = {}
     print("geting wikidata_other_parameter")
-    datas = await sprql_wikidata(Wikidata_qurry_property)
+    datas = await sprql_wikidata(Wikidata_qurry_property,session)
     print("done wikidata_other_parameter")
     pbar = manager.counter(
         desc='get_wikidata_other_parameter', total=len(datas))
