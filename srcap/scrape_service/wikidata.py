@@ -2,7 +2,6 @@ import asyncio
 import time
 from uitls.SPRQL import SPRQL
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
-from qwikidata.linked_data_interface import aio_get_entity_dict_from_api
 from qwikidata.datavalue import WikibaseEntityId,Time,Quantity,GlobeCoordinate
 
 import motor.motor_asyncio
