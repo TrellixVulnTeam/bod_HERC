@@ -289,8 +289,19 @@ async def url_add(url_from, where, item=None, item_type="website", dectect_item_
             if (mine == " ") and (mine is None) or "html" in mine:
                 check_html, feeds = await scanHTML(text, url_from)
                 if check_html and item_type != "feed":
+<<<<<<< HEAD
+                    if len(feeds) != 0:
+                        for feed in feeds:
+                            try:
+                                await asyncio.wait_for(url_add(feed["href"], "wikidata", index=index+1,  item_type="feed", p=True, session=session, robot=robot),timeout=60*8*4)
+                            except:
+                                exc_type, exc_obj, exc_tb = sys.exc_info()
+                                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                                print("ERROR ", (exc_obj), ":", type(exc_obj)," : ",feed,":",exc_type, fname, exc_tb.tb_lineno)
+=======
                     for feed in feeds:
                         await url_add(feed["href"], "wikidata",  item_type="feed", p=True, session=session, robot=robot)
+>>>>>>> parent of 9e5671b (update code)
             else:
                 check_html = False
             if (mine == " ") and (mine is None) or ("xml" in mine) or ("rss" in mine) or ("atom" in mine) or ("json" in mine) or item_type == "feed":
