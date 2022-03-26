@@ -87,7 +87,6 @@ class Robot(urllib.robotparser.RobotFileParser):
                             expires = resp.headers.get('expires')
                             if expires is not None:
                                 try:
-<<<<<<< HEAD
                                     text = await resp.text('ISO-8859-1')
                                 except (LookupError, UnicodeDecodeError):
                                     text = await resp.content.read()
@@ -118,35 +117,6 @@ class Robot(urllib.robotparser.RobotFileParser):
                             self.parse(text)
                             self.disallow_all = False
                             break
-=======
-                                    deadtime = parsedate_to_datetime(expires)
-                                    self.deadtime = deadtime.timestamp()
-                                    self.deadtime =self.deadtime
-                                except:
-                                    try:
-                                        self.deadtime = int(expires)
-                                    except:
-                                        pass
-                            elif resp.ok:
-                                text = await resp.text()
-                                self.parse(text)
-                                self.disallow_all = False
-                                break
-                            elif resp.status in (401, 403):
-                                self.disallow_all = True
-                                has = True
-                                break
-                            elif resp.status >= 400 and resp.status < 500:
-                                self.allow_all = True
-                                has = True
-                                self.disallow_all = False
-                                break
-                            else:
-                                text = await resp.text()
-                                self.parse(text)
-                                self.disallow_all = False
-                                break
->>>>>>> parent of 9e5671b (update code)
                 except aiohttp.ClientConnectorError as e:
                     print("error",e)
                     self.disallow_all = True
