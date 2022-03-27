@@ -6,3 +6,5 @@
 *.json
 *.pyc
 *.pyc
+*.pyc
+srcap/scrape_service/__pycache__/commoncrawl.cpython-38.pyc
