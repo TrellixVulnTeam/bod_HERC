@@ -54,7 +54,7 @@ async def get_wikidata_website(data_p, session):
         cont = cont + 1
         pedding.append(asyncio.create_task(k(data["official_website"]["value"],
                                              Get_Q(data["item"]["value"]), data_p)))
-        while cont > 500:
+        while cont > 1000:
             try:
                 await asyncio.sleep(1.0)
                 done, pedding = await asyncio.wait(pedding, timeout=1.0)
