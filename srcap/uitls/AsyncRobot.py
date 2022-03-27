@@ -1,8 +1,10 @@
+import ctypes
 import datetime
 import os
 from pickle import FALSE
 import urllib.robotparser
 import asyncio
+from charset_normalizer import from_bytes
 import motor.motor_asyncio
 from urllib.parse import urljoin, urlparse
 import time
@@ -33,9 +35,11 @@ headers = {
 local_robots = {}
 llls = {}
 robots = client['scrape']["robots"]
-import ctypes
+
+
 def ref_count(a):
     return ctypes.c_long.from_address(id(a)).value
+
 
 async def remove_robots(url):
     return
@@ -47,7 +51,7 @@ async def remove_robots(url):
         llls[temp_url] = llls[temp_url] - 1
 
 
-async def add_robots(url,session):
+async def add_robots(url, session):
     o = urlparse(url)
     local_robots = Robot(url)
     return local_robots
@@ -73,7 +77,7 @@ class Robot(urllib.robotparser.RobotFileParser):
         self.deadtime = 0
         self.lock_ = asyncio.Lock()
 
-    async def _read(self,session) -> None:
+    async def _read(self, session) -> None:
         has = False
         text = ""
         self.modified()
@@ -83,14 +87,14 @@ class Robot(urllib.robotparser.RobotFileParser):
         async with sem_web:
             for i in range(4):
                 try:
-                        async with session.get(self.url, ssl=False, headers=headers) as resp:
-                            expires = resp.headers.get('expires')
-                            if expires is not None:
-                                try:
-                                    text = await resp.text('ISO-8859-1')
-                                except (LookupError, UnicodeDecodeError):
-                                    text = await resp.content.read()
-                                    print(from_bytes(text))
+                    async with session.get(self.url, ssl=False, headers=headers) as resp:
+                        expires = resp.headers.get('expires')
+                        if expires is not None:
+                            try:
+                                text = await resp.text('ISO-8859-1')
+                            except (LookupError, UnicodeDecodeError):
+                                text = await resp.content.read()
+                                print(from_bytes(text))
                             self.parse(text)
                             self.disallow_all = False
                             break
@@ -118,14 +122,14 @@ class Robot(urllib.robotparser.RobotFileParser):
                             self.disallow_all = False
                             break
                 except aiohttp.ClientConnectorError as e:
-                    print("error",e)
+                    print("error", e)
                     self.disallow_all = True
                     break
                 except asyncio.TimeoutError as e:
-                    print("error",e)
+                    print("error", e)
                     continue
                 except UnicodeDecodeError as e:
-                    print("error",e)
+                    print("error", e)
                     break
                 except asyncio.TimeoutError:
                     break
@@ -141,8 +145,7 @@ class Robot(urllib.robotparser.RobotFileParser):
         db_robots = await robots.find_one({"domain": domain})
         if db_robots is not None:
             await robots.delete_many({"domain": domain})
-        
-        
+
         document = {
             'disallow_all': self.disallow_all,
             'allow_all': self.allow_all,
@@ -159,7 +162,7 @@ class Robot(urllib.robotparser.RobotFileParser):
         robots.insert_one(document)
         return has
 
-    async def read_db(self,session) -> None:
+    async def read_db(self, session) -> None:
         url_o = urlparse(self.url)
         domain = url_o.scheme + "://"+url_o.netloc
         robots = client['scrape']["robots"]
@@ -176,7 +179,7 @@ class Robot(urllib.robotparser.RobotFileParser):
         if (db_robots is None) or (self.deadtime is None) or (self.deadtime < int(time.time())):
             await self._read(session)
 
-    async def can_fetch(self, useragent, url,session) -> None:
+    async def can_fetch(self, useragent, url, session) -> None:
         if (self.deadtime is None):
             await self._read(session)
         elif (self.deadtime is None) or int(self.deadtime) < int(time.time()):
@@ -184,7 +187,7 @@ class Robot(urllib.robotparser.RobotFileParser):
         a = super().can_fetch(useragent, url)
         return a
 
-    async def crawl_delay(self, useragent,session) -> None:
+    async def crawl_delay(self, useragent, session) -> None:
         if (self.deadtime is None):
             await self._read(session)
         elif (self.deadtime is None) or int(self.deadtime) < int(time.time()):
@@ -192,7 +195,7 @@ class Robot(urllib.robotparser.RobotFileParser):
 
         return super().crawl_delay(useragent)
 
-    async def request_rate(self, useragent,session) -> None:
+    async def request_rate(self, useragent, session) -> None:
         if (self.deadtime is None):
             await self._read(session)
         elif (self.deadtime is None) or int(self.deadtime) < int(time.time()):
@@ -200,7 +203,7 @@ class Robot(urllib.robotparser.RobotFileParser):
 
         return super().request_rate(useragent)
 
-    async def site_maps(self,session) -> None:
+    async def site_maps(self, session) -> None:
         if (self.deadtime is None):
             await self._read(session)
         elif (self.deadtime is None) or int(self.deadtime) < int(time.time()):
@@ -208,18 +211,20 @@ class Robot(urllib.robotparser.RobotFileParser):
         return super().site_maps()
 
 
-async def test2(url,session):
-        ro = await add_robots("https://en.wikipedia.org/",session)
-        await ro.read_db(session)
-        a = await ro.can_fetch("*", "https://en.wikipedia.org/",session)
+async def test2(url, session):
+    ro = await add_robots("https://en.wikipedia.org/", session)
+    await ro.read_db(session)
+    a = await ro.can_fetch("*", "https://en.wikipedia.org/", session)
+
+
 async def test():
     c = aiohttp.TCPConnector(enable_cleanup_closed=True)
     async with aiohttp.ClientSession(connector=c) as session:
-        ro = await add_robots("https://en.wikipedia.org/",session)
+        ro = await add_robots("https://en.wikipedia.org/", session)
         await ro.read_db(session)
-        a = await ro.can_fetch("*", "https://en.wikipedia.org/",session)
+        a = await ro.can_fetch("*", "https://en.wikipedia.org/", session)
         await remove_robots("https://en.wikipedia.org/")
-        await test2("https://en.wikipedia.org/",session)
+        await test2("https://en.wikipedia.org/", session)
 if __name__ == '__main__':
 
     loop = asyncio.get_event_loop()

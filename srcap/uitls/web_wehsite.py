@@ -235,7 +235,7 @@ async def websub_do(data):
     await url_add(data["href"], where="internal", item_type="websub")
 
 
-async def url_add(url_from, where, item=None, item_type="website", dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):
+async def url_add(url_from, where, item=None, item_type="website",index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):
     async with qarry_lmmit:
         try:
             url_from = str(url_from)

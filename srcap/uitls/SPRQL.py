@@ -3,58 +3,41 @@ import asyncio
 import json
 import os
 import sys
-import httpx
+import aiofiles
+import aiohttp
+import ijson
 import time
 from uitls.get import sem_web
 sem_SPRQL = asyncio.BoundedSemaphore(300)
-class SPRQL:
-    def __init__(self, sparql = None, url = None, key="item") -> None:
-        self.sparql = sparql
-        self.url = url
-        self.key = key
 
-    async def run(self,sparql=None,i=200) -> None:
-        if sparql is None:
-            sparql = self.sparql
-        da = {}
-        async with sem_web:
-            async with sem_SPRQL:
-                print("ffff.1")
-                for i in range(i):
-                    print("ffff.2")
-                    a = []
-                    try:
-                        print("ddddd.3")
-                        r = httpx.post(self.url, data={ 'format': 'json', 'query': sparql})
-                        print("ffff.3")
-                        if r.status_code == 404:
-                            print("fffc.4")
-                            data = r.text
-                            print("fffc.5")
-                            print(data)
-                            data =  r.json()
-                            r.ra
-                            print(data)
-                            ds = data["results"]["bindings"]
-                            for i in ds:
-                                item = {}
-                                for c in i.keys():
-                                    item[c] = i[c]["value"]
-                                a.append(item)
-                            return a
-                        else:
-                            print("ffff.4")
-                            await asyncio.sleep(10)
-                            continue
-                    except  BaseException as  e:
-                        print("ERROR ",type(e),":",e,":",self.url,":",sparql)
-                        exc_type, exc_obj, exc_tb = sys.exc_info()
-                        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                        print(type(e),exc_type, fname, exc_tb.tb_lineno)
-                    except:
-                        exc_type, exc_obj, exc_tb = sys.exc_info()
-                        print("ERROR ",type(exc_obj),":",exc_obj,":",self.url,":",sparql)
-                        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                        print(type(e),exc_type, fname, exc_tb.tb_lineno)
-                await asyncio.sleep(10)
-        return []
+
+async def SPRQL_GEN(sparql, endpoint, file_name, online=True):
+    while True:
+        try:
+            while online:
+                try:
+                    async with aiohttp.ClientSession(headers={"Accept": "application/json"}) as session:
+                        async with session.request('POST', endpoint, data={'format': 'json', 'query': sparql}) as r:
+                            async with aiofiles.open(file_name, mode='wb') as f:
+                                if r.ok:
+                                    print("download ok")
+                                    async for data, _ in r.content.iter_chunks():
+                                        await f.write(data)
+                                    print("download done")
+                                    break
+                                else:
+                                    print("download fails will retry")
+                except:
+                    print("download fails with except will retry")
+            size = 0
+            async with aiofiles.open(file_name, mode='rb') as fs:
+                a = ijson.items(fs, 'results.bindings.item')
+                async for o in a:
+                    size = size + 1
+            async with aiofiles.open(file_name, mode='rb') as fs:
+                a = ijson.items(fs, 'results.bindings.item')
+                async for o in a:
+                    yield o, size
+                break
+        except:
+            continue

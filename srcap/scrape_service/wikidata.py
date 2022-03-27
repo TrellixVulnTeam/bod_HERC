@@ -1,11 +1,11 @@
 import asyncio
 import time
-from uitls.SPRQL import SPRQL
+from uitls.SPRQL import  SPRQL_GEN
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.datavalue import WikibaseEntityId,Time,Quantity,GlobeCoordinate
 
 import motor.motor_asyncio
-data_sprql = SPRQL(url = "https://query.wikidata.org/bigdata/namespace/wdq/sparql")
+data_sprql =  "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
 myclient = motor.motor_asyncio.AsyncIOMotorClient()
@@ -13,9 +13,9 @@ myclient = motor.motor_asyncio.AsyncIOMotorClient()
 scrap = myclient.scrap
 wikidataDb = scrap.wikidata
 
-async def sprql_wikidata(qurry,session):
+async def sprql_wikidata(qurry,file_name):
     print("ffff")
-    return await data_sprql.run(qurry)
+    return  SPRQL_GEN(qurry, data_sprql, file_name, online=True)
 
 
 def Get_Q(Q):
