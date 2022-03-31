@@ -1,5 +1,6 @@
 import asyncio
 import os
+from re import T
 import sys
 import time
 import tldextract
@@ -8,15 +9,16 @@ import validators
 from uitls.AsyncRobot import Robot, add_robots, remove_robots
 from uitls.asyncio_c import wait_task
 from uitls.feedCheck import feedCheck
-from uitls.get import aio_check_if_page_exists, async_check_if_website_exists
+from uitls.get import aio_check_2, aio_check_if_page_exists, async_check_if_website_exists
 from uitls.scan_f import scanHTML
 from uitls.webLmmit import qarry_lmmit
-from scrape_service.wikidata import wikidata_linked, Get_Q, sprql_wikidata
+from scrape_service.wikidata import wikidata_linked, get_q, sprql_wikidata
 import motor.motor_asyncio
 from datetime import datetime
-myclient = motor.motor_asyncio.AsyncIOMotorClient()
+from uitls.webLmmit import sem_web
+myClient = motor.motor_asyncio.AsyncIOMotorClient()
 
-scrap = myclient.scrap
+scrap = myClient.scrap
 websiteDb = scrap.website
 feedTypes_ends = [
     'feed+json',
@@ -134,6 +136,10 @@ async def add_website_where(url_to, where, path, type_="website", item=None, mps
 
 
 async def _add_wensite_(url_to, url_from):
+    a = urlparse(url_to)
+    url_to = a.netloc
+    a = urlparse(url_from)
+    url_from = a.netloc
     myquery1 = {"to_url": url_to}
     c = await websiteDb.find_one(myquery1)
     if (c) is not None:
@@ -232,34 +238,202 @@ async def feed_do(data):
 
 
 async def websub_do(data):
-    await url_add(data["href"], where="internal", item_type="websub")
+    await url_add(data["href"], where="internal", item_type="feed")
 
 
-async def url_add(url_from, where, item=None, item_type="website",index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):
+async def just_url_page(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None):
+    try:
+        check, _, x = urlCheck(url)
+        if not check:
+            return False
+        check = await check_if_needed(url, where, item_type, item)
+        if not check:
+            return True
+        if text is None:
+            async with sem_web:
+                check, url_to, text, mine, path, status = await aio_check_if_page_exists(url, robot, session)
+            if mine is None:
+                mine = ""
+            if "css" in mine:
+                return False
+            if "image" in mine:
+                return False
+            if "audio" in mine:
+                return False
+            if "model" in mine:
+                return False
+            if "video" in mine:
+                return False
+            if "javascript" in mine:
+                return False
+            if "ecmascript" in mine:
+                return False
+            if "font" in mine:
+                return False
+        else:
+            url_to = url
+        if not check:
+            return False
+        check_feed, feeds = await scanHTML(text, url)
+        if len(feeds) != 0:
+            for feed in feeds:
+                try:
+                    a_task = asyncio.create_task(just_url_feed(
+                        feed["href"], "wikidata", item_type="feed", session=session, robot=robot))
+                    await asyncio.wait_for(a_task, timeout=60*40)
+                except:
+                    pass
+        if not check_feed:
+            return False
+        await add_website_where(url_to, where, path, item_type, item, Ps, d=True, session=session)
+        return True
+    except:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("ERROR ", (exc_obj), ":", type(exc_obj),
+              exc_type, fname, exc_tb.tb_lineno)
+        return False
+
+
+async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None):
+    try:
+        check = await check_if_needed(url, where, item_type, item)
+        if not check:
+            return False
+        if text is None or path is None:
+            async with sem_web:
+                check, url_to, text, mine, path, status = await aio_check_if_page_exists(url,  robot, session)
+            if mine is None:
+                mine = ""
+            if "css" in mine:
+                return False
+            if "image" in mine:
+                return False
+            if "audio" in mine:
+                return False
+            if "model" in mine:
+                return False
+            if "video" in mine:
+                return False
+            if "javascript" in mine:
+                return False
+            if "ecmascript" in mine:
+                return False
+            if "font" in mine:
+                return False
+        else:
+            url_to = url
+        if not check:
+            return False
+        check_feed, datas = feedCheck(text)
+        if not check_feed:
+            return False
+        await add_website_where(url, where, path, item_type, item, Ps, d=True, session=session)
+        return True
+    except:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("ERROR ", (exc_obj), ":", type(exc_obj),
+              exc_type, fname, exc_tb.tb_lineno)
+        return False
+
+
+async def url_add2(url_from, where, item=None, item_type="website",  ps={}, session=None, robot=None):
+
+        try:
+            url_from = str(url_from)
+            check, _, x = urlCheck(url_from)
+            if not check:
+                return False
+            check = await check_if_needed(url_from, where, item_type, item)
+            if not check:
+                return True
+            async with sem_web:
+                if robot is None:
+                    robot = await add_robots(url_from, session)
+                if robot.disallow_all:
+                    return False
+                check_website, check_page, url_to, text, mine, path, status = await aio_check_2(url_from, robot, session)
+            if mine is None:
+                mine = ""
+            if not check:
+                return False
+            if "css" in mine:
+                return False
+            if "image" in mine:
+                return False
+            if "audio" in mine:
+                return False
+            if "model" in mine:
+                return False
+            if "video" in mine:
+                return False
+            if "javascript" in mine:
+                return False
+            if "ecmascript" in mine:
+                return False
+            if "font" in mine:
+                return False
+            if check_website:
+                await _add_wensite_(url_to, url_from)
+            if check_page:
+                await just_url_page(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
+                await just_url_feed(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
+
+        except:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print("ERROR ", (exc_obj), ":", type(exc_obj),
+                  exc_type, fname, exc_tb.tb_lineno)
+            return False
+        return True
+        # await wait_task(call_async)
+
+
+async def url_add(url_from, where, item=None, item_type="website", index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):
     async with qarry_lmmit:
         try:
             url_from = str(url_from)
             check, _, x = urlCheck(url_from)
             if not check:
                 return False
-            url_parts = urlparse(url_from)
             check = await check_if_needed(url_from, where, item_type, item)
+            if not check:
+                return True
             if robot is None:
                 robot = await add_robots(url_from, session)
-            check, url_to, text, mine, path, status = await async_check_if_website_exists(url_from, robot, session=session)
+            url_parts = urlparse(url_from)
+            check, url_to, text, mine, path, status = await async_check_if_website_exists(url_from, robot, session)
             if (not check) or (text is None):
-                check, url_to, text, mine, path, status = await aio_check_if_page_exists(url_from, robot, session=session)
+                check, url_to, text, mine, path, status = await aio_check_if_page_exists(url_from, robot, session)
                 if (not check) or (text is None):
                     await remove_robots(url_from)
                     return False
-            if (url_parts.path != "/" and url_parts.path != "") or item_type != "website":
-                check_, url_to_, text_, mine_, path_, status_ = await aio_check_if_page_exists(url_from, robot, session=session)
 
-                if (not check and p) or ((text is None) and p):
+            if (url_parts.path != "/" and url_parts.path != "") or item_type != "website":
+                check_, url_to_, text_, mine_, path_, status_ = await aio_check_if_page_exists(url_from, robot, session)
+
+                if 0 != index:
+                    check = check_
+                    url_to = url_to_
+                    text = text_
+                    mine = mine_
+                    path = path_
+                    status = status_
+                if not check_:
+                    return False
+                if 0 != index and ((not check_ and p) or ((text is None) and p)):
                     await remove_robots(url_from)
                     return False
-                if not check or ((text is not None)):
+                if not check_ or ((text is not None)):
                     item = None
+                elif 0 < index:
+                    check = check_
+                    url_to = url_to_
+                    text = text_
+                    mine = mine_
+                    path = path_
+                    status = status_
                 else:
                     check = check_
                     url_to = url_to_
@@ -267,7 +441,7 @@ async def url_add(url_from, where, item=None, item_type="website",index=0, decte
                     mine = mine_
                     path = path_
                     status = status_
-                if check and dectect_item_type:
+                if check_ and dectect_item_type:
                     item_type = "page"
             if "css" in mine:
                 return False
@@ -285,18 +459,21 @@ async def url_add(url_from, where, item=None, item_type="website",index=0, decte
                 return False
             if "font" in mine:
                 return False
-            # print("mime: ",mine)
             if (mine == " ") and (mine is None) or "html" in mine:
                 check_html, feeds = await scanHTML(text, url_from)
                 if check_html and item_type != "feed":
                     if len(feeds) != 0:
                         for feed in feeds:
                             try:
-                                await asyncio.wait_for(url_add(feed["href"], "wikidata", index=index+1,  item_type="feed", p=True, session=session, robot=robot),timeout=60*8*4)
+                                a_task = asyncio.create_task(just_url_feed(
+                                    feed["href"], "wikidata", item_type="feed", session=session, robot=robot))
+                                await asyncio.wait_for(a_task, timeout=60*40)
                             except:
                                 exc_type, exc_obj, exc_tb = sys.exc_info()
-                                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                                print("ERROR ", (exc_obj), ":", type(exc_obj)," : ",feed,":",exc_type, fname, exc_tb.tb_lineno)
+                                fname = os.path.split(
+                                    exc_tb.tb_frame.f_code.co_filename)[1]
+                                print("ERROR ", (exc_obj), ":", type(
+                                    exc_obj), " : ", feed, ":", exc_type, fname, exc_tb.tb_lineno)
             else:
                 check_html = False
             if (mine == " ") and (mine is None) or ("xml" in mine) or ("rss" in mine) or ("atom" in mine) or ("json" in mine) or item_type == "feed":

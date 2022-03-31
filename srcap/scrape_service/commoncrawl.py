@@ -5,7 +5,7 @@ import re
 import aiohttp
 from rfc3986 import urlparse
 from requests.models import PreparedRequest
-from uitls.get import sem_web
+from uitls.webLmmit import sem_web
 
 from uitls.asyncio_c import wait_task
 

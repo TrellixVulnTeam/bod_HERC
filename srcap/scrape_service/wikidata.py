@@ -14,11 +14,10 @@ scrap = myclient.scrap
 wikidataDb = scrap.wikidata
 
 async def sprql_wikidata(qurry,file_name):
-    print("ffff")
     return  SPRQL_GEN(qurry, data_sprql, file_name, online=True)
 
 
-def Get_Q(Q):
+def get_q(Q):
     Q = Q.replace(
         "https://www.wikidata.org/entity/", "")
     Q =  Q.replace(

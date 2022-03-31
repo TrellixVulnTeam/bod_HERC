@@ -7,7 +7,6 @@ import aiofiles
 import aiohttp
 import ijson
 import time
-from uitls.get import sem_web
 sem_SPRQL = asyncio.BoundedSemaphore(300)
 
 

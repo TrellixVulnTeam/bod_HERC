@@ -8,23 +8,26 @@ import aiohttp
 from scrape_service.commoncrawl import commoncrawl_init, get_common_crawl_reqest_pages
 from uitls.AsyncResolver2 import AsyncResolver2
 from uitls.asyncio_c import wait_task
-from uitls.web_wehsite import add_other_parameter, url_add
-from scrape_service.wikidata import Get_Q, SPARQL_all_feeds, SPARQL_all_website, SPARQL_offical_blog, Wikidata_qurry_property, sprql_wikidata
+from uitls.web_wehsite import add_other_parameter, url_add, url_add2
+from scrape_service.wikidata import get_q, SPARQL_all_feeds, SPARQL_all_website, SPARQL_offical_blog, Wikidata_qurry_property, sprql_wikidata
 from scrape_service.commoncrawl import toplevels
 import enlighten
 import gc
 
 
-def main():
-    pass
+def list_split(listA, n):
+    for x in range(0, len(listA), n):
+        every_chunk = listA[x: n+x]
+        if len(every_chunk) < n:
+            every_chunk = every_chunk + \
+                [None for y in range(n-len(every_chunk))]
+        yield every_chunk
 
 
-manager = enlighten.Manager()
-
-
-async def get_wikidata_website(data_p, session):
+async def get_wikidata_website(data_p, connector, timeout):
     pedding = []
     gc.collect()
+    manager = enlighten.get_manager()
     pbar = manager.counter(desc='get_wikidata_website', total=0)
     pbar_started = manager.counter(
         desc='get_wikidata_website started', total=len([]))
@@ -32,92 +35,113 @@ async def get_wikidata_website(data_p, session):
     started_bad = pbar.add_subcounter('yellow')
     started_error = pbar.add_subcounter('red')
 
-    async def k(data, item, data_ps):
-        try:
-            pbar_started.update()
-            if await url_add(data, "wikidata", item, Ps=data_ps, session=session):
-                starting_good.update()
-            else:
-                started_bad.update()
-        except:
-            started_error.update()
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print("ERROR ", (exc_obj), ":", type(exc_obj),
-                  exc_type, fname, exc_tb.tb_lineno)
-        gc.collect()
-    data = await sprql_wikidata(SPARQL_all_website, "SPARQL_all_website.json")
+    async def make_new_session(items, connector, timeout):
+        async def add_url_with_bar(data, item, data_ps, session):
+            try:
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                    starting_good.update()
+                else:
+                    started_bad.update()
+            except:
+                started_error.update()
+            gc.collect()
+        async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
+            a = []
+            for item in items:
+                a.append(add_url_with_bar(item["official_website"]["value"], get_q(
+                    item["item"]["value"]), data_p, session))
+                pbar_started.update()
+            await asyncio.wait(a)
+    pedding = []
     cont = 0
-    async for data, size in data:
+    async for data, size in await sprql_wikidata(SPARQL_all_website, "SPARQL_all_website.json"):
+        pedding.append(data)
         pbar.total = size
         pbar_started.total = size
         cont = cont + 1
-        pedding.append(asyncio.create_task(k(data["official_website"]["value"],
-                                             Get_Q(data["item"]["value"]), data_p)))
-        while cont > 1000:
+        if cont == 500:
+            await make_new_session(pedding, connector, timeout)
+            cont = 0
+
+
+async def get_wikidata_feed(data_p, connector, timeout):
+    pedding = []
+    gc.collect()
+    manager = enlighten.get_manager()
+    pbar = manager.counter(desc='get_wikidata_website', total=0)
+    pbar_started = manager.counter(
+        desc='get_wikidata_website started', total=len([]))
+    starting_good = pbar.add_subcounter('green')
+    started_bad = pbar.add_subcounter('yellow')
+    started_error = pbar.add_subcounter('red')
+
+    async def make_new_session(items, connector, timeout):
+        async def add_url_with_bar(data, item, data_ps, session):
             try:
-                await asyncio.sleep(1.0)
-                done, pedding = await asyncio.wait(pedding, timeout=1.0)
-                cont = cont - len(done)
-                pedding = list(pedding)
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                    starting_good.update()
+                else:
+                    started_bad.update()
             except:
-                pass
-    await asyncio.wait(pedding)
+                started_error.update()
+            gc.collect()
+        async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
+            a = []
+            for item in items:
+                a.append(add_url_with_bar(item["web_feed_URL"]["value"], get_q(
+                    item["item"]["value"]), data_p, session))
+                pbar_started.update()
+            await asyncio.wait(a)
+    pedding = []
+    cont = 0
+    async for data, size in await sprql_wikidata(SPARQL_all_feeds, "SPARQL_all_feeds.json"):
+        pedding.append(data)
+        pbar.total = size
+        pbar_started.total = size
+        cont = cont + 1
+        if cont == 500:
+            await make_new_session(pedding, connector, timeout)
+            cont = 0
 
 
-async def get_wikidata_feed(data_p, session):
-    a = []
+async def get_wikidata_blog(data_p, connector, timeout):
+    pedding = []
     gc.collect()
-    datas = await sprql_wikidata(SPARQL_all_feeds, session)
-    gc.collect()
-    pbar = manager.counter(desc='get_wikidata_feed', total=len(datas))
+    manager = enlighten.get_manager()
+    pbar = manager.counter(desc='get_wikidata_website', total=0)
+    pbar_started = manager.counter(
+        desc='get_wikidata_website started', total=len([]))
     starting_good = pbar.add_subcounter('green')
-    started_bad = pbar.add_subcounter('red')
+    started_bad = pbar.add_subcounter('yellow')
+    started_error = pbar.add_subcounter('red')
 
-    async def k(data, item, data_ps):
-
-        try:
-            if await url_add(data, "wikidata", item, Ps=data_ps, session=session):
-                starting_good.update()
-            else:
-                started_bad.update()
-        except:
-            started_bad.update()
-        gc.collect()
-
-    for data in datas:
-        data["item"] = Get_Q(data["item"])
-    for data in datas:
-        if "web_feed_URL" in data.keys():
-            a.append(k(data["web_feed_URL"], data["item"], data_p))
-    await wait_task(a)
-
-
-async def get_wikidata_blog(data_p, session):
-    a = []
-    gc.collect()
-    datas = await sprql_wikidata(SPARQL_offical_blog, session)
-    gc.collect()
-    pbar = manager.counter(desc='get_wikidata_blog', total=len(datas))
-    starting_good = pbar.add_subcounter('green')
-    started_bad = pbar.add_subcounter('red')
-
-    async def k(data, item, data_ps):
-
-        try:
-            if await url_add(data, "wikidata", item, Ps=data_ps, session=session):
-                starting_good.update()
-            else:
-                started_bad.update()
-        except:
-            started_bad.update()
-        gc.collect()
-    for data in datas:
-        data["item"] = Get_Q(data["item"])
-    for data in datas:
-        if "official_blog" in data.keys():
-            a.append(k(data["official_blog"], data["item"], data_p))
-    await wait_task(a)
+    async def make_new_session(items, connector, timeout):
+        async def add_url_with_bar(data, item, data_ps, session):
+            try:
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                    starting_good.update()
+                else:
+                    started_bad.update()
+            except:
+                started_error.update()
+            gc.collect()
+        async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
+            a = []
+            for item in items:
+                a.append(add_url_with_bar(item["official_blog"]["value"], get_q(
+                    item["item"]["value"]), data_p, session))
+                pbar_started.update()
+            await asyncio.wait(a)
+    pedding = []
+    cont = 0
+    async for data, size in await sprql_wikidata(SPARQL_offical_blog, "SPARQL_offical_blog.json"):
+        pedding.append(data)
+        pbar.total = size
+        pbar_started.total = size
+        cont = cont + 1
+        if cont == 500:
+            await make_new_session(pedding, connector, timeout)
+            cont = 0
 
 
 async def get_wikidata_other_parameter():
@@ -129,7 +153,7 @@ async def get_wikidata_other_parameter():
 
     for data, size in sprql_wikidata(Wikidata_qurry_property):
         pbar.total = size
-        data["Wikidata_property"] = Get_Q(data["Wikidata_property"])
+        data["Wikidata_property"] = get_q(data["Wikidata_property"])
         if data["Wikidata_property"] not in datas_.keys():
             datas_[data["Wikidata_property"]] = {
                 "Wikidata_property": data["Wikidata_property"],
@@ -157,8 +181,8 @@ async def get_wikidata_other_parameter():
         if "maintained_by" in data.keys():
             if "maintained_by" not in datas_[data["Wikidata_property"]].keys():
                 datas_[data["Wikidata_property"]]["maintained_by"] = ""
-            if Get_Q(data["maintained_by"]) not in datas_[data["Wikidata_property"]]["maintained_by"]:
-                datas_[data["Wikidata_property"]]["maintained_by"] = Get_Q(
+            if get_q(data["maintained_by"]) not in datas_[data["Wikidata_property"]]["maintained_by"]:
+                datas_[data["Wikidata_property"]]["maintained_by"] = get_q(
                     data["maintained_by"])
         if "mobile_formatter_URLitem" in data.keys():
             if "mobile_formatter_URLitem" not in datas_[data["Wikidata_property"]].keys():
@@ -224,7 +248,7 @@ async def get_other_parameter_scan(datas, session):
                     datas = await sprql_wikidata(query)
                     for data in datas:
                         url = formatter_URL.replace("$1", data["data"])
-                        az.append(c(url, Get_Q(data["item"])))
+                        az.append(c(url, get_q(data["item"])))
             elif "third_party_formatter_URL" in data_p.keys():
                 pass
             else:
@@ -286,24 +310,21 @@ async def main():
     data_commoncrawl = {}
     resolver = aiohttp.AsyncResolver()
     timeout = aiohttp.ClientTimeout(total=60)
+    connector = aiohttp.TCPConnector(limit=555, ssl=False,
+                                     family=socket.AF_INET, resolver=resolver)
     print("cats")
-    c = aiohttp.TCPConnector(limit=555, ssl=False,
-                             family=socket.AF_INET, resolver=resolver)
-    print("cats")
-    async with aiohttp.ClientSession(connector=c, trust_env=True, timeout=timeout) as session:
-        print("cats")
-        await get_wikidata_website(data_wikidata, session)
-        # print("cats")
-        # await get_wikidata_feed(data_wikidata,session)
-        # print("cats")
-        # await get_wikidata_blog(data_wikidata,session)
-        # print("cats")
-        # await get_other_parameter_scan(data_wikidata,session)
-        # print("cats")
-        # await get_common_crawl_website(data_commoncrawl,session)
-        # print("cats")
-        # await get_web_archive_website_feed(data_commoncrawl,session)
-        # print("cats")
+    await get_wikidata_website(data_wikidata, connector, timeout)
+    # print("cats")
+    # await get_wikidata_feed(data_wikidata,session)
+    # print("cats")
+    # await get_wikidata_blog(data_wikidata,session)
+    # print("cats")
+    # await get_other_parameter_scan(data_wikidata,session)
+    # print("cats")
+    # await get_common_crawl_website(data_commoncrawl,session)
+    # print("cats")
+    # await get_web_archive_website_feed(data_commoncrawl,session)
+    # print("cats")
 
 
 async def test():

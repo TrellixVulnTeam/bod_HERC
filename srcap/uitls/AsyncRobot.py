@@ -52,7 +52,6 @@ async def remove_robots(url):
 
 
 async def add_robots(url, session):
-    o = urlparse(url)
     local_robots = Robot(url)
     return local_robots
     temp_url = o.scheme + "://" + o.netloc
@@ -84,21 +83,10 @@ class Robot(urllib.robotparser.RobotFileParser):
         self.disallow_all = False
         self.allow_all = False
         self.deadtime = (86400*7*4) + int(time.time())
-        async with sem_web:
-            for i in range(4):
+        for i in range(4):
                 try:
                     async with session.get(self.url, ssl=False, headers=headers) as resp:
-                        expires = resp.headers.get('expires')
-                        if expires is not None:
-                            try:
-                                text = await resp.text('ISO-8859-1')
-                            except (LookupError, UnicodeDecodeError):
-                                text = await resp.content.read()
-                                print(from_bytes(text))
-                            self.parse(text)
-                            self.disallow_all = False
-                            break
-                        elif resp.status in (401, 403):
+                        if resp.status in (401, 403):
                             self.disallow_all = True
                             has = True
                             break
@@ -122,14 +110,11 @@ class Robot(urllib.robotparser.RobotFileParser):
                             self.disallow_all = False
                             break
                 except aiohttp.ClientConnectorError as e:
-                    print("error", e)
                     self.disallow_all = True
                     break
                 except asyncio.TimeoutError as e:
-                    print("error", e)
                     continue
                 except UnicodeDecodeError as e:
-                    print("error", e)
                     break
                 except asyncio.TimeoutError:
                     break
