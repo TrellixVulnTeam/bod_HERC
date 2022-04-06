@@ -340,54 +340,54 @@ async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, r
 
 async def url_add2(url_from, where, item=None, item_type="website",  ps={}, session=None, robot=None):
 
-        try:
-            url_from = str(url_from)
-            check, _, x = urlCheck(url_from)
-            if not check:
-                return False
-            check = await check_if_needed(url_from, where, item_type, item)
-            if not check:
-                return True
-            async with sem_web:
-                if robot is None:
-                    robot = await add_robots(url_from, session)
-                if robot.disallow_all:
-                    return False
-                check_website, check_page, url_to, text, mine, path, status = await aio_check_2(url_from, robot, session)
-            if mine is None:
-                mine = ""
-            if not check:
-                return False
-            if "css" in mine:
-                return False
-            if "image" in mine:
-                return False
-            if "audio" in mine:
-                return False
-            if "model" in mine:
-                return False
-            if "video" in mine:
-                return False
-            if "javascript" in mine:
-                return False
-            if "ecmascript" in mine:
-                return False
-            if "font" in mine:
-                return False
-            if check_website:
-                await _add_wensite_(url_to, url_from)
-            if check_page:
-                await just_url_page(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
-                await just_url_feed(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
-
-        except:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print("ERROR ", (exc_obj), ":", type(exc_obj),
-                  exc_type, fname, exc_tb.tb_lineno)
+    try:
+        url_from = str(url_from)
+        check, _, x = urlCheck(url_from)
+        if not check:
             return False
-        return True
-        # await wait_task(call_async)
+        check = await check_if_needed(url_from, where, item_type, item)
+        if not check:
+            return True
+        async with sem_web:
+            if robot is None:
+                robot = await add_robots(url_from, session)
+            if robot.disallow_all:
+                return False
+            check_website, check_page, url_to, text, mine, path, status = await aio_check_2(url_from, robot, session)
+        if mine is None:
+            mine = ""
+        if not check:
+            return False
+        if "css" in mine:
+            return False
+        if "image" in mine:
+            return False
+        if "audio" in mine:
+            return False
+        if "model" in mine:
+            return False
+        if "video" in mine:
+            return False
+        if "javascript" in mine:
+            return False
+        if "ecmascript" in mine:
+            return False
+        if "font" in mine:
+            return False
+        if check_website:
+            await _add_wensite_(url_to, url_from)
+        if check_page:
+            await just_url_page(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
+            await just_url_feed(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
+
+    except:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("ERROR ", (exc_obj), ":", type(exc_obj),
+              exc_type, fname, exc_tb.tb_lineno)
+        return False
+    return True
+    # await wait_task(call_async)
 
 
 async def url_add(url_from, where, item=None, item_type="website", index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):

@@ -48,9 +48,8 @@ async def get_wikidata_website(data_p, connector, timeout):
         async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
             a = []
             for item in items:
-                a.append(add_url_with_bar(item["official_website"]["value"], get_q(
-                    item["item"]["value"]), data_p, session))
-                pbar_started.update()
+                a.append(asyncio.create_task(add_url_with_bar(item["official_website"]["value"], get_q(
+                    item["item"]["value"]), data_p, session)))
             await asyncio.wait(a)
     pedding = []
     cont = 0
@@ -59,18 +58,24 @@ async def get_wikidata_website(data_p, connector, timeout):
         pbar.total = size
         pbar_started.total = size
         cont = cont + 1
+        if cont > size:
+            pbar.total = cont
+            pbar_started.total = cont
+        pbar_started.update()
         if cont == 500:
             await make_new_session(pedding, connector, timeout)
             cont = 0
+            pedding = []
+    await make_new_session(pedding, connector, timeout)
 
 
 async def get_wikidata_feed(data_p, connector, timeout):
     pedding = []
     gc.collect()
     manager = enlighten.get_manager()
-    pbar = manager.counter(desc='get_wikidata_website', total=0)
+    pbar = manager.counter(desc='SPARQL_all_feeds', total=0)
     pbar_started = manager.counter(
-        desc='get_wikidata_website started', total=len([]))
+        desc='SPARQL_all_feeds started', total=len([]))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('yellow')
     started_error = pbar.add_subcounter('red')
@@ -78,7 +83,7 @@ async def get_wikidata_feed(data_p, connector, timeout):
     async def make_new_session(items, connector, timeout):
         async def add_url_with_bar(data, item, data_ps, session):
             try:
-                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                if await url_add2(data, "wikidata", item=item, item_type="feed",  ps=data_ps, session=session):
                     starting_good.update()
                 else:
                     started_bad.update()
@@ -88,9 +93,8 @@ async def get_wikidata_feed(data_p, connector, timeout):
         async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
             a = []
             for item in items:
-                a.append(add_url_with_bar(item["web_feed_URL"]["value"], get_q(
-                    item["item"]["value"]), data_p, session))
-                pbar_started.update()
+                a.append(asyncio.create_task(add_url_with_bar(item["web_feed_URL"]["value"], get_q(
+                    item["item"]["value"]), data_p, session)))
             await asyncio.wait(a)
     pedding = []
     cont = 0
@@ -99,18 +103,24 @@ async def get_wikidata_feed(data_p, connector, timeout):
         pbar.total = size
         pbar_started.total = size
         cont = cont + 1
+        if cont > size:
+            pbar.total = cont
+            pbar_started.total = cont
+        pbar_started.update()
         if cont == 500:
             await make_new_session(pedding, connector, timeout)
             cont = 0
+            pedding = []
+    await make_new_session(pedding, connector, timeout)
 
 
-async def get_wikidata_blog(data_p, connector, timeout):
+async def get_wikidata_feed(data_p, connector, timeout):
     pedding = []
     gc.collect()
     manager = enlighten.get_manager()
-    pbar = manager.counter(desc='get_wikidata_website', total=0)
+    pbar = manager.counter(desc='get_wikidata_feed(', total=0)
     pbar_started = manager.counter(
-        desc='get_wikidata_website started', total=len([]))
+        desc='get_wikidata_feed started', total=len([]))
     starting_good = pbar.add_subcounter('green')
     started_bad = pbar.add_subcounter('yellow')
     started_error = pbar.add_subcounter('red')
@@ -128,20 +138,70 @@ async def get_wikidata_blog(data_p, connector, timeout):
         async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
             a = []
             for item in items:
-                a.append(add_url_with_bar(item["official_blog"]["value"], get_q(
-                    item["item"]["value"]), data_p, session))
-                pbar_started.update()
+                a.append(asyncio.create_task(add_url_with_bar(item["web_feed_URL"]["value"], get_q(
+                    item["item"]["value"]), data_p, session)))
             await asyncio.wait(a)
     pedding = []
     cont = 0
-    async for data, size in await sprql_wikidata(SPARQL_offical_blog, "SPARQL_offical_blog.json"):
+    async for data, size in await sprql_wikidata(SPARQL_all_feeds, "SPARQL_all_feeds.json"):
+        pedding.append(data)
+        pbar.total = size
+        cont = cont + 1
+        pbar_started.total = size
+        if cont > size:
+            pbar.total = cont
+            pbar_started.total = cont
+        pbar_started.update()
+        if cont == 500:
+            await make_new_session(pedding, connector, timeout)
+            cont = 0
+            pedding = []
+    await make_new_session(pedding, connector, timeout)
+
+
+async def get_wikidata_blog(data_p, connector, timeout):
+    pedding = []
+    gc.collect()
+    manager = enlighten.get_manager()
+    pbar = manager.counter(desc='SPARQL_offical_blog', total=0)
+    pbar_started = manager.counter(
+        desc='SPARQL_offical_blog started', total=len([]))
+    starting_good = pbar.add_subcounter('green')
+    started_bad = pbar.add_subcounter('yellow')
+    started_error = pbar.add_subcounter('red')
+
+    async def make_new_session(items, connector, timeout):
+        async def add_url_with_bar(data, item, data_ps, session):
+            try:
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                    starting_good.update()
+                else:
+                    started_bad.update()
+            except:
+                started_error.update()
+            gc.collect()
+        async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
+            a = []
+            for item in items:
+                a.append(asyncio.create_task(add_url_with_bar(item["official_blog"]["value"], get_q(
+                    item["item"]["value"]), data_p, session)))
+            await asyncio.wait(a)
+    pedding = []
+    cont = 0
+    async for data, size in await sprql_wikidata(SPARQL_all_feeds, "SPARQL_offical_blog.json"):
         pedding.append(data)
         pbar.total = size
         pbar_started.total = size
         cont = cont + 1
+        if cont > size:
+            pbar.total = cont
+            pbar_started.total = cont
+        pbar_started.update()
         if cont == 500:
             await make_new_session(pedding, connector, timeout)
             cont = 0
+            pedding = []
+    await make_new_session(pedding, connector, timeout)
 
 
 async def get_wikidata_other_parameter():
@@ -248,7 +308,8 @@ async def get_other_parameter_scan(datas, session):
                     datas = await sprql_wikidata(query)
                     for data in datas:
                         url = formatter_URL.replace("$1", data["data"])
-                        az.append(c(url, get_q(data["item"])))
+                        az.append(asyncio.create_task(
+                            c(url, get_q(data["item"]))))
             elif "third_party_formatter_URL" in data_p.keys():
                 pass
             else:
@@ -312,12 +373,11 @@ async def main():
     timeout = aiohttp.ClientTimeout(total=60)
     connector = aiohttp.TCPConnector(limit=555, ssl=False,
                                      family=socket.AF_INET, resolver=resolver)
-    print("cats")
-    await get_wikidata_website(data_wikidata, connector, timeout)
+    # await get_wikidata_website(data_wikidata, connector, timeout)
     # print("cats")
-    # await get_wikidata_feed(data_wikidata,session)
+    await get_wikidata_feed(data_wikidata, connector, timeout)
     # print("cats")
-    # await get_wikidata_blog(data_wikidata,session)
+    await get_wikidata_blog(data_wikidata, connector, timeout)
     # print("cats")
     # await get_other_parameter_scan(data_wikidata,session)
     # print("cats")

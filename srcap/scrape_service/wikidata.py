@@ -1,11 +1,12 @@
+from qwikidata import typedefs
 import asyncio
 import time
-from uitls.SPRQL import  SPRQL_GEN
+from uitls.SPRQL import SPRQL_GEN
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
-from qwikidata.datavalue import WikibaseEntityId,Time,Quantity,GlobeCoordinate
+from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 
 import motor.motor_asyncio
-data_sprql =  "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
+data_sprql = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
 myclient = motor.motor_asyncio.AsyncIOMotorClient()
@@ -13,68 +14,73 @@ myclient = motor.motor_asyncio.AsyncIOMotorClient()
 scrap = myclient.scrap
 wikidataDb = scrap.wikidata
 
-async def sprql_wikidata(qurry,file_name):
-    return  SPRQL_GEN(qurry, data_sprql, file_name, online=True)
+
+async def sprql_wikidata(qurry, file_name):
+    return SPRQL_GEN(qurry, data_sprql, file_name, online=True)
 
 
 def get_q(Q):
     Q = Q.replace(
         "https://www.wikidata.org/entity/", "")
-    Q =  Q.replace(
+    Q = Q.replace(
         "http://www.wikidata.org/entity/", "")
     return Q
 
-from qwikidata import typedefs
+
 WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
-async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL,session=None) -> typedefs.EntityDict:
+
+
+async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
     url = "{}/{}.json".format(base_url, entity_id)
     for i in range(100):
         async with session.post(url) as response:
-                    if response.ok:
-                        entity_dict_full = await response.json()
-                    else:
-                        continue
+            if response.ok:
+                entity_dict_full = await response.json()
+            else:
+                continue
 
-                    # remove redundant top level keys
-                    returned_entity_id = next(iter(entity_dict_full["entities"]))
-                    entity_dict = entity_dict_full["entities"][returned_entity_id]
-                    return entity_dict
+            # remove redundant top level keys
+            returned_entity_id = next(iter(entity_dict_full["entities"]))
+            entity_dict = entity_dict_full["entities"][returned_entity_id]
+            return entity_dict
     raise None
 
-async def __aio_get_entity_dict_from_api(Q,session=None):
+
+async def __aio_get_entity_dict_from_api(Q, session=None):
     q_dict = wikidataDb.find_one({'title': Q})
-    if (q_dict is None) or ("daedtime" not in  q_dict.keys()):
-        q_dict = await aio_get_entity_dict_from_api2(Q,session=session)
+    if (q_dict is None) or ("daedtime" not in q_dict.keys()):
+        q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
         q_dict["daedtime"] = (86400*30) + int(time.time())
         wikidataDb.insert_one(q_dict)
     q_ = WikidataItem(q_dict)
-    return q_ ,q_dict
+    return q_, q_dict
 
-async def wikidata_linked(Q,magic=[],session=None):
+
+async def wikidata_linked(Q, magic=[], session=None):
     dos = []
     data = []
-    q_ ,q_dict = await __aio_get_entity_dict_from_api(Q,session=session)
+    q_, q_dict = await __aio_get_entity_dict_from_api(Q, session=session)
     claim_groups = q_.get_truthy_claim_groups()
     for claim in q_dict["claims"]:
         claims = claim_groups[claim]
         if len(claims) > 0:
             for claim in claims:
                 try:
-                    if isinstance(claim.mainsnak.datavalue , GlobeCoordinate):
+                    if isinstance(claim.mainsnak.datavalue, GlobeCoordinate):
                         value = claim.mainsnak.datavalue.value
-                    elif isinstance(claim.mainsnak.datavalue , Time):
+                    elif isinstance(claim.mainsnak.datavalue, Time):
                         value = claim.mainsnak.datavalue.value
-                        data.append({claim.property_id:value['time']})
+                        data.append({claim.property_id: value['time']})
                         continue
-                    elif isinstance(claim.mainsnak.datavalue , WikibaseEntityId):
+                    elif isinstance(claim.mainsnak.datavalue, WikibaseEntityId):
                         value = claim.mainsnak.datavalue.value
-                        data.append({claim.property_id:value['id']})
+                        data.append({claim.property_id: value['id']})
                         continue
                     elif claim.property_id in magic:
                         value = claim.mainsnak.datavalue.value
                         if "formatter_URL" in magic[claim.property_id].keys():
                             for formatter_URL in magic[claim.property_id]["formatter_URL"]:
-                                url = formatter_URL.replace("$1",value)
+                                url = formatter_URL.replace("$1", value)
                                 dos.append(url)
                 except:
                     pass
