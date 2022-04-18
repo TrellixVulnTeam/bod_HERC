@@ -1,3 +1,4 @@
+import sys
 from qwikidata import typedefs
 import asyncio
 import time
@@ -32,26 +33,31 @@ WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
 
 async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
     url = "{}/{}.json".format(base_url, entity_id)
+    exc_obj = None
     for i in range(100):
-        async with session.post(url) as response:
-            if response.ok:
-                entity_dict_full = await response.json()
-            else:
-                continue
+        try:
+            async with session.post(url) as response:
+                if response.ok:
+                    entity_dict_full = await response.json()
+                else:
+                    continue
 
-            # remove redundant top level keys
-            returned_entity_id = next(iter(entity_dict_full["entities"]))
-            entity_dict = entity_dict_full["entities"][returned_entity_id]
-            return entity_dict
-    raise None
+                # remove redundant top level keys
+                returned_entity_id = next(iter(entity_dict_full["entities"]))
+                entity_dict = entity_dict_full["entities"][returned_entity_id]
+                return entity_dict
+        except:
+            await asyncio.sleep(10)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+    raise exc_obj
 
 
 async def __aio_get_entity_dict_from_api(Q, session=None):
-    q_dict = wikidataDb.find_one({'title': Q})
+    q_dict = await wikidataDb.find_one({'title': Q})
     if (q_dict is None) or ("daedtime" not in q_dict.keys()):
         q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
         q_dict["daedtime"] = (86400*30) + int(time.time())
-        wikidataDb.insert_one(q_dict)
+        await wikidataDb.insert_one(q_dict)
     q_ = WikidataItem(q_dict)
     return q_, q_dict
 

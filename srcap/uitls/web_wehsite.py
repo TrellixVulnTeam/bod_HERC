@@ -30,109 +30,107 @@ feedTypes_ends = [
 ]
 
 
-async def remove_website_where(url_from):
-    myquery = {
-        "url_from": url_from
-    }
-    if await websiteDb.find_one(myquery) is not None:
-        test = await websiteDb.remove(myquery)
-
-
-async def remove_page_where(url_from, path):
-    myquery = {
-        "url_from": url_from,
-        "points.path": path
-    }
-    data_website_pull = {'$pull': {"points": {
-        "path": path,
-    }}}
-    if await websiteDb.find_one(myquery) is not None:
-        await websiteDb.update_one(myquery, data_website_pull)
-
-
 async def check_if_needed(url_from, where, type_="website", item=None):
-    myquery1 = {
-        "url_from": url_from,
-        "points": {"$elemMatch": {
-            "where": where,
-            "type": type_,
-        }
-        }
-    }
-    if item is not None:
-        myquery1["points"]["$elemMatch"]["ID"] = item
-    c = await websiteDb.find_one(myquery1)
-    if c is None:
-        return True
+    # myquery1 = {
+    #     "url_from": url_from,
+    #     "points": {"$elemMatch": {
+    #         "where": where,
+    #         "type": type_,
+    #     }
+    #     }
+    # }
+    # if item is not None:
+    #     myquery1["points"]["$elemMatch"]["ID"] = item
+    # c = await websiteDb.find_one(myquery1)
+    # if c is None:
+    #     return True
     return False
 
 
-async def add_website_where(url_to, where, path, type_="website", item=None, mps={}, d=True, session=None):
-    myquery1 = {
-        "to_url": url_to,
-        "points": {"$elemMatch": {
-            "where": where,
-            "path": path,
-            "type": type_,
-        }
-        }
-    }
-    myquery2 = {
-        "to_url": url_to,
-        "points": {"$elemMatch": {
-            "where": where,
-            "path": path,
-            "type": type_,
-        }
-        }
-    }
-    myquery3 = {
-        "to_url": url_to,
-    }
-
-    data_website_pull = {'$pull': {"points": {
-        "where": where,
-        "path": path,
-        "type": type_
-    }}}
-    data_website = {'$push': {"points":  {
-        "where": where,
-        "path": path,
-        "type": type_,
-        "deadtime": int(time.time()) + (86400*7*4)
-    }}}
-    a = []
+async def get_data(where, item, mps, session, prop, data=None):
+    data_ = {}
+    if data is not None:
+        data_["data"] = data
     if item is not None:
-        myquery1["points"]["$elemMatch"]["ID"] = item
-        myquery2["points"]["$elemMatch"]["ID"] = item
-        data_website["$push"]["points"]["ID"] = item
-        data_website_pull["$pull"]["points"]["ID"] = item
-    # if where == "wikidata":
-    #     try:
-    #         data, dos = await wikidata_linked(item, mps,session)
-    #         if d:
-    #             for do in dos:
-    #                 a.append(url_add(do, where, item, item_type="website",d=False,session=session))
-    #         myquery1["points"]["$elemMatch"]["data"] = data
-    #         data_website["$push"]["points"]["data"] = data
-    #     except BaseException as e:
-    #         pass
-    if a != []:
-        await wait_task(a)
-    c = await websiteDb.find_one(myquery1)
-    if c is not None:
-        return
-    c = await websiteDb.find_one(myquery2)
-    if c is not None:
-        await websiteDb.update_one(myquery2, data_website_pull)
-        await websiteDb.update_one(myquery2, data_website)
-    else:
+        data_["item"] = item
+    if where == "wikidata" and data is None and item is not None:
         try:
-            await websiteDb.update_one(myquery3, data_website)
+            data_["data"], dos = await wikidata_linked(item, mps, session)
         except BaseException as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print("ERROR ", type(e), exc_type, fname, exc_tb.tb_lineno)
+            print("ERROR wikidata ", (exc_obj), ":", type(exc_obj),
+                  exc_type, fname, exc_tb.tb_lineno)
+            pass
+        except:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print("ERROR wikidata ", (exc_obj), ":", type(exc_obj),
+                  exc_type, fname, exc_tb.tb_lineno)
+    return data_
+
+
+async def add_website_where(url_from, url_to, url, where, path, type_="website", item=None, mps={}, d=True, session=None, prop=None, data=None):
+    a = urlparse(url_to)
+    query2 = {
+        "to_url":  a.scheme+"://"+a.netloc,
+        "from_to": url_from
+    }
+    query3 = {
+        "to_url":  a.scheme+"://"+a.netloc,
+        "url_from": url_from,
+        "points": {"$elemMatch": {
+            "where": where,
+            "path": path,
+            "type": type_,
+        }
+        }
+    }
+    # Wikidata
+
+    if await websiteDb.count_documents(query3) != 0:
+        print("start updating B")
+        document = {
+            "$set": {
+                "points.$.datetime": time.time(),
+                "points.$.data": await get_data(where, item, mps, session, prop, data),
+                "datetime": time.time()
+            }
+        }
+        await websiteDb.update_one(query3, document)
+        print("updating B")
+    elif await websiteDb.count_documents(query2) != 0:
+        print("start updating A")
+        document = {
+            "to_url": a.scheme+"://"+a.netloc,
+            "url_from": {"$push":  url_from},
+            "datetime": time.time(),
+            "points": {"$push": {
+                "where": where,
+                "path": path,
+                "type": type_,
+                "data": await get_data(where, item, mps, session, prop, data),
+                "datetime": time.time()
+            }}
+        }
+        await websiteDb.update_one(query2, document)
+        print("updating A")
+    else:
+        print("start adding new")
+        document = {
+            "to_url": a.scheme+"://"+a.netloc,
+            "url_from":  [url_from],
+            "datetime": time.time(),
+            "points": [{
+                "where": where,
+                "path": path,
+                "type": type_,
+                "data": await get_data(where, item, mps, session, prop, data),
+                "datetime": time.time()
+            }]
+        }
+        await websiteDb.insert_one(document)
+        print("adding new")
 
 
 async def _add_wensite_(url_to, url_from):
@@ -157,6 +155,7 @@ async def _add_wensite_(url_to, url_from):
             "url_from": [url_from],
             "points": [],
         }
+        print("add one ")
         await websiteDb.insert_one(data_website)
 
 
@@ -185,6 +184,7 @@ async def _add_wensite_(url_to, url_from):
                 "url_from": url_from
             }
         }
+        print("add one")
         await websiteDb.update_one(myquery, newvalues)
 
 
@@ -241,12 +241,12 @@ async def websub_do(data):
     await url_add(data["href"], where="internal", item_type="feed")
 
 
-async def just_url_page(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None):
+async def just_url_page(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None,  prop=None):
     try:
         check, _, x = urlCheck(url)
         if not check:
             return False
-        check = await check_if_needed(url, where, item_type, item)
+        # check = await check_if_needed(url, where, item_type, item)
         if not check:
             return True
         if text is None:
@@ -285,7 +285,8 @@ async def just_url_page(url, where, item_type, item=None, Ps={}, session=None, r
                     pass
         if not check_feed:
             return False
-        await add_website_where(url_to, where, path, item_type, item, Ps, d=True, session=session)
+        await add_website_where("", url_to, url, where, path, type_="website", item=item, mps=Ps, d=True, session=session, prop=prop, data=None)
+
         return True
     except:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -295,11 +296,11 @@ async def just_url_page(url, where, item_type, item=None, Ps={}, session=None, r
         return False
 
 
-async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None):
+async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, robot=None, text=None, path=None, mine=None,  prop=None):
     try:
-        check = await check_if_needed(url, where, item_type, item)
-        if not check:
-            return False
+        # check = await check_if_needed(url, where, item_type, item)
+        # if not check:
+        # return False
         if text is None or path is None:
             async with sem_web:
                 check, url_to, text, mine, path, status = await aio_check_if_page_exists(url,  robot, session)
@@ -323,12 +324,12 @@ async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, r
                 return False
         else:
             url_to = url
-        if not check:
-            return False
+        # if not check:
+            # return False
         check_feed, datas = feedCheck(text)
         if not check_feed:
             return False
-        await add_website_where(url, where, path, item_type, item, Ps, d=True, session=session)
+        await add_website_where("", url_to, url, where, path, type_="feed", item=item, mps=Ps, d=True, session=session, prop=prop, data=None)
         return True
     except:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -338,16 +339,16 @@ async def just_url_feed(url, where, item_type, item=None, Ps={}, session=None, r
         return False
 
 
-async def url_add2(url_from, where, item=None, item_type="website",  ps={}, session=None, robot=None):
+async def url_add2(url_from, where, item=None, item_type="website",  ps={}, session=None, robot=None,  prop=None):
 
     try:
         url_from = str(url_from)
         check, _, x = urlCheck(url_from)
         if not check:
             return False
-        check = await check_if_needed(url_from, where, item_type, item)
-        if not check:
-            return True
+        # check = await check_if_needed(url_from, where, item_type, item)
+        # if not check:
+            # return True
         async with sem_web:
             if robot is None:
                 robot = await add_robots(url_from, session)
@@ -377,8 +378,8 @@ async def url_add2(url_from, where, item=None, item_type="website",  ps={}, sess
         if check_website:
             await _add_wensite_(url_to, url_from)
         if check_page:
-            await just_url_page(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
-            await just_url_feed(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine)
+            await just_url_page(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine,  prop=prop)
+            await just_url_feed(url_from, where, item_type, item=item, Ps=ps, session=session, robot=robot, text=text, path=path, mine=mine,  prop=prop)
 
     except:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -390,16 +391,16 @@ async def url_add2(url_from, where, item=None, item_type="website",  ps={}, sess
     # await wait_task(call_async)
 
 
-async def url_add(url_from, where, item=None, item_type="website", index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None):
+async def url_add(url_from, where, item=None, item_type="website", index=0, dectect_item_type=True, Ps={}, d=True, p=False, session=None, robot=None,  prop=None):
     async with qarry_lmmit:
         try:
             url_from = str(url_from)
             check, _, x = urlCheck(url_from)
             if not check:
                 return False
-            check = await check_if_needed(url_from, where, item_type, item)
-            if not check:
-                return True
+            # check = await check_if_needed(url_from, where, item_type, item)
+            # if not check:
+                # return True
             if robot is None:
                 robot = await add_robots(url_from, session)
             url_parts = urlparse(url_from)
@@ -487,8 +488,7 @@ async def url_add(url_from, where, item=None, item_type="website", index=0, dect
                 check_feed = False
             if not check_html and not check_feed:
                 return False
-            await _add_wensite_(url_to, url_from)
-            await add_website_where(url_to, where, path, item_type, item, Ps, d=True, session=session)
+            await add_website_where("", url_to, path, where, path, type_=item_type, item=None, mps={}, d=True, session=session, prop=prop, data=None)
             # await wait_task(call_async)
             return True
         except:
@@ -497,15 +497,3 @@ async def url_add(url_from, where, item=None, item_type="website", index=0, dect
             print("ERROR ", (exc_obj), ":", type(exc_obj),
                   exc_type, fname, exc_tb.tb_lineno)
             raise exc_obj
-
-
-def url_sprql(self, url, item):
-    while True:
-        try:
-            ext = tldextract.extract(url)
-            break
-        except:
-            pass
-    toplevelHost = ext.domain + "." + ext.suffix
-    if toplevelHost in self.registered_domains:
-        self.registered_domains[toplevelHost].url_sprql_add(item)

@@ -2,32 +2,19 @@ import asyncio
 import os
 from re import T
 import socket
-import sys
-
+from uitls.bar import manager
 import aiohttp
-from scrape_service.commoncrawl import commoncrawl_init, get_common_crawl_reqest_pages
+from scrape_service.commoncrawl import commoncrawl_init, get_common_crawl
 from uitls.AsyncResolver2 import AsyncResolver2
 from uitls.asyncio_c import wait_task
 from uitls.web_wehsite import add_other_parameter, url_add, url_add2
 from scrape_service.wikidata import get_q, SPARQL_all_feeds, SPARQL_all_website, SPARQL_offical_blog, Wikidata_qurry_property, sprql_wikidata
-from scrape_service.commoncrawl import toplevels
-import enlighten
 import gc
-
-
-def list_split(listA, n):
-    for x in range(0, len(listA), n):
-        every_chunk = listA[x: n+x]
-        if len(every_chunk) < n:
-            every_chunk = every_chunk + \
-                [None for y in range(n-len(every_chunk))]
-        yield every_chunk
 
 
 async def get_wikidata_website(data_p, connector, timeout):
     pedding = []
     gc.collect()
-    manager = enlighten.get_manager()
     pbar = manager.counter(desc='get_wikidata_website', total=0)
     pbar_started = manager.counter(
         desc='get_wikidata_website started', total=len([]))
@@ -38,7 +25,7 @@ async def get_wikidata_website(data_p, connector, timeout):
     async def make_new_session(items, connector, timeout):
         async def add_url_with_bar(data, item, data_ps, session):
             try:
-                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session,  prop="P856"):
                     starting_good.update()
                 else:
                     started_bad.update()
@@ -67,12 +54,12 @@ async def get_wikidata_website(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
+    await asyncio.sleep(10)
 
 
 async def get_wikidata_feed(data_p, connector, timeout):
     pedding = []
     gc.collect()
-    manager = enlighten.get_manager()
     pbar = manager.counter(desc='SPARQL_all_feeds', total=0)
     pbar_started = manager.counter(
         desc='SPARQL_all_feeds started', total=len([]))
@@ -83,7 +70,7 @@ async def get_wikidata_feed(data_p, connector, timeout):
     async def make_new_session(items, connector, timeout):
         async def add_url_with_bar(data, item, data_ps, session):
             try:
-                if await url_add2(data, "wikidata", item=item, item_type="feed",  ps=data_ps, session=session):
+                if await url_add2(data, "wikidata", item=item, item_type="feed",  ps=data_ps, session=session,  prop="P1019"):
                     starting_good.update()
                 else:
                     started_bad.update()
@@ -112,57 +99,12 @@ async def get_wikidata_feed(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
-
-
-async def get_wikidata_feed(data_p, connector, timeout):
-    pedding = []
-    gc.collect()
-    manager = enlighten.get_manager()
-    pbar = manager.counter(desc='get_wikidata_feed(', total=0)
-    pbar_started = manager.counter(
-        desc='get_wikidata_feed started', total=len([]))
-    starting_good = pbar.add_subcounter('green')
-    started_bad = pbar.add_subcounter('yellow')
-    started_error = pbar.add_subcounter('red')
-
-    async def make_new_session(items, connector, timeout):
-        async def add_url_with_bar(data, item, data_ps, session):
-            try:
-                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
-                    starting_good.update()
-                else:
-                    started_bad.update()
-            except:
-                started_error.update()
-            gc.collect()
-        async with aiohttp.ClientSession(connector=connector, trust_env=True, timeout=timeout) as session:
-            a = []
-            for item in items:
-                a.append(asyncio.create_task(add_url_with_bar(item["web_feed_URL"]["value"], get_q(
-                    item["item"]["value"]), data_p, session)))
-            await asyncio.wait(a)
-    pedding = []
-    cont = 0
-    async for data, size in await sprql_wikidata(SPARQL_all_feeds, "SPARQL_all_feeds.json"):
-        pedding.append(data)
-        pbar.total = size
-        cont = cont + 1
-        pbar_started.total = size
-        if cont > size:
-            pbar.total = cont
-            pbar_started.total = cont
-        pbar_started.update()
-        if cont == 500:
-            await make_new_session(pedding, connector, timeout)
-            cont = 0
-            pedding = []
-    await make_new_session(pedding, connector, timeout)
+    await asyncio.sleep(10)
 
 
 async def get_wikidata_blog(data_p, connector, timeout):
     pedding = []
     gc.collect()
-    manager = enlighten.get_manager()
     pbar = manager.counter(desc='SPARQL_offical_blog', total=0)
     pbar_started = manager.counter(
         desc='SPARQL_offical_blog started', total=len([]))
@@ -173,7 +115,7 @@ async def get_wikidata_blog(data_p, connector, timeout):
     async def make_new_session(items, connector, timeout):
         async def add_url_with_bar(data, item, data_ps, session):
             try:
-                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session):
+                if await url_add2(data, "wikidata", item=item, item_type="website",  ps=data_ps, session=session,  prop="P1581"):
                     starting_good.update()
                 else:
                     started_bad.update()
@@ -188,7 +130,7 @@ async def get_wikidata_blog(data_p, connector, timeout):
             await asyncio.wait(a)
     pedding = []
     cont = 0
-    async for data, size in await sprql_wikidata(SPARQL_all_feeds, "SPARQL_offical_blog.json"):
+    async for data, size in await sprql_wikidata(SPARQL_offical_blog, "SPARQL_offical_blog.json"):
         pedding.append(data)
         pbar.total = size
         pbar_started.total = size
@@ -202,6 +144,7 @@ async def get_wikidata_blog(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
+    await asyncio.sleep(10)
 
 
 async def get_wikidata_other_parameter():
@@ -319,72 +262,33 @@ async def get_other_parameter_scan(datas, session):
             return
         lllx.append(k(query, datas[P]))
     await wait_task(lllx)
+    await asyncio.sleep(10)
 
 
-async def get_common_crawl_website(data_commoncrawl, session):
-    cc = []
-    for data_commoncrawl in data_commoncrawl:
-        for toplevel in toplevels:
-            params1 = [
-                ('url', toplevel),
-                ('matchType', 'domain'),
-                ('filter', 'status'),
-            ]
-            params2 = [
-                ('url', toplevel),
-                ('matchType', 'domain'),
-                ('filter', 'status'),
-                ('showNumPages', 'true'),
-            ]
-            cc.append(get_common_crawl_reqest_pages(
-                data_commoncrawl, params1, params2, session=session))
-    await wait_task(cc)
-
-
-async def get_web_archive_website_feed(data_commoncrawl, session):
-    cc = []
-    pbar = manager.counter(desc='get_web_archive_website_feed', total=len([]))
-    starting_good = pbar.add_subcounter('green')
-    started_bad = pbar.add_subcounter('red')
-    for data_commoncrawl in data_commoncrawl:
-        for toplevel in toplevels:
-            params1 = [
-                ('url', toplevel),
-                ('matchType', 'domain'),
-                ('filter', 'mime:~*/xml'),
-            ]
-            params2 = [
-                ('url', toplevel),
-                ('filter', 'mime:~*/xml'),
-                ('matchType', 'domain'),
-                ('showNumPages', 'true'),
-            ]
-            cc.append(get_common_crawl_reqest_pages(
-                data_commoncrawl, params1, params2, session=session))
-    await wait_task(cc)
+async def get_common_crawl_website(data_commoncrawl, connector, timeout):
+    await get_common_crawl(data_commoncrawl, connector, timeout)
 
 
 async def main():
     # data_wikidata = await get_wikidata_other_parameter()
     data_wikidata = {}
-    # data_commoncrawl = await commoncrawl_init()
-    data_commoncrawl = {}
+    data_commoncrawl = await commoncrawl_init()
     resolver = aiohttp.AsyncResolver()
     timeout = aiohttp.ClientTimeout(total=60)
     connector = aiohttp.TCPConnector(limit=555, ssl=False,
                                      family=socket.AF_INET, resolver=resolver)
-    # await get_wikidata_website(data_wikidata, connector, timeout)
-    # print("cats")
-    await get_wikidata_feed(data_wikidata, connector, timeout)
-    # print("cats")
-    await get_wikidata_blog(data_wikidata, connector, timeout)
-    # print("cats")
-    # await get_other_parameter_scan(data_wikidata,session)
-    # print("cats")
-    # await get_common_crawl_website(data_commoncrawl,session)
-    # print("cats")
+    await asyncio.wait([
+        asyncio.create_task(get_wikidata_website(
+            data_wikidata, connector, timeout)),
+        asyncio.create_task(get_wikidata_feed(
+            data_wikidata, connector, timeout)),
+        # asyncio.create_task(get_wikidata_blog(
+        # data_wikidata, connector, timeout)),
+        asyncio.create_task(get_common_crawl_website(
+            data_commoncrawl, connector, timeout))
+    ])
+    # await get_other_parameter_scan(data_wikidata,connector, timeout)
     # await get_web_archive_website_feed(data_commoncrawl,session)
-    # print("cats")
 
 
 async def test():
