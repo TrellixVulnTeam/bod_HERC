@@ -5,6 +5,7 @@ import random
 import re
 import socket
 import aiohttp
+from service.service import do_callback_url_mach, test_url_mach
 from uitls.bar import manager
 from rfc3986 import urlparse
 from requests.models import PreparedRequest
@@ -1601,8 +1602,12 @@ async def get_common_crawl(commoncrawls_endpoints, connector, timeout):
                             commoncrawls_endpoint["cdx-api"], "."+toplevel, page_count, session, matchType="domain")
                     pbar_started.update()
                     for data in datas:
-                        await do_url(data["url"], data["mime"],
-                                     data["status"],  data["where"], session)
+                        test, q = test_url_mach(data["url"])
+                        if test:
+                            if do_callback_url_mach(data["url"]):
+                                await do_url(data["url"], data["mime"], data["status"],  data["where"], session)
+                                continue
+                        await do_url(data["url"], data["mime"], data["status"],  data["where"], session)
             a_.append(asyncio.create_task(a(commoncrawls_endpoint, toplevel)))
             if len(a_) == 500:
                 await asyncio.wait(a_)

@@ -2,6 +2,7 @@ import asyncio
 import os
 from re import T
 import socket
+from scrape_service.wikidata2 import do_query
 from uitls.bar import manager
 import aiohttp
 from scrape_service.commoncrawl import commoncrawl_init, get_common_crawl
@@ -54,7 +55,6 @@ async def get_wikidata_website(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
-    await asyncio.sleep(10)
 
 
 async def get_wikidata_feed(data_p, connector, timeout):
@@ -99,7 +99,6 @@ async def get_wikidata_feed(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
-    await asyncio.sleep(10)
 
 
 async def get_wikidata_blog(data_p, connector, timeout):
@@ -144,13 +143,10 @@ async def get_wikidata_blog(data_p, connector, timeout):
             cont = 0
             pedding = []
     await make_new_session(pedding, connector, timeout)
-    await asyncio.sleep(10)
 
 
 async def get_wikidata_other_parameter():
     datas_ = {}
-    print("geting wikidata_other_parameter")
-    print("done wikidata_other_parameter")
     pbar = manager.counter(
         desc='get_wikidata_other_parameter', total=0)
 
@@ -262,7 +258,6 @@ async def get_other_parameter_scan(datas, session):
             return
         lllx.append(k(query, datas[P]))
     await wait_task(lllx)
-    await asyncio.sleep(10)
 
 
 async def get_common_crawl_website(data_commoncrawl, connector, timeout):
@@ -277,16 +272,16 @@ async def main():
     timeout = aiohttp.ClientTimeout(total=60)
     connector = aiohttp.TCPConnector(limit=555, ssl=False,
                                      family=socket.AF_INET, resolver=resolver)
-    await asyncio.wait([
-        asyncio.create_task(get_wikidata_website(
-            data_wikidata, connector, timeout)),
-        asyncio.create_task(get_wikidata_feed(
-            data_wikidata, connector, timeout)),
-        # asyncio.create_task(get_wikidata_blog(
-        # data_wikidata, connector, timeout)),
-        asyncio.create_task(get_common_crawl_website(
-            data_commoncrawl, connector, timeout))
-    ])
+
+    await asyncio.create_task(get_wikidata_website(
+        data_wikidata, connector, timeout)),
+    await asyncio.create_task(get_wikidata_feed(
+        data_wikidata, connector, timeout)),
+    await asyncio.create_task(get_wikidata_blog(
+        data_wikidata, connector, timeout)),
+    # asyncio.create_task(do_query(connector, timeout)),
+    # asyncio.create_task(get_common_crawl_website(
+    # data_commoncrawl, connector, timeout))
     # await get_other_parameter_scan(data_wikidata,connector, timeout)
     # await get_web_archive_website_feed(data_commoncrawl,session)
 

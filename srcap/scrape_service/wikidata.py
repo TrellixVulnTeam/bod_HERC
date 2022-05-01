@@ -34,15 +34,19 @@ WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
 async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
     url = "{}/{}.json".format(base_url, entity_id)
     exc_obj = None
-    for i in range(100):
+    count = 10
+    while count != 0:
         try:
             async with session.post(url) as response:
                 if response.ok:
                     entity_dict_full = await response.json()
-                else:
+                elif response.status == 503:
+                    await asyncio.sleep(10*60)
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
                     continue
-
-                # remove redundant top level keys
+                else:
+                    count = count - 1
+                    continue
                 returned_entity_id = next(iter(entity_dict_full["entities"]))
                 entity_dict = entity_dict_full["entities"][returned_entity_id]
                 return entity_dict

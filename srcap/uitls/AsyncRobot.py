@@ -83,47 +83,48 @@ class Robot(urllib.robotparser.RobotFileParser):
         self.disallow_all = False
         self.allow_all = False
         self.deadtime = (86400*7*4) + int(time.time())
-        for i in range(4):
-                try:
-                    async with session.get(self.url, ssl=False, headers=headers) as resp:
-                        if resp.status in (401, 403):
-                            self.disallow_all = True
-                            has = True
-                            break
-                        elif resp.status in (429, 503):
-                            await asyncio.sleep(10)
-                        elif resp.status >= 400 and resp.status < 500:
-                            self.allow_all = True
-                            has = True
-                            self.disallow_all = False
-                            break
-                        else:
+        for i in range(90):
+            try:
+                async with session.get(self.url, ssl=False, headers=headers) as resp:
+                    if resp.status in (401, 403):
+                        self.disallow_all = True
+                        has = True
+                        break
+                    elif resp.status in (429, 503):
+                        await asyncio.sleep(10)
+                    elif resp.status >= 400 and resp.status < 500:
+                        self.allow_all = True
+                        has = True
+                        self.disallow_all = False
+                        break
+                    else:
+                        try:
+                            text = await resp.text()
+                        except (LookupError, UnicodeDecodeError):
                             try:
-                                text = await resp.text()
+                                text = await resp.text('ISO-8859-1')
                             except (LookupError, UnicodeDecodeError):
-                                try:
-                                    text = await resp.text('ISO-8859-1')
-                                except (LookupError, UnicodeDecodeError):
-                                    text = await resp.content.read()
-                                    print(from_bytes(text))
-                            self.parse(text)
-                            self.disallow_all = False
-                            break
-                except aiohttp.ClientConnectorError as e:
-                    self.disallow_all = True
-                    break
-                except asyncio.TimeoutError as e:
-                    continue
-                except UnicodeDecodeError as e:
-                    break
-                except asyncio.TimeoutError:
-                    break
+                                text = await resp.content.read()
+                                print(from_bytes(text))
+                        self.parse(text)
+                        self.disallow_all = False
+                        break
+            except aiohttp.ClientConnectorError as e:
+                self.disallow_all = True
+                break
+            except asyncio.TimeoutError as e:
+                continue
+            except UnicodeDecodeError as e:
+                break
+            except asyncio.TimeoutError:
+                break
 
-                except RuntimeError as e:
-                    break
-                except:
-                    print("error unkown")
-                    continue
+            except RuntimeError as e:
+                break
+            except:
+                await asyncio.sleep(60)
+                print("error unkown:", self.url)
+                continue
 
         url_o = urlparse(self.url)
         domain = url_o.scheme + "://"+url_o.netloc
