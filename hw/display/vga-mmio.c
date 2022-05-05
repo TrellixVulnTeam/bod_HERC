@@ -38,7 +38,8 @@
 
 OBJECT_DECLARE_SIMPLE_TYPE(VGAMmioState, VGA_MMIO)
 
-struct VGAMmioState {
+struct VGAMmioState
+{
     /*< private >*/
     SysBusDevice parent_obj;
 
@@ -55,7 +56,7 @@ static uint64_t vga_mm_read(void *opaque, hwaddr addr, unsigned size)
     VGAMmioState *s = opaque;
 
     return vga_ioport_read(&s->vga, addr >> s->it_shift) &
-        MAKE_64BIT_MASK(0, size * 8);
+           MAKE_64BIT_MASK(0, size * 8);
 }
 
 static void vga_mm_write(void *opaque, hwaddr addr, uint64_t value,
@@ -102,7 +103,8 @@ static void vga_mmio_realizefn(DeviceState *dev, Error **errp)
 
     s->vga.bank_offset = 0;
     s->vga.global_vmstate = true;
-    if (!vga_common_init(&s->vga, OBJECT(dev), errp)) {
+    if (!vga_common_init(&s->vga, OBJECT(dev), errp))
+    {
         return;
     }
 
@@ -128,10 +130,10 @@ static void vga_mmio_class_initfn(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo vga_mmio_info = {
-    .name          = TYPE_VGA_MMIO,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_VGA_MMIO,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(VGAMmioState),
-    .class_init    = vga_mmio_class_initfn,
+    .class_init = vga_mmio_class_initfn,
 };
 
 static void vga_mmio_register_types(void)

@@ -32,148 +32,148 @@
 #include "qom/object.h"
 
 /* Constants related to the USB / PCI interaction */
-#define USB_SBRN    0x60 /* Serial Bus Release Number Register */
-#define USB_RELEASE_1  0x10 /* USB 1.0 */
-#define USB_RELEASE_2  0x20 /* USB 2.0 */
-#define USB_RELEASE_3  0x30 /* USB 3.0 */
+#define USB_SBRN 0x60      /* Serial Bus Release Number Register */
+#define USB_RELEASE_1 0x10 /* USB 1.0 */
+#define USB_RELEASE_2 0x20 /* USB 2.0 */
+#define USB_RELEASE_3 0x30 /* USB 3.0 */
 
 #define USB_TOKEN_SETUP 0x2d
-#define USB_TOKEN_IN    0x69 /* device -> host */
-#define USB_TOKEN_OUT   0xe1 /* host -> device */
+#define USB_TOKEN_IN 0x69  /* device -> host */
+#define USB_TOKEN_OUT 0xe1 /* host -> device */
 
-#define USB_RET_SUCCESS           (0)
-#define USB_RET_NODEV             (-1)
-#define USB_RET_NAK               (-2)
-#define USB_RET_STALL             (-3)
-#define USB_RET_BABBLE            (-4)
-#define USB_RET_IOERROR           (-5)
-#define USB_RET_ASYNC             (-6)
-#define USB_RET_ADD_TO_QUEUE      (-7)
+#define USB_RET_SUCCESS (0)
+#define USB_RET_NODEV (-1)
+#define USB_RET_NAK (-2)
+#define USB_RET_STALL (-3)
+#define USB_RET_BABBLE (-4)
+#define USB_RET_IOERROR (-5)
+#define USB_RET_ASYNC (-6)
+#define USB_RET_ADD_TO_QUEUE (-7)
 #define USB_RET_REMOVE_FROM_QUEUE (-8)
 
-#define USB_SPEED_LOW   0
-#define USB_SPEED_FULL  1
-#define USB_SPEED_HIGH  2
+#define USB_SPEED_LOW 0
+#define USB_SPEED_FULL 1
+#define USB_SPEED_HIGH 2
 #define USB_SPEED_SUPER 3
 
-#define USB_SPEED_MASK_LOW   (1 << USB_SPEED_LOW)
-#define USB_SPEED_MASK_FULL  (1 << USB_SPEED_FULL)
-#define USB_SPEED_MASK_HIGH  (1 << USB_SPEED_HIGH)
+#define USB_SPEED_MASK_LOW (1 << USB_SPEED_LOW)
+#define USB_SPEED_MASK_FULL (1 << USB_SPEED_FULL)
+#define USB_SPEED_MASK_HIGH (1 << USB_SPEED_HIGH)
 #define USB_SPEED_MASK_SUPER (1 << USB_SPEED_SUPER)
 
 #define USB_STATE_NOTATTACHED 0
-#define USB_STATE_ATTACHED    1
+#define USB_STATE_ATTACHED 1
 //#define USB_STATE_POWERED     2
-#define USB_STATE_DEFAULT     3
+#define USB_STATE_DEFAULT 3
 //#define USB_STATE_ADDRESS     4
 //#define	USB_STATE_CONFIGURED  5
-#define USB_STATE_SUSPENDED   6
+#define USB_STATE_SUSPENDED 6
 
-#define USB_CLASS_AUDIO			1
-#define USB_CLASS_COMM			2
-#define USB_CLASS_HID			3
-#define USB_CLASS_PHYSICAL		5
-#define USB_CLASS_STILL_IMAGE		6
-#define USB_CLASS_PRINTER		7
-#define USB_CLASS_MASS_STORAGE		8
-#define USB_CLASS_HUB			9
-#define USB_CLASS_CDC_DATA		0x0a
-#define USB_CLASS_CSCID			0x0b
-#define USB_CLASS_CONTENT_SEC		0x0d
-#define USB_CLASS_APP_SPEC		0xfe
-#define USB_CLASS_VENDOR_SPEC		0xff
+#define USB_CLASS_AUDIO 1
+#define USB_CLASS_COMM 2
+#define USB_CLASS_HID 3
+#define USB_CLASS_PHYSICAL 5
+#define USB_CLASS_STILL_IMAGE 6
+#define USB_CLASS_PRINTER 7
+#define USB_CLASS_MASS_STORAGE 8
+#define USB_CLASS_HUB 9
+#define USB_CLASS_CDC_DATA 0x0a
+#define USB_CLASS_CSCID 0x0b
+#define USB_CLASS_CONTENT_SEC 0x0d
+#define USB_CLASS_APP_SPEC 0xfe
+#define USB_CLASS_VENDOR_SPEC 0xff
 
-#define USB_SUBCLASS_UNDEFINED          0
-#define USB_SUBCLASS_AUDIO_CONTROL      1
-#define USB_SUBCLASS_AUDIO_STREAMING    2
+#define USB_SUBCLASS_UNDEFINED 0
+#define USB_SUBCLASS_AUDIO_CONTROL 1
+#define USB_SUBCLASS_AUDIO_STREAMING 2
 #define USB_SUBCLASS_AUDIO_MIDISTREAMING 3
 
-#define USB_DIR_OUT			0
-#define USB_DIR_IN			0x80
+#define USB_DIR_OUT 0
+#define USB_DIR_IN 0x80
 
-#define USB_TYPE_MASK			(0x03 << 5)
-#define USB_TYPE_STANDARD		(0x00 << 5)
-#define USB_TYPE_CLASS			(0x01 << 5)
-#define USB_TYPE_VENDOR			(0x02 << 5)
-#define USB_TYPE_RESERVED		(0x03 << 5)
+#define USB_TYPE_MASK (0x03 << 5)
+#define USB_TYPE_STANDARD (0x00 << 5)
+#define USB_TYPE_CLASS (0x01 << 5)
+#define USB_TYPE_VENDOR (0x02 << 5)
+#define USB_TYPE_RESERVED (0x03 << 5)
 
-#define USB_RECIP_MASK			0x1f
-#define USB_RECIP_DEVICE		0x00
-#define USB_RECIP_INTERFACE		0x01
-#define USB_RECIP_ENDPOINT		0x02
-#define USB_RECIP_OTHER			0x03
+#define USB_RECIP_MASK 0x1f
+#define USB_RECIP_DEVICE 0x00
+#define USB_RECIP_INTERFACE 0x01
+#define USB_RECIP_ENDPOINT 0x02
+#define USB_RECIP_OTHER 0x03
 
-#define DeviceRequest ((USB_DIR_IN|USB_TYPE_STANDARD|USB_RECIP_DEVICE)<<8)
-#define DeviceOutRequest ((USB_DIR_OUT|USB_TYPE_STANDARD|USB_RECIP_DEVICE)<<8)
-#define VendorDeviceRequest ((USB_DIR_IN|USB_TYPE_VENDOR|USB_RECIP_DEVICE)<<8)
+#define DeviceRequest ((USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE) << 8)
+#define DeviceOutRequest ((USB_DIR_OUT | USB_TYPE_STANDARD | USB_RECIP_DEVICE) << 8)
+#define VendorDeviceRequest ((USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE) << 8)
 #define VendorDeviceOutRequest \
-        ((USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_DEVICE)<<8)
+    ((USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE) << 8)
 
-#define InterfaceRequest                                        \
-        ((USB_DIR_IN|USB_TYPE_STANDARD|USB_RECIP_INTERFACE)<<8)
+#define InterfaceRequest \
+    ((USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_INTERFACE) << 8)
 #define InterfaceOutRequest \
-        ((USB_DIR_OUT|USB_TYPE_STANDARD|USB_RECIP_INTERFACE)<<8)
+    ((USB_DIR_OUT | USB_TYPE_STANDARD | USB_RECIP_INTERFACE) << 8)
 #define ClassInterfaceRequest \
-        ((USB_DIR_IN|USB_TYPE_CLASS|USB_RECIP_INTERFACE)<<8)
+    ((USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8)
 #define ClassInterfaceOutRequest \
-        ((USB_DIR_OUT|USB_TYPE_CLASS|USB_RECIP_INTERFACE)<<8)
+    ((USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8)
 #define VendorInterfaceRequest \
-        ((USB_DIR_IN|USB_TYPE_VENDOR|USB_RECIP_INTERFACE)<<8)
+    ((USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE) << 8)
 #define VendorInterfaceOutRequest \
-        ((USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE)<<8)
+    ((USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_INTERFACE) << 8)
 
-#define EndpointRequest ((USB_DIR_IN|USB_TYPE_STANDARD|USB_RECIP_ENDPOINT)<<8)
+#define EndpointRequest ((USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_ENDPOINT) << 8)
 #define EndpointOutRequest \
-        ((USB_DIR_OUT|USB_TYPE_STANDARD|USB_RECIP_ENDPOINT)<<8)
+    ((USB_DIR_OUT | USB_TYPE_STANDARD | USB_RECIP_ENDPOINT) << 8)
 
-#define USB_REQ_GET_STATUS		0x00
-#define USB_REQ_CLEAR_FEATURE		0x01
-#define USB_REQ_SET_FEATURE		0x03
-#define USB_REQ_SET_ADDRESS		0x05
-#define USB_REQ_GET_DESCRIPTOR		0x06
-#define USB_REQ_SET_DESCRIPTOR		0x07
-#define USB_REQ_GET_CONFIGURATION	0x08
-#define USB_REQ_SET_CONFIGURATION	0x09
-#define USB_REQ_GET_INTERFACE		0x0A
-#define USB_REQ_SET_INTERFACE		0x0B
-#define USB_REQ_SYNCH_FRAME		0x0C
-#define USB_REQ_SET_SEL                 0x30
-#define USB_REQ_SET_ISOCH_DELAY         0x31
+#define USB_REQ_GET_STATUS 0x00
+#define USB_REQ_CLEAR_FEATURE 0x01
+#define USB_REQ_SET_FEATURE 0x03
+#define USB_REQ_SET_ADDRESS 0x05
+#define USB_REQ_GET_DESCRIPTOR 0x06
+#define USB_REQ_SET_DESCRIPTOR 0x07
+#define USB_REQ_GET_CONFIGURATION 0x08
+#define USB_REQ_SET_CONFIGURATION 0x09
+#define USB_REQ_GET_INTERFACE 0x0A
+#define USB_REQ_SET_INTERFACE 0x0B
+#define USB_REQ_SYNCH_FRAME 0x0C
+#define USB_REQ_SET_SEL 0x30
+#define USB_REQ_SET_ISOCH_DELAY 0x31
 
-#define USB_DEVICE_SELF_POWERED		0
-#define USB_DEVICE_REMOTE_WAKEUP	1
+#define USB_DEVICE_SELF_POWERED 0
+#define USB_DEVICE_REMOTE_WAKEUP 1
 
-#define USB_DT_DEVICE			0x01
-#define USB_DT_CONFIG			0x02
-#define USB_DT_STRING			0x03
-#define USB_DT_INTERFACE		0x04
-#define USB_DT_ENDPOINT			0x05
-#define USB_DT_DEVICE_QUALIFIER         0x06
-#define USB_DT_OTHER_SPEED_CONFIG       0x07
-#define USB_DT_DEBUG                    0x0A
-#define USB_DT_INTERFACE_ASSOC          0x0B
-#define USB_DT_BOS                      0x0F
-#define USB_DT_DEVICE_CAPABILITY        0x10
-#define USB_DT_CS_INTERFACE             0x24
-#define USB_DT_CS_ENDPOINT              0x25
-#define USB_DT_ENDPOINT_COMPANION       0x30
+#define USB_DT_DEVICE 0x01
+#define USB_DT_CONFIG 0x02
+#define USB_DT_STRING 0x03
+#define USB_DT_INTERFACE 0x04
+#define USB_DT_ENDPOINT 0x05
+#define USB_DT_DEVICE_QUALIFIER 0x06
+#define USB_DT_OTHER_SPEED_CONFIG 0x07
+#define USB_DT_DEBUG 0x0A
+#define USB_DT_INTERFACE_ASSOC 0x0B
+#define USB_DT_BOS 0x0F
+#define USB_DT_DEVICE_CAPABILITY 0x10
+#define USB_DT_CS_INTERFACE 0x24
+#define USB_DT_CS_ENDPOINT 0x25
+#define USB_DT_ENDPOINT_COMPANION 0x30
 
-#define USB_DEV_CAP_WIRELESS            0x01
-#define USB_DEV_CAP_USB2_EXT            0x02
-#define USB_DEV_CAP_SUPERSPEED          0x03
+#define USB_DEV_CAP_WIRELESS 0x01
+#define USB_DEV_CAP_USB2_EXT 0x02
+#define USB_DEV_CAP_SUPERSPEED 0x03
 
-#define USB_CFG_ATT_ONE              (1 << 7) /* should always be set */
-#define USB_CFG_ATT_SELFPOWER        (1 << 6)
-#define USB_CFG_ATT_WAKEUP           (1 << 5)
-#define USB_CFG_ATT_BATTERY          (1 << 4)
+#define USB_CFG_ATT_ONE (1 << 7) /* should always be set */
+#define USB_CFG_ATT_SELFPOWER (1 << 6)
+#define USB_CFG_ATT_WAKEUP (1 << 5)
+#define USB_CFG_ATT_BATTERY (1 << 4)
 
-#define USB_ENDPOINT_XFER_CONTROL	0
-#define USB_ENDPOINT_XFER_ISOC		1
-#define USB_ENDPOINT_XFER_BULK		2
-#define USB_ENDPOINT_XFER_INT		3
-#define USB_ENDPOINT_XFER_INVALID     255
+#define USB_ENDPOINT_XFER_CONTROL 0
+#define USB_ENDPOINT_XFER_ISOC 1
+#define USB_ENDPOINT_XFER_BULK 2
+#define USB_ENDPOINT_XFER_INT 3
+#define USB_ENDPOINT_XFER_INVALID 255
 
-#define USB_INTERFACE_INVALID         255
+#define USB_INTERFACE_INVALID 255
 
 typedef struct USBBusOps USBBusOps;
 typedef struct USBPort USBPort;
@@ -193,16 +193,19 @@ typedef struct USBDescOther USBDescOther;
 typedef struct USBDescString USBDescString;
 typedef struct USBDescMSOS USBDescMSOS;
 
-struct USBDescString {
+struct USBDescString
+{
     uint8_t index;
     char *str;
-    QLIST_ENTRY(USBDescString) next;
+    QLIST_ENTRY(USBDescString)
+    next;
 };
 
-#define USB_MAX_ENDPOINTS  15
+#define USB_MAX_ENDPOINTS 15
 #define USB_MAX_INTERFACES 16
 
-struct USBEndpoint {
+struct USBEndpoint
+{
     uint8_t nr;
     uint8_t pid;
     uint8_t type;
@@ -212,10 +215,12 @@ struct USBEndpoint {
     bool pipeline;
     bool halted;
     USBDevice *dev;
-    QTAILQ_HEAD(, USBPacket) queue;
+    QTAILQ_HEAD(, USBPacket)
+    queue;
 };
 
-enum USBDeviceFlags {
+enum USBDeviceFlags
+{
     USB_DEV_FLAG_IS_HOST,
     USB_DEV_FLAG_MSOS_DESC_ENABLE,
     USB_DEV_FLAG_MSOS_DESC_IN_USE,
@@ -223,7 +228,8 @@ enum USBDeviceFlags {
 };
 
 /* definition of a USB device */
-struct USBDevice {
+struct USBDevice
+{
     DeviceState qdev;
     USBPort *port;
     char *port_path;
@@ -255,7 +261,8 @@ struct USBDevice {
     USBEndpoint ep_in[USB_MAX_ENDPOINTS];
     USBEndpoint ep_out[USB_MAX_ENDPOINTS];
 
-    QLIST_HEAD(, USBDescString) strings;
+    QLIST_HEAD(, USBDescString)
+    strings;
     const USBDesc *usb_desc; /* Overrides class usb_desc if not NULL */
     const USBDescDevice *device;
 
@@ -263,7 +270,7 @@ struct USBDevice {
     int ninterfaces;
     int altsetting[USB_MAX_INTERFACES];
     const USBDescConfig *config;
-    const USBDescIface  *ifaces[USB_MAX_INTERFACES];
+    const USBDescIface *ifaces[USB_MAX_INTERFACES];
 };
 
 #define TYPE_USB_DEVICE "usb-device"
@@ -272,7 +279,8 @@ OBJECT_DECLARE_TYPE(USBDevice, USBDeviceClass, USB_DEVICE)
 typedef void (*USBDeviceRealize)(USBDevice *dev, Error **errp);
 typedef void (*USBDeviceUnrealize)(USBDevice *dev);
 
-struct USBDeviceClass {
+struct USBDeviceClass
+{
     DeviceClass parent_class;
 
     USBDeviceRealize realize;
@@ -346,7 +354,8 @@ struct USBDeviceClass {
     bool attached_settable;
 };
 
-typedef struct USBPortOps {
+typedef struct USBPortOps
+{
     void (*attach)(USBPort *port);
     void (*detach)(USBPort *port);
     /*
@@ -363,7 +372,8 @@ typedef struct USBPortOps {
 } USBPortOps;
 
 /* USB port on which a device can be connected */
-struct USBPort {
+struct USBPort
+{
     USBDevice *dev;
     int speedmask;
     int hubcount;
@@ -371,12 +381,14 @@ struct USBPort {
     USBPortOps *ops;
     void *opaque;
     int index; /* internal port index, may be used with the opaque */
-    QTAILQ_ENTRY(USBPort) next;
+    QTAILQ_ENTRY(USBPort)
+    next;
 };
 
-typedef void USBCallback(USBPacket * packet, void *opaque);
+typedef void USBCallback(USBPacket *packet, void *opaque);
 
-typedef enum USBPacketState {
+typedef enum USBPacketState
+{
     USB_PACKET_UNDEFINED = 0,
     USB_PACKET_SETUP,
     USB_PACKET_QUEUED,
@@ -386,7 +398,8 @@ typedef enum USBPacketState {
 } USBPacketState;
 
 /* Structure used to hold information about an active USB packet.  */
-struct USBPacket {
+struct USBPacket
+{
     /* Data fields for use by the driver.  */
     int pid;
     uint64_t id;
@@ -396,18 +409,22 @@ struct USBPacket {
     uint64_t parameter; /* control transfers */
     bool short_not_ok;
     bool int_req;
-    int status; /* USB_RET_* status code */
+    int status;        /* USB_RET_* status code */
     int actual_length; /* Number of bytes actually transferred */
     /* Internal use by the USB layer.  */
     USBPacketState state;
     USBCombinedPacket *combined;
-    QTAILQ_ENTRY(USBPacket) queue;
-    QTAILQ_ENTRY(USBPacket) combined_entry;
+    QTAILQ_ENTRY(USBPacket)
+    queue;
+    QTAILQ_ENTRY(USBPacket)
+    combined_entry;
 };
 
-struct USBCombinedPacket {
+struct USBCombinedPacket
+{
     USBPacket *first;
-    QTAILQ_HEAD(, USBPacket) packets;
+    QTAILQ_HEAD(, USBPacket)
+    packets;
     QEMUIOVector iov;
 };
 
@@ -436,7 +453,7 @@ USBDevice *usb_find_device(USBPort *port, uint8_t addr);
 void usb_handle_packet(USBDevice *dev, USBPacket *p);
 void usb_packet_complete(USBDevice *dev, USBPacket *p);
 void usb_packet_complete_one(USBDevice *dev, USBPacket *p);
-void usb_cancel_packet(USBPacket * p);
+void usb_cancel_packet(USBPacket *p);
 
 void usb_ep_init(USBDevice *dev);
 void usb_ep_reset(USBDevice *dev);
@@ -476,18 +493,23 @@ void hmp_info_usbhost(Monitor *mon, const QDict *qdict);
 #define TYPE_USB_BUS "usb-bus"
 OBJECT_DECLARE_SIMPLE_TYPE(USBBus, USB_BUS)
 
-struct USBBus {
+struct USBBus
+{
     BusState qbus;
     USBBusOps *ops;
     int busnr;
     int nfree;
     int nused;
-    QTAILQ_HEAD(, USBPort) free;
-    QTAILQ_HEAD(, USBPort) used;
-    QTAILQ_ENTRY(USBBus) next;
+    QTAILQ_HEAD(, USBPort)
+    free;
+    QTAILQ_HEAD(, USBPort)
+    used;
+    QTAILQ_ENTRY(USBBus)
+    next;
 };
 
-struct USBBusOps {
+struct USBBusOps
+{
     void (*register_companion)(USBBus *bus, USBPort *ports[],
                                uint32_t portcount, uint32_t firstport,
                                Error **errp);
@@ -525,13 +547,14 @@ static inline USBBus *usb_bus_from_device(USBDevice *d)
 
 extern const VMStateDescription vmstate_usb_device;
 
-#define VMSTATE_USB_DEVICE(_field, _state) {                         \
-    .name       = (stringify(_field)),                               \
-    .size       = sizeof(USBDevice),                                 \
-    .vmsd       = &vmstate_usb_device,                               \
-    .flags      = VMS_STRUCT,                                        \
-    .offset     = vmstate_offset_value(_state, _field, USBDevice),   \
-}
+#define VMSTATE_USB_DEVICE(_field, _state)                         \
+    {                                                              \
+        .name = (stringify(_field)),                               \
+        .size = sizeof(USBDevice),                                 \
+        .vmsd = &vmstate_usb_device,                               \
+        .flags = VMS_STRUCT,                                       \
+        .offset = vmstate_offset_value(_state, _field, USBDevice), \
+    }
 
 USBDevice *usb_device_find_device(USBDevice *dev, uint8_t addr);
 
@@ -569,9 +592,9 @@ static inline bool usb_device_is_scsi_storage(USBDevice *dev)
 /* quirks.c */
 
 /* In bulk endpoints are streaming data sources (iow behave like isoc eps) */
-#define USB_QUIRK_BUFFER_BULK_IN	0x01
+#define USB_QUIRK_BUFFER_BULK_IN 0x01
 /* Bulk pkts in FTDI format, need special handling when combining packets */
-#define USB_QUIRK_IS_FTDI		0x02
+#define USB_QUIRK_IS_FTDI 0x02
 
 int usb_get_quirks(uint16_t vendor_id, uint16_t product_id,
                    uint8_t interface_class, uint8_t interface_subclass,

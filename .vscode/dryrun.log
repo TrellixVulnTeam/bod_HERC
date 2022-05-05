@@ -1,0 +1,672 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/william/Code/pppp/qemu'
+echo 'changing dir to build for make ""...'
+changing dir to build for make ""...
+make -C build -f Makefile 
+make[1]: Entering directory '/home/william/Code/pppp/qemu/build'
+ 
+/home/william/.local/bin/meson introspect --buildoptions /home/william/Code/pppp/qemu/meson.build | /usr/bin/python3 -B \
+  scripts/meson-buildoptions.py > /home/william/Code/pppp/qemu/scripts/meson-buildoptions.sh.tmp && mv /home/william/Code/pppp/qemu/scripts/meson-buildoptions.sh.tmp /home/william/Code/pppp/qemu/scripts/meson-buildoptions.sh
+ 
+Unable to evaluate subdir([]) in AstInterpreter --> Skipping
+
+config-host.mak is out-of-date, running configure
+ 
+/usr/bin/ninja  build.ninja && touch build.ninja.stamp
+ 
+[0/1] Regenerating build files.
+ 
+The Meson build system
+Version: 0.62.1
+Source dir: /home/william/Code/pppp/qemu
+Build dir: /home/william/Code/pppp/qemu/build
+Build type: native build
+Project name: qemu
+Project version: 7.0.50
+C compiler for the host machine: cc -m64 -mcx16 (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0")
+C linker for the host machine: cc -m64 -mcx16 ld.bfd 2.34
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Program sh found: YES (/usr/bin/sh)
+Program python3 found: YES (/usr/bin/python3.9)
+Program bzip2 found: YES (/usr/bin/bzip2)
+C++ compiler for the host machine: c++ -m64 -mcx16 (gcc 9.4.0 "c++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0")
+C++ linker for the host machine: c++ -m64 -mcx16 ld.bfd 2.34
+Program cgcc found: NO
+Library m found: YES
+Dependency threads found: YES unknown (cached)
+Library util found: YES
+Run-time dependency appleframeworks found: NO (tried framework)
+Dependency pixman-1 found: YES 0.38.4 (cached)
+Dependency zlib found: YES 1.2.11 (cached)
+Has header "libaio.h" : YES (cached)
+Library aio found: YES
+Found pkg-config: /usr/bin/pkg-config (0.29.1)
+Run-time dependency liburing found: NO (tried pkgconfig)
+Run-time dependency libnfs found: NO (tried pkgconfig)
+Dependency boost (modules: graph, python3) found: YES 1.71.0 (cached)
+Dependency python3-embed found: YES 3.8 (cached)
+Run-time dependency appleframeworks found: NO (tried framework)
+Dependency libseccomp found: YES 2.5.1 (cached)
+Has header "cap-ng.h" : YES (cached)
+Library cap-ng found: YES
+Run-time dependency xkbcommon found: NO (tried pkgconfig)
+Has header "libvdeplug.h" : NO (cached)
+Dependency libpulse found: YES 13.99.1 (cached)
+Dependency alsa found: YES 1.2.2 (cached)
+Run-time dependency jack found: NO (tried pkgconfig)
+Dependency spice-protocol found: YES 0.14.0 (cached)
+Dependency spice-server found: YES 0.14.2 (cached)
+Library rt found: YES
+Dependency libiscsi found: YES 1.18.0 (cached)
+Run-time dependency libzstd found: NO (tried pkgconfig)
+Dependency virglrenderer found: YES 0.8.2 (cached)
+Dependency libcurl found: YES 7.68.0 (cached)
+Dependency libudev found: YES 245 (cached)
+Library mpathpersist found: NO
+Dependency ncursesw found: YES 6.2.20200212 (cached)
+Has header "brlapi.h" : YES (cached)
+Library brlapi found: YES
+sdl2-config found: NO
+Run-time dependency sdl2 found: NO (tried pkgconfig and config-tool)
+Library rados found: YES
+Has header "rbd/librbd.h" : YES (cached)
+Library rbd found: YES
+Run-time dependency glusterfs-api found: NO (tried pkgconfig)
+Dependency libssh found: YES 0.9.3 (cached)
+Has header "bzlib.h" : NO (cached)
+Has header "lzfse.h" : NO (cached)
+Has header "sys/soundcard.h" : YES (cached)
+Dependency gbm found: YES 21.2.6 (cached)
+Dependency gnutls found: NO found 3.6.13 but need: '>=3.6.14'
+Run-time dependency gnutls found: NO (tried pkgconfig)
+Dependency gnutls found: YES 3.6.13 (cached)
+libgcrypt-config found: NO need ['>=1.8']
+Run-time dependency libgcrypt found: NO (tried config-tool)
+Dependency nettle found: YES 3.5.1 (cached)
+Has header "nettle/xts.h" with dependency nettle: YES (cached)
+Run-time dependency gtk+-3.0 found: NO (tried pkgconfig)
+Dependency libpng found: YES 1.6.37 (cached)
+Dependency libjpeg found: YES 2.0.3 (cached)
+Has header "sasl/sasl.h" : YES (cached)
+Library sasl2 found: YES
+Has header "security/pam_appl.h" : NO (cached)
+Has header "snappy-c.h" : NO (cached)
+Has header "lzo/lzo1x.h" : NO (cached)
+Has header "numa.h" : YES (cached)
+Library numa found: YES
+Dependency libcacard found: YES 2.6.1 (cached)
+Run-time dependency u2f-emu found: NO (tried pkgconfig)
+Dependency libusbredirparser-0.5 found: YES 0.8.0 (cached)
+Dependency libusb-1.0 found: YES 1.0.23 (cached)
+Dependency libpmem found: YES 1.8 (cached)
+Run-time dependency libdaxctl found: NO (tried pkgconfig)
+Dependency libtasn1 found: YES 4.16.0 (cached)
+Run-time dependency libkeyutils found: NO (tried pkgconfig)
+Checking for function "gettid" : YES (cached)
+Dependency libselinux found: YES 3.0 (cached)
+Run-time dependency fuse3 found: NO (tried pkgconfig)
+Run-time dependency libbpf found: NO (tried pkgconfig)
+Has header "sys/epoll.h" : YES (cached)
+Has header "linux/magic.h" : YES (cached)
+Has header "valgrind/valgrind.h" : NO (cached)
+Has header "linux/btrfs.h" : YES (cached)
+Has header "libdrm/drm.h" : YES (cached)
+Has header "pty.h" : YES (cached)
+Has header "sys/disk.h" : NO (cached)
+Has header "sys/ioccom.h" : NO (cached)
+Has header "sys/kcov.h" : NO (cached)
+Checking for function "accept4" : YES (cached)
+Checking for function "clock_adjtime" : YES (cached)
+Checking for function "dup3" : YES (cached)
+Checking for function "fallocate" : YES (cached)
+Checking for function "posix_fallocate" : YES (cached)
+Checking for function "posix_memalign" : YES (cached)
+Checking for function "_aligned_malloc" : NO (cached)
+Checking for function "valloc" : YES (cached)
+Checking for function "memalign" : YES (cached)
+Checking for function "ppoll" : YES (cached)
+Checking for function "preadv" : YES (cached)
+Checking for function "pthread_fchdir_np" : NO (cached)
+Checking for function "sendfile" : YES (cached)
+Checking for function "setns" : YES (cached)
+Checking for function "unshare" : YES (cached)
+Checking for function "syncfs" : YES (cached)
+Checking for function "sync_file_range" : YES (cached)
+Checking for function "timerfd_create" : YES (cached)
+Checking for function "copy_file_range" : YES (cached)
+Checking for function "openpty" with dependency -lutil: YES (cached)
+Checking for function "strchrnul" : YES (cached)
+Checking for function "system" : YES (cached)
+Checking for function "ibv_advise_mr" : YES (cached)
+Header <byteswap.h> has symbol "bswap_32" : YES (cached)
+Header <sys/epoll.h> has symbol "epoll_create1" : YES (cached)
+Header <linux/falloc.h> has symbol "FALLOC_FL_PUNCH_HOLE" : YES (cached)
+Header <linux/falloc.h> has symbol "FALLOC_FL_KEEP_SIZE" : YES (cached)
+Header <linux/falloc.h> has symbol "FALLOC_FL_ZERO_RANGE" : YES (cached)
+Has header "linux/fiemap.h" : YES (cached)
+Header <linux/fs.h> has symbol "FS_IOC_FIEMAP" : YES (cached)
+Checking for function "getrandom" : YES (cached)
+Header <sys/random.h> has symbol "GRND_NONBLOCK" : YES (cached)
+Header <sys/inotify.h> has symbol "inotify_init" : YES (cached)
+Header <sys/inotify.h> has symbol "inotify_init1" : YES (cached)
+Header <machine/bswap.h> has symbol "bswap32" : NO (cached)
+Header <sys/prctl.h> has symbol "PR_SET_TIMERSLACK" : YES (cached)
+Header <linux/rtnetlink.h> has symbol "IFLA_PROTO_DOWN" : YES (cached)
+Header <sys/sysmacros.h> has symbol "makedev" : YES (cached)
+Header <getopt.h> has symbol "optreset" : NO (cached)
+Header <netinet/in.h> has symbol "IPPROTO_MPTCP" : NO (cached)
+Checking whether type "struct sigevent" has member "sigev_notify_thread_id" : NO (cached)
+Checking whether type "struct stat" has member "st_atim" : YES (cached)
+Checking for type "struct iovec" : YES (cached)
+Checking for type "struct utmpx" : YES (cached)
+Checking for type "struct mmsghdr" : YES (cached)
+Header <linux/vm_sockets.h> has symbol "AF_VSOCK" : YES (cached)
+Program scripts/minikconf.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/scripts/minikconf.py)
+Configuring aarch64-softmmu-config-target.h using configuration
+Configuring aarch64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/aarch64-softmmu-config-devices.mak.d
+Configuring aarch64-softmmu-config-devices.h using configuration
+Configuring alpha-softmmu-config-target.h using configuration
+Configuring alpha-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/alpha-softmmu-config-devices.mak.d
+Configuring alpha-softmmu-config-devices.h using configuration
+Configuring arm-softmmu-config-target.h using configuration
+Configuring arm-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/arm-softmmu-config-devices.mak.d
+Configuring arm-softmmu-config-devices.h using configuration
+Configuring avr-softmmu-config-target.h using configuration
+Configuring avr-softmmu-config-devices.mak with command
+ 
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/avr-softmmu-config-devices.mak.d
+Configuring avr-softmmu-config-devices.h using configuration
+Configuring cris-softmmu-config-target.h using configuration
+Configuring cris-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/cris-softmmu-config-devices.mak.d
+Configuring cris-softmmu-config-devices.h using configuration
+Configuring hppa-softmmu-config-target.h using configuration
+Configuring hppa-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/hppa-softmmu-config-devices.mak.d
+Configuring hppa-softmmu-config-devices.h using configuration
+Configuring i386-softmmu-config-target.h using configuration
+Configuring i386-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/i386-softmmu-config-devices.mak.d
+Configuring i386-softmmu-config-devices.h using configuration
+Configuring m68k-softmmu-config-target.h using configuration
+Configuring m68k-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/m68k-softmmu-config-devices.mak.d
+Configuring m68k-softmmu-config-devices.h using configuration
+Configuring microblaze-softmmu-config-target.h using configuration
+Configuring microblaze-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/microblaze-softmmu-config-devices.mak.d
+Configuring microblaze-softmmu-config-devices.h using configuration
+Configuring microblazeel-softmmu-config-target.h using configuration
+Configuring microblazeel-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/microblazeel-softmmu-config-devices.mak.d
+Configuring microblazeel-softmmu-config-devices.h using configuration
+Configuring mips-softmmu-config-target.h using configuration
+Configuring mips-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/mips-softmmu-config-devices.mak.d
+Configuring mips-softmmu-config-devices.h using configuration
+Configuring mips64-softmmu-config-target.h using configuration
+Configuring mips64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/mips64-softmmu-config-devices.mak.d
+Configuring mips64-softmmu-config-devices.h using configuration
+Configuring mips64el-softmmu-config-target.h using configuration
+Configuring mips64el-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/mips64el-softmmu-config-devices.mak.d
+Configuring mips64el-softmmu-config-devices.h using configuration
+Configuring mipsel-softmmu-config-target.h using configuration
+Configuring mipsel-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/mipsel-softmmu-config-devices.mak.d
+Configuring mipsel-softmmu-config-devices.h using configuration
+Configuring nios2-softmmu-config-target.h using configuration
+Configuring nios2-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/nios2-softmmu-config-devices.mak.d
+Configuring nios2-softmmu-config-devices.h using configuration
+Configuring or1k-softmmu-config-target.h using configuration
+Configuring or1k-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/or1k-softmmu-config-devices.mak.d
+Configuring or1k-softmmu-config-devices.h using configuration
+Configuring ppc-softmmu-config-target.h using configuration
+Configuring ppc-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/ppc-softmmu-config-devices.mak.d
+Configuring ppc-softmmu-config-devices.h using configuration
+Configuring ppc64-softmmu-config-target.h using configuration
+Configuring ppc64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/ppc64-softmmu-config-devices.mak.d
+Configuring ppc64-softmmu-config-devices.h using configuration
+Configuring riscv32-softmmu-config-target.h using configuration
+Configuring riscv32-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/riscv32-softmmu-config-devices.mak.d
+Configuring riscv32-softmmu-config-devices.h using configuration
+Configuring riscv64-softmmu-config-target.h using configuration
+Configuring riscv64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/riscv64-softmmu-config-devices.mak.d
+Configuring riscv64-softmmu-config-devices.h using configuration
+Configuring rx-softmmu-config-target.h using configuration
+Configuring rx-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/rx-softmmu-config-devices.mak.d
+Configuring rx-softmmu-config-devices.h using configuration
+Configuring s390x-softmmu-config-target.h using configuration
+Configuring s390x-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/s390x-softmmu-config-devices.mak.d
+Configuring s390x-softmmu-config-devices.h using configuration
+Configuring sh4-softmmu-config-target.h using configuration
+Configuring sh4-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/sh4-softmmu-config-devices.mak.d
+Configuring sh4-softmmu-config-devices.h using configuration
+Configuring sh4eb-softmmu-config-target.h using configuration
+Configuring sh4eb-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/sh4eb-softmmu-config-devices.mak.d
+Configuring sh4eb-softmmu-config-devices.h using configuration
+Configuring sparc-softmmu-config-target.h using configuration
+Configuring sparc-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/sparc-softmmu-config-devices.mak.d
+Configuring sparc-softmmu-config-devices.h using configuration
+Configuring sparc64-softmmu-config-target.h using configuration
+Configuring sparc64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/sparc64-softmmu-config-devices.mak.d
+Configuring sparc64-softmmu-config-devices.h using configuration
+Configuring tricore-softmmu-config-target.h using configuration
+Configuring tricore-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/tricore-softmmu-config-devices.mak.d
+Configuring tricore-softmmu-config-devices.h using configuration
+Configuring x86_64-softmmu-config-target.h using configuration
+Configuring x86_64-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/x86_64-softmmu-config-devices.mak.d
+Configuring x86_64-softmmu-config-devices.h using configuration
+Configuring xtensa-softmmu-config-target.h using configuration
+Configuring xtensa-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/xtensa-softmmu-config-devices.mak.d
+Configuring xtensa-softmmu-config-devices.h using configuration
+Configuring xtensaeb-softmmu-config-target.h using configuration
+Configuring xtensaeb-softmmu-config-devices.mak with command
+Reading depfile: /home/william/Code/pppp/qemu/build/meson-private/xtensaeb-softmmu-config-devices.mak.d
+Configuring xtensaeb-softmmu-config-devices.h using configuration
+Configuring aarch64-linux-user-config-target.h using configuration
+Configuring aarch64_be-linux-user-config-target.h using configuration
+Configuring alpha-linux-user-config-target.h using configuration
+Configuring arm-linux-user-config-target.h using configuration
+Configuring armeb-linux-user-config-target.h using configuration
+Configuring cris-linux-user-config-target.h using configuration
+Configuring hexagon-linux-user-config-target.h using configuration
+Configuring hppa-linux-user-config-target.h using configuration
+ 
+Configuring i386-linux-user-config-target.h using configuration
+Configuring m68k-linux-user-config-target.h using configuration
+Configuring microblaze-linux-user-config-target.h using configuration
+Configuring microblazeel-linux-user-config-target.h using configuration
+Configuring mips-linux-user-config-target.h using configuration
+Configuring mips64-linux-user-config-target.h using configuration
+Configuring mips64el-linux-user-config-target.h using configuration
+Configuring mipsel-linux-user-config-target.h using configuration
+Configuring mipsn32-linux-user-config-target.h using configuration
+Configuring mipsn32el-linux-user-config-target.h using configuration
+Configuring nios2-linux-user-config-target.h using configuration
+Configuring or1k-linux-user-config-target.h using configuration
+Configuring ppc-linux-user-config-target.h using configuration
+Configuring ppc64-linux-user-config-target.h using configuration
+Configuring ppc64le-linux-user-config-target.h using configuration
+Configuring riscv32-linux-user-config-target.h using configuration
+Configuring riscv64-linux-user-config-target.h using configuration
+Configuring s390x-linux-user-config-target.h using configuration
+Configuring sh4-linux-user-config-target.h using configuration
+Configuring sh4eb-linux-user-config-target.h using configuration
+Configuring sparc-linux-user-config-target.h using configuration
+Configuring sparc32plus-linux-user-config-target.h using configuration
+Configuring sparc64-linux-user-config-target.h using configuration
+Configuring x86_64-linux-user-config-target.h using configuration
+Configuring xtensa-linux-user-config-target.h using configuration
+Configuring xtensaeb-linux-user-config-target.h using configuration
+Program scripts/make-config-poison.sh found: YES (/home/william/Code/pppp/qemu/scripts/make-config-poison.sh)
+Dependency capstone found: YES 4.0.2 (cached)
+Dependency slirp found: YES 4.1.0 (cached)
+Library fdt found: YES
+Configuring config-host.h using configuration
+Program scripts/hxtool found: YES (/home/william/Code/pppp/qemu/scripts/hxtool)
+Program scripts/shaderinclude.pl found: YES (/usr/bin/env perl /home/william/Code/pppp/qemu/scripts/shaderinclude.pl)
+Program scripts/qapi-gen.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/scripts/qapi-gen.py)
+Program scripts/qemu-version.sh found: YES (/home/william/Code/pppp/qemu/scripts/qemu-version.sh)
+
+Executing subproject libvhost-user 
+
+libvhost-user| Project name: libvhost-user
+libvhost-user| Project version: undefined
+libvhost-user| C compiler for the host machine: cc -m64 -mcx16 (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0")
+libvhost-user| C linker for the host machine: cc -m64 -mcx16 ld.bfd 2.34
+libvhost-user| Dependency threads found: YES unknown (cached)
+libvhost-user| Dependency glib-2.0 found: YES 2.64.6 (overridden)
+libvhost-user| Build targets in project: 9
+libvhost-user| Subproject libvhost-user finished.
+
+Program scripts/decodetree.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/scripts/decodetree.py)
+Program ../scripts/modules/module_block.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/block/../scripts/modules/module_block.py)
+Program ../scripts/block-coroutine-wrapper.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/block/../scripts/block-coroutine-wrapper.py)
+Program scripts/modinfo-collect.py found: YES (/home/william/Code/pppp/qemu/scripts/modinfo-collect.py)
+Program scripts/modinfo-generate.py found: YES (/home/william/Code/pppp/qemu/scripts/modinfo-generate.py)
+Program nm found: YES
+Program scripts/undefsym.py found: YES (/usr/bin/python3.9 /home/william/Code/pppp/qemu/scripts/undefsym.py)
+Program scripts/feature_to_c.sh found: YES (/bin/sh /home/william/Code/pppp/qemu/scripts/feature_to_c.sh)
+Library ibumad found: YES
+Configuring 50-qemu-gpu.json using configuration
+Configuring 50-qemu-virtiofsd.json using configuration
+Configuring 50-edk2-i386-secure.json using configuration
+Configuring 50-edk2-x86_64-secure.json using configuration
+Configuring 60-edk2-aarch64.json using configuration
+Configuring 60-edk2-arm.json using configuration
+Configuring 60-edk2-i386.json using configuration
+Configuring 60-edk2-x86_64.json using configuration
+Program qemu-keymap found: NO
+Program cp found: YES (/usr/bin/cp)
+Program sphinx-build found: YES (/usr/bin/sphinx-build)
+../docs/meson.build:30: WARNING: /usr/bin/sphinx-build: 
+Configuration error:
+There is a programmable error in your configuration file:
+
+Traceback (most recent call last):
+  File "/home/william/Code/pppp/qemu/docs/conf.py", line 166, in <module>
+    import sphinx_rtd_theme
+ModuleNotFoundError: No module named 'sphinx_rtd_theme'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/sphinx/config.py", line 368, in eval_config_file
+    execfile_(filename, namespace)
+  File "/usr/lib/python3/dist-packages/sphinx/util/pycompat.py", line 150, in execfile_
+    exec_(code, _globals)
+  File "/home/william/Code/pppp/qemu/docs/conf.py", line 168, in <module>
+    raise ConfigError(
+sphinx.errors.ConfigError: The Sphinx 'sphinx_rtd_theme' HTML theme was not found.
+
+
+
+Program bash found: YES 5.0.17 (/usr/bin/bash)
+Program diff found: YES (/usr/bin/diff)
+Program dbus-daemon found: YES (/usr/bin/dbus-daemon)
+Program initrd-stress.sh found: YES (/home/william/Code/pppp/qemu/tests/migration/initrd-stress.sh)
+Build targets in project: 730
+
+qemu 7.0.50
+
+  Directories
+    Install prefix               : /usr/local
+    BIOS directory               : share/qemu
+    firmware path                : /usr/local/share/qemu-firmware
+    binary directory             : bin
+    library directory            : lib
+    module directory             : lib/qemu
+    libexec directory            : libexec
+    include directory            : include
+    config directory             : /usr/local/etc
+    local state directory        : /usr/local/var
+    Manual directory             : share/man
+    Doc directory                : /usr/local/share/doc
+    Build directory              : /home/william/Code/pppp/qemu/build
+    Source path                  : /home/william/Code/pppp/qemu
+    GIT submodules               : ui/keycodemapdb tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc capstone slirp
+
+  Host binaries
+    git                          : git
+    make                         : make
+    python                       : /usr/bin/python3.9 (version: 3.9)
+    sphinx-build                 : /usr/bin/sphinx-build
+    gdb                          : /usr/bin/gdb
+    iasl                         : NO
+    genisoimage                  : /usr/bin/genisoimage
+    smbd                         : /usr/sbin/smbd
+
+  Configurable features
+    Documentation                : NO
+    system-mode emulation        : YES
+    user-mode emulation          : YES
+    block layer                  : YES
+    Install blobs                : YES
+    module support               : NO
+    fuzzing support              : NO
+    Audio drivers                : pa oss
+    Trace backends               : log
+    D-Bus display                : NO
+    QOM debugging                : NO
+    vhost-kernel support         : YES
+    vhost-net support            : YES
+    vhost-crypto support         : YES
+    vhost-scsi support           : YES
+    vhost-vsock support          : YES
+    vhost-user support           : YES
+    vhost-user-blk server support: YES
+    vhost-user-fs support        : YES
+    vhost-vdpa support           : YES
+    build guest agent            : YES
+
+  Compilation
+    host CPU                     : x86_64
+    host endianness              : little
+    C compiler                   : cc -m64 -mcx16
+    Host C compiler              : cc -m64 -mcx16
+    C++ compiler                 : c++ -m64 -mcx16
+    CFLAGS                       : -O2 -g
+    CXXFLAGS                     : -O2 -g
+    QEMU_CFLAGS                  :  
+-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wstrict-prototypes -Wredundant-decls -Wundef -Wwrite-strings -Wmissing-prototypes -fno-strict-aliasing -fno-common -fwrapv -Wold-style-declaration -Wold-style-definition -Wtype-limits -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wempty-body -Wnested-externs -Wendif-labels -Wexpansion-to-defined -Wimplicit-fallthrough=2 -Wno-missing-include-dirs -Wno-shift-negative-value -Wno-psabi -fstack-protector-strong
+    QEMU_CXXFLAGS                : -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wundef -Wwrite-strings -fno-strict-aliasing -fno-common -fwrapv -Wtype-limits -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wempty-body -Wendif-labels -Wexpansion-to-defined -Wimplicit-fallthrough=2 -Wno-missing-include-dirs -Wno-shift-negative-value -Wno-psabi -fstack-protector-strong
+    QEMU_OBJCFLAGS               : -Wold-style-definition -Wtype-limits -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wempty-body -Wnested-externs -Wendif-labels -Wexpansion-to-defined -Wno-initializer-overrides -Wno-missing-include-dirs -Wno-shift-negative-value -Wno-string-plus-int -Wno-typedef-redefinition -Wno-tautological-type-limit-compare
+    QEMU_LDFLAGS                 : -Wl,--warn-common -Wl,-z,relro -Wl,-z,now  -fstack-protector-strong
+    profiler                     : NO
+    link-time optimization (LTO) : NO
+    PIE                          : YES
+    static build                 : NO
+    malloc trim support          : YES
+    membarrier                   : NO
+    debug stack usage            : NO
+    mutex debugging              : NO
+    memory allocator             : system
+    avx2 optimization            : YES
+    avx512f optimization         : NO
+    gprof enabled                : NO
+    gcov                         : NO
+    thread sanitizer             : NO
+    CFI support                  : NO
+    strip binaries               : NO
+    sparse                       : NO
+    mingw32 support              : NO
+
+  Targets and accelerators
+    KVM support                  : YES
+    HAX support                  : NO
+    HVF support                  : NO
+    WHPX support                 : NO
+    NVMM support                 : NO
+    Xen support                  : YES
+    xen ctrl version             : 41100
+    TCG support                  : YES
+    TCG backend                  : native (x86_64)
+    TCG plugins                  : YES
+    TCG debug enabled            : NO
+    target list                  : aarch64-softmmu alpha-softmmu arm-softmmu avr-softmmu cris-softmmu hppa-softmmu i386-softmmu m68k-softmmu microblaze-softmmu microblazeel-softmmu mips-softmmu mips64-softmmu mips64el-softmmu mipsel-softmmu nios2-softmmu or1k-softmmu ppc-softmmu ppc64-softmmu riscv32-softmmu riscv64-softmmu rx-softmmu s390x-softmmu sh4-softmmu sh4eb-softmmu sparc-softmmu sparc64-softmmu tricore-softmmu x86_64-softmmu xtensa-softmmu xtensaeb-softmmu aarch64-linux-user aarch64_be-linux-user alpha-linux-user arm-linux-user armeb-linux-user cris-linux-user hexagon-linux-user hppa-linux-user i386-linux-user m68k-linux-user microblaze-linux-user microblazeel-linux-user mips-linux-user mips64-linux-user mips64el-linux-user mipsel-linux-user mipsn32-linux-user mipsn32el-linux-user nios2-linux-user or1k-linux-user ppc-linux-user ppc64-linux-user ppc64le-linux-user riscv32-linux-user riscv64-linux-user s390x-linux-user sh4-linux-user sh4eb-linux-user sparc-linux-user sparc32plus-linux-user sparc64-linux-user x86_64-linux-user xtensa-linux-user xtensaeb-linux-user
+    default devices              : YES
+    out of process emulation     : YES
+
+  Block layer support
+    coroutine backend            : ucontext
+    coroutine pool               : YES
+    Block whitelist (rw)         : 
+    Block whitelist (ro)         : 
+    Use block whitelist in tools : NO
+    VirtFS support               : YES
+    build virtiofs daemon        : YES
+    Live block migration         : YES
+    replication support          : YES
+    bochs support                : YES
+    cloop support                : YES
+    dmg support                  : YES
+    qcow v1 support              : YES
+    vdi support                  : YES
+    vvfat support                : YES
+    qed support                  : YES
+    parallels support            : YES
+    FUSE exports                 : NO
+
+  Crypto
+    TLS priority                 : "NORMAL"
+    GNUTLS support               : YES 3.6.13
+      GNUTLS crypto              : NO
+    libgcrypt                    : NO
+    nettle                       : YES 3.5.1
+      XTS                        : YES
+    AF_ALG support               : NO
+    rng-none                     : NO
+    Linux keyring                : YES
+
+  Dependencies
+    SDL support                  : NO
+    SDL image support            : NO
+    GTK support                  : NO
+    pixman                       : YES 0.38.4
+    VTE support                  : NO
+    slirp support                : YES 4.1.0
+    libtasn1                     : YES 4.16.0
+    PAM                          : NO
+    iconv support                : YES
+    curses support               : YES
+    virgl support                : YES 0.8.2
+    curl support                 : YES 7.68.0
+    Multipath support            : NO
+    VNC support                  : YES
+    VNC SASL support             : YES
+    VNC JPEG support             : YES 2.0.3
+    VNC PNG support              : YES 1.6.37
+    OSS support                  : YES
+    ALSA support                 : YES 1.2.2
+    PulseAudio support           : YES 13.99.1
+    JACK support                 : NO
+    brlapi support               : YES
+    vde support                  : NO
+    netmap support               : NO
+    l2tpv3 support               : YES
+    Linux AIO support            : YES
+    Linux io_uring support       : NO
+    ATTR/XATTR support           : YES
+    RDMA support                 : YES
+    PVRDMA support               : YES
+    fdt support                  : system
+    libcap-ng support            : YES
+    bpf support                  : NO
+    spice protocol support       : YES 0.14.0
+      spice server support       : YES 0.14.2
+    rbd support                  : YES
+    smartcard support            : YES 2.6.1
+    U2F support                  : NO
+    libusb                       : YES 1.0.23
+    usb net redir                : YES 0.8.0
+    OpenGL support               : YES
+    GBM                          : YES 21.2.6
+    libiscsi support             : YES 1.18.0
+    libnfs support               : NO
+    seccomp support              : YES 2.5.1
+    GlusterFS support            : NO
+    TPM support                  : YES
+    libssh support               : YES 0.9.3
+    lzo support                  : NO
+    snappy support               : NO
+    bzip2 support                : NO
+    lzfse support                : NO
+    zstd support                 : NO
+    NUMA host support            : YES
+    capstone                     : YES 4.0.2
+    libpmem support              : YES 1.8
+    libdaxctl support            : NO
+    libudev                      : YES 245
+    FUSE lseek                   : NO
+    selinux                      : YES 3.0
+
+  Subprojects
+    libvhost-user                : YES
+
+  User defined options
+    Native files                 : /home/william/Code/pppp/qemu/build/config-meson.cross
+    backend                      : ninja
+    bindir                       : /usr/local/bin
+    datadir                      : /usr/local/share
+    debug                        : true
+    includedir                   : /usr/local/include
+    libdir                       : /usr/local/lib
+    libexecdir                   : /usr/local/libexec
+    localedir                    : /usr/local/share/locale
+    localstatedir                : /usr/local/var
+    mandir                       : /usr/local/share/man
+    optimization                 : 2
+    prefix                       : /usr/local
+    sysconfdir                   :  
+/usr/local/etc
+    werror                       : true
+    b_coverage                   : false
+    b_lto                        : false
+    b_pie                        : true
+    audio_drv_list               : default
+    capstone                     : auto
+    cfi                          : false
+    default_devices              : true
+    docdir                       : /usr/local/share/doc
+    fdt                          : auto
+    iasl                         : 
+    qemu_firmwarepath            : /usr/local/share/qemu-firmware
+    qemu_suffix                  : qemu
+    slirp                        : auto
+    smbd                         : 
+    sphinx_build                 : 
+    tcg                          : enabled
+    trace_file                   : trace
+    xen                          : enabled
+
+Found ninja-1.10.0 at /usr/bin/ninja
+ 
+Generating targets:   0%|                                                   | 0/730 [00:00<?, ?it/s]
+                                                                                                    
+Traceback (most recent call last):
+  File "/home/william/.local/bin/meson", line 8, in <module>
+
+    sys.exit(main())
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/mesonmain.py", line 271, in main
+
+    return run(sys.argv[1:], launcher)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/mesonmain.py", line 262, in run
+
+    return CommandLineParser().run(args)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/mesonmain.py", line 153, in run
+    return options.run_func(options)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/msetup.py", line 301, in run
+
+    app.generate()
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/msetup.py", line 185, in generate
+
+    self._generate(env)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/msetup.py", line 247, in _generate
+
+    intr.backend.generate()
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/backend/ninjabackend.py", line 554, in generate
+
+    self.generate_target(t)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/backend/ninjabackend.py", line 836, in generate_target
+
+    o, s = self.generate_single_compile(target, src, True,
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/backend/ninjabackend.py", line 2698, in generate_single_compile
+
+    element.add_item('ARGS', commands)
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/backend/ninjabackend.py", line 332, in add_item
+    elems = elems.to_native()
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/compilers/mixins/clike.py", line 111, in to_native
+
+    new[i + 1] in default_dirs):
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/arglist.py", line 168, in __getitem__
+
+    self.flush_pre_post()
+  File "/home/william/.local/lib/python3.9/site-packages/mesonbuild/arglist.py", line 134, in flush_pre_post
+    for a in reversed(self.post):
+KeyboardInterrupt
+
+ninja: error: rebuilding 'build.ninja': interrupted by user
+
+make: *** [GNUmakefile:11: all] Interrupt
+

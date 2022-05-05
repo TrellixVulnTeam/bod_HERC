@@ -23,7 +23,8 @@
 
 #include "hw/pci/pci.h"
 
-struct MSIMessage {
+struct MSIMessage
+{
     uint64_t address;
     uint32_t data;
 };

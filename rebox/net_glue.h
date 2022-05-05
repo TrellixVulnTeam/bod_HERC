@@ -1,0 +1,21 @@
+
+void NetPoll(NetClientState *, bool enable);
+void NetCanReceive(NetClientState *);
+void NetReceive(NetClientState *, const uint8_t *, size_t);
+void NetReceiveIOV(NetClientState *, const struct iovec *, int);
+void NetCleanup(NetClientState *);
+void LinkStatusChanged(NetClientState *);
+void NetClientDestructor(NetClientState *);
+void QueryRxFilter(NetClientState *);
+void HasUfo(NetClientState *);
+void HasVnetHdr(NetClientState *);
+void HasVnetHdrLen(NetClientState *, int);
+void UsingVnetHdr(NetClientState *, bool);
+void SetOffload(NetClientState *, int, int, int, int, int);
+void SetVnetHdrLen(NetClientState *, int);
+void SetVnetLE(NetClientState *, bool);
+void SetVnetBE(NetClientState *, bool);
+void SocketReadStateFinalize(SocketReadState *rs);
+void NetAnnounce(NetClientState *);
+void SetSteeringEBPF(NetClientState *, int);
+void NetCheckPeerType(NetClientState *, ObjectClass *, Error **);

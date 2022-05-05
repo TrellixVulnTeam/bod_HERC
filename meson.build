@@ -484,6 +484,11 @@ if not get_option('libnfs').auto() or have_block
                       method: 'pkg-config', kwargs: static_kwargs)
 endif
 
+# python start
+boost = dependency('boost',modules: ['graph', 'python3'],required: true)
+python_deb = dependency('python3-embed', required: true)
+# python end
+
 libattr_test = '''
   #include <stddef.h>
   #include <sys/types.h>
@@ -2654,7 +2659,7 @@ stub_ss = ss.source_set()
 trace_ss = ss.source_set()
 user_ss = ss.source_set()
 util_ss = ss.source_set()
-
+rebox_ss = ss.source_set()
 # accel modules
 qtest_module_ss = ss.source_set()
 tcg_module_ss = ss.source_set()
@@ -2795,6 +2800,8 @@ subdir('qom')
 subdir('authz')
 subdir('crypto')
 subdir('ui')
+subdir('rebox')
+
 
 
 if enable_modules
@@ -3013,12 +3020,16 @@ qemu_syms = custom_target('qemu.syms', output: 'qemu.syms',
                              capture: true,
                              command: [undefsym, nm, '@INPUT@'])
 
+rebox_ss = rebox_ss.apply(config_host, strict: false)
+librebox = static_library('rebox', rebox_ss.sources() + genh, dependencies: [rebox_ss.dependencies(),boost,pixman,python_deb ],name_suffix: 'fa')
+rebox = declare_dependency(link_whole: librebox, dependencies: [pixman])
+
 qom_ss = qom_ss.apply(config_host, strict: false)
 libqom = static_library('qom', qom_ss.sources() + genh,
                         dependencies: [qom_ss.dependencies()],
                         name_suffix: 'fa')
 
-qom = declare_dependency(link_whole: libqom)
+qom = declare_dependency(link_whole: libqom,dependencies: [rebox])
 
 authz_ss = authz_ss.apply(config_host, strict: false)
 libauthz = static_library('authz', authz_ss.sources() + genh,
@@ -3027,7 +3038,7 @@ libauthz = static_library('authz', authz_ss.sources() + genh,
                           build_by_default: false)
 
 authz = declare_dependency(link_whole: libauthz,
-                           dependencies: qom)
+                           dependencies: [qom,rebox])
 
 crypto_ss = crypto_ss.apply(config_host, strict: false)
 libcrypto = static_library('crypto', crypto_ss.sources() + genh,
@@ -3036,7 +3047,7 @@ libcrypto = static_library('crypto', crypto_ss.sources() + genh,
                            build_by_default: false)
 
 crypto = declare_dependency(link_whole: libcrypto,
-                            dependencies: [authz, qom])
+                            dependencies: [authz, qom,rebox])
 
 io_ss = io_ss.apply(config_host, strict: false)
 libio = static_library('io', io_ss.sources() + genh,
@@ -3045,13 +3056,13 @@ libio = static_library('io', io_ss.sources() + genh,
                        name_suffix: 'fa',
                        build_by_default: false)
 
-io = declare_dependency(link_whole: libio, dependencies: [crypto, qom])
+io = declare_dependency(link_whole: libio, dependencies: [crypto, qom,rebox])
 
 libmigration = static_library('migration', sources: migration_files + genh,
                               name_suffix: 'fa',
                               build_by_default: false)
 migration = declare_dependency(link_with: libmigration,
-                               dependencies: [zlib, qom, io])
+                               dependencies: [zlib, qom, io,rebox])
 softmmu_ss.add(migration)
 
 block_ss = block_ss.apply(config_host, strict: false)
@@ -3063,7 +3074,7 @@ libblock = static_library('block', block_ss.sources() + genh,
 
 block = declare_dependency(link_whole: [libblock],
                            link_args: '@block.syms',
-                           dependencies: [crypto, io])
+                           dependencies: [crypto, io,rebox])
 
 blockdev_ss = blockdev_ss.apply(config_host, strict: false)
 libblockdev = static_library('blockdev', blockdev_ss.sources() + genh,
@@ -3072,7 +3083,7 @@ libblockdev = static_library('blockdev', blockdev_ss.sources() + genh,
                              build_by_default: false)
 
 blockdev = declare_dependency(link_whole: [libblockdev],
-                              dependencies: [block])
+                              dependencies: [block,rebox])
 
 qmp_ss = qmp_ss.apply(config_host, strict: false)
 libqmp = static_library('qmp', qmp_ss.sources() + genh,
@@ -3080,14 +3091,14 @@ libqmp = static_library('qmp', qmp_ss.sources() + genh,
                         name_suffix: 'fa',
                         build_by_default: false)
 
-qmp = declare_dependency(link_whole: [libqmp])
+qmp = declare_dependency(link_whole: [libqmp] )
 
 libchardev = static_library('chardev', chardev_ss.sources() + genh,
                             name_suffix: 'fa',
                             dependencies: chardev_ss.dependencies(),
                             build_by_default: false)
 
-chardev = declare_dependency(link_whole: libchardev)
+chardev = declare_dependency(link_whole: libchardev )
 
 hwcore_ss = hwcore_ss.apply(config_host, strict: false)
 libhwcore = static_library('hwcore', sources: hwcore_ss.sources() + genh,

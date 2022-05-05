@@ -19,7 +19,8 @@
 #include "ui/console.h"
 #include "sysemu/reset.h"
 
-struct QEMU_PACKED RAMFBCfg {
+struct QEMU_PACKED RAMFBCfg
+{
     uint64_t addr;
     uint32_t fourcc;
     uint32_t flags;
@@ -28,7 +29,8 @@ struct QEMU_PACKED RAMFBCfg {
     uint32_t stride;
 };
 
-struct RAMFBState {
+struct RAMFBState
+{
     DisplaySurface *ds;
     uint32_t width, height;
     struct RAMFBCfg cfg;
@@ -38,7 +40,7 @@ static void ramfb_unmap_display_surface(pixman_image_t *image, void *unused)
 {
     void *data = pixman_image_get_data(image);
     uint32_t size = pixman_image_get_stride(image) *
-        pixman_image_get_height(image);
+                    pixman_image_get_height(image);
     cpu_physical_memory_unmap(data, size, 0, 0);
 }
 
@@ -56,13 +58,15 @@ static DisplaySurface *ramfb_create_display_surface(int width, int height,
         return NULL;
 
     linesize = width * PIXMAN_FORMAT_BPP(format) / 8;
-    if (stride == 0) {
+    if (stride == 0)
+    {
         stride = linesize;
     }
 
     mapsize = size = stride * (height - 1) + linesize;
     data = cpu_physical_memory_map(addr, &mapsize, false);
-    if (size != mapsize) {
+    if (size != mapsize)
+    {
         cpu_physical_memory_unmap(data, mapsize, 0, 0);
         return NULL;
     }
@@ -82,16 +86,17 @@ static void ramfb_fw_cfg_write(void *dev, off_t offset, size_t len)
     uint32_t fourcc, format, width, height;
     hwaddr stride, addr;
 
-    width  = be32_to_cpu(s->cfg.width);
+    width = be32_to_cpu(s->cfg.width);
     height = be32_to_cpu(s->cfg.height);
     stride = be32_to_cpu(s->cfg.stride);
     fourcc = be32_to_cpu(s->cfg.fourcc);
-    addr   = be64_to_cpu(s->cfg.addr);
+    addr = be64_to_cpu(s->cfg.addr);
     format = qemu_drm_format_to_pixman(fourcc);
 
     surface = ramfb_create_display_surface(width, height,
                                            format, stride, addr);
-    if (!surface) {
+    if (!surface)
+    {
         return;
     }
 
@@ -102,11 +107,13 @@ static void ramfb_fw_cfg_write(void *dev, off_t offset, size_t len)
 
 void ramfb_display_update(QemuConsole *con, RAMFBState *s)
 {
-    if (!s->width || !s->height) {
+    if (!s->width || !s->height)
+    {
         return;
     }
 
-    if (s->ds) {
+    if (s->ds)
+    {
         dpy_gfx_replace_surface(con, s->ds);
         s->ds = NULL;
     }
@@ -120,7 +127,8 @@ RAMFBState *ramfb_setup(Error **errp)
     FWCfgState *fw_cfg = fw_cfg_find();
     RAMFBState *s;
 
-    if (!fw_cfg || !fw_cfg->dma_enabled) {
+    if (!fw_cfg || !fw_cfg->dma_enabled)
+    {
         error_setg(errp, "ramfb device requires fw_cfg with DMA");
         return NULL;
     }

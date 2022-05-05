@@ -35,7 +35,8 @@
 #define TYPE_ISA_CIRRUS_VGA "isa-cirrus-vga"
 OBJECT_DECLARE_SIMPLE_TYPE(ISACirrusVGAState, ISA_CIRRUS_VGA)
 
-struct ISACirrusVGAState {
+struct ISACirrusVGAState
+{
     ISADevice parent_obj;
 
     CirrusVGAState cirrus_vga;
@@ -50,13 +51,15 @@ static void isa_cirrus_vga_realizefn(DeviceState *dev, Error **errp)
     /* follow real hardware, cirrus card emulated has 4 MB video memory.
        Also accept 8 MB/16 MB for backward compatibility. */
     if (s->vram_size_mb != 4 && s->vram_size_mb != 8 &&
-        s->vram_size_mb != 16) {
+        s->vram_size_mb != 16)
+    {
         error_setg(errp, "Invalid cirrus_vga ram size '%u'",
                    s->vram_size_mb);
         return;
     }
     s->global_vmstate = true;
-    if (!vga_common_init(s, OBJECT(dev), errp)) {
+    if (!vga_common_init(s, OBJECT(dev), errp))
+    {
         return;
     }
     cirrus_init_common(&d->cirrus_vga, OBJECT(dev), CIRRUS_ID_CLGD5430, 0,
@@ -80,15 +83,15 @@ static void isa_cirrus_vga_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
-    dc->vmsd  = &vmstate_cirrus_vga;
+    dc->vmsd = &vmstate_cirrus_vga;
     dc->realize = isa_cirrus_vga_realizefn;
     device_class_set_props(dc, isa_cirrus_vga_properties);
     set_bit(DEVICE_CATEGORY_DISPLAY, dc->categories);
 }
 
 static const TypeInfo isa_cirrus_vga_info = {
-    .name          = TYPE_ISA_CIRRUS_VGA,
-    .parent        = TYPE_ISA_DEVICE,
+    .name = TYPE_ISA_CIRRUS_VGA,
+    .parent = TYPE_ISA_DEVICE,
     .instance_size = sizeof(ISACirrusVGAState),
     .class_init = isa_cirrus_vga_class_init,
 };

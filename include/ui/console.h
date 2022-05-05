@@ -8,8 +8,8 @@
 #include "qapi/qapi-types-ui.h"
 
 #ifdef CONFIG_OPENGL
-# include <epoxy/gl.h>
-# include "ui/shader.h"
+#include <epoxy/gl.h>
+#include "ui/shader.h"
 #endif
 
 /* keyboard/mouse support */
@@ -22,23 +22,24 @@
 
 /* identical to the ps/2 keyboard bits */
 #define QEMU_SCROLL_LOCK_LED (1 << 0)
-#define QEMU_NUM_LOCK_LED    (1 << 1)
-#define QEMU_CAPS_LOCK_LED   (1 << 2)
+#define QEMU_NUM_LOCK_LED (1 << 1)
+#define QEMU_CAPS_LOCK_LED (1 << 2)
 
 /* in ms */
-#define GUI_REFRESH_INTERVAL_DEFAULT    30
-#define GUI_REFRESH_INTERVAL_IDLE     3000
+#define GUI_REFRESH_INTERVAL_DEFAULT 30
+#define GUI_REFRESH_INTERVAL_IDLE 3000
 
 /* Color number is match to standard vga palette */
-enum qemu_color_names {
-    QEMU_COLOR_BLACK   = 0,
-    QEMU_COLOR_BLUE    = 1,
-    QEMU_COLOR_GREEN   = 2,
-    QEMU_COLOR_CYAN    = 3,
-    QEMU_COLOR_RED     = 4,
+enum qemu_color_names
+{
+    QEMU_COLOR_BLACK = 0,
+    QEMU_COLOR_BLUE = 1,
+    QEMU_COLOR_GREEN = 2,
+    QEMU_COLOR_CYAN = 3,
+    QEMU_COLOR_RED = 4,
     QEMU_COLOR_MAGENTA = 5,
-    QEMU_COLOR_YELLOW  = 6,
-    QEMU_COLOR_WHITE   = 7
+    QEMU_COLOR_YELLOW = 6,
+    QEMU_COLOR_WHITE = 7
 };
 /* Convert to curses char attributes */
 #define ATTR2CHTYPE(c, fg, bg, bold) \
@@ -70,25 +71,25 @@ void hmp_mouse_set(Monitor *mon, const QDict *qdict);
 /* keysym is a unicode code except for special keys (see QEMU_KEY_xxx
    constants) */
 #define QEMU_KEY_ESC1(c) ((c) | 0xe100)
-#define QEMU_KEY_BACKSPACE  0x007f
-#define QEMU_KEY_UP         QEMU_KEY_ESC1('A')
-#define QEMU_KEY_DOWN       QEMU_KEY_ESC1('B')
-#define QEMU_KEY_RIGHT      QEMU_KEY_ESC1('C')
-#define QEMU_KEY_LEFT       QEMU_KEY_ESC1('D')
-#define QEMU_KEY_HOME       QEMU_KEY_ESC1(1)
-#define QEMU_KEY_END        QEMU_KEY_ESC1(4)
-#define QEMU_KEY_PAGEUP     QEMU_KEY_ESC1(5)
-#define QEMU_KEY_PAGEDOWN   QEMU_KEY_ESC1(6)
-#define QEMU_KEY_DELETE     QEMU_KEY_ESC1(3)
+#define QEMU_KEY_BACKSPACE 0x007f
+#define QEMU_KEY_UP QEMU_KEY_ESC1('A')
+#define QEMU_KEY_DOWN QEMU_KEY_ESC1('B')
+#define QEMU_KEY_RIGHT QEMU_KEY_ESC1('C')
+#define QEMU_KEY_LEFT QEMU_KEY_ESC1('D')
+#define QEMU_KEY_HOME QEMU_KEY_ESC1(1)
+#define QEMU_KEY_END QEMU_KEY_ESC1(4)
+#define QEMU_KEY_PAGEUP QEMU_KEY_ESC1(5)
+#define QEMU_KEY_PAGEDOWN QEMU_KEY_ESC1(6)
+#define QEMU_KEY_DELETE QEMU_KEY_ESC1(3)
 
-#define QEMU_KEY_CTRL_UP         0xe400
-#define QEMU_KEY_CTRL_DOWN       0xe401
-#define QEMU_KEY_CTRL_LEFT       0xe402
-#define QEMU_KEY_CTRL_RIGHT      0xe403
-#define QEMU_KEY_CTRL_HOME       0xe404
-#define QEMU_KEY_CTRL_END        0xe405
-#define QEMU_KEY_CTRL_PAGEUP     0xe406
-#define QEMU_KEY_CTRL_PAGEDOWN   0xe407
+#define QEMU_KEY_CTRL_UP 0xe400
+#define QEMU_KEY_CTRL_DOWN 0xe401
+#define QEMU_KEY_CTRL_LEFT 0xe402
+#define QEMU_KEY_CTRL_RIGHT 0xe403
+#define QEMU_KEY_CTRL_HOME 0xe404
+#define QEMU_KEY_CTRL_END 0xe405
+#define QEMU_KEY_CTRL_PAGEUP 0xe406
+#define QEMU_KEY_CTRL_PAGEDOWN 0xe407
 
 void kbd_put_keysym_console(QemuConsole *s, int keysym);
 bool kbd_put_qcode_console(QemuConsole *s, int qcode, bool ctrl);
@@ -100,15 +101,16 @@ void kbd_put_keysym(int keysym);
 #define TYPE_QEMU_CONSOLE "qemu-console"
 OBJECT_DECLARE_TYPE(QemuConsole, QemuConsoleClass, QEMU_CONSOLE)
 
-
-struct QemuConsoleClass {
+struct QemuConsoleClass
+{
     ObjectClass parent_class;
 };
 
-#define QEMU_ALLOCATED_FLAG     0x01
-#define QEMU_PLACEHOLDER_FLAG   0x02
+#define QEMU_ALLOCATED_FLAG 0x01
+#define QEMU_PLACEHOLDER_FLAG 0x02
 
-typedef struct ScanoutTexture {
+typedef struct ScanoutTexture
+{
     uint32_t backing_id;
     bool backing_y_0_top;
     uint32_t backing_width;
@@ -119,7 +121,8 @@ typedef struct ScanoutTexture {
     uint32_t height;
 } ScanoutTexture;
 
-typedef struct DisplaySurface {
+typedef struct DisplaySurface
+{
     pixman_format_code_t format;
     pixman_image_t *image;
     uint8_t flags;
@@ -130,23 +133,25 @@ typedef struct DisplaySurface {
 #endif
 } DisplaySurface;
 
-typedef struct QemuUIInfo {
+typedef struct QemuUIInfo
+{
     /* physical dimension */
     uint16_t width_mm;
     uint16_t height_mm;
     /* geometry */
-    int       xoff;
-    int       yoff;
-    uint32_t  width;
-    uint32_t  height;
+    int xoff;
+    int yoff;
+    uint32_t width;
+    uint32_t height;
 } QemuUIInfo;
 
 /* cursor data format is 32bit RGBA */
-typedef struct QEMUCursor {
-    int                 width, height;
-    int                 hot_x, hot_y;
-    int                 refcount;
-    uint32_t            data[];
+typedef struct QEMUCursor
+{
+    int width, height;
+    int hot_x, hot_y;
+    int refcount;
+    uint32_t data[];
 } QEMUCursor;
 
 QEMUCursor *cursor_alloc(int width, int height);
@@ -165,40 +170,45 @@ void cursor_get_mono_mask(QEMUCursor *c, int transparent, uint8_t *mask);
 typedef void *QEMUGLContext;
 typedef struct QEMUGLParams QEMUGLParams;
 
-struct QEMUGLParams {
+struct QEMUGLParams
+{
     int major_ver;
     int minor_ver;
 };
 
-typedef struct QemuDmaBuf {
-    int       fd;
-    uint32_t  width;
-    uint32_t  height;
-    uint32_t  stride;
-    uint32_t  fourcc;
-    uint64_t  modifier;
-    uint32_t  texture;
-    uint32_t  x;
-    uint32_t  y;
-    uint32_t  scanout_width;
-    uint32_t  scanout_height;
-    bool      y0_top;
-    void      *sync;
-    int       fence_fd;
-    bool      allow_fences;
-    bool      draw_submitted;
+typedef struct QemuDmaBuf
+{
+    int fd;
+    uint32_t width;
+    uint32_t height;
+    uint32_t stride;
+    uint32_t fourcc;
+    uint64_t modifier;
+    uint32_t texture;
+    uint32_t x;
+    uint32_t y;
+    uint32_t scanout_width;
+    uint32_t scanout_height;
+    bool y0_top;
+    void *sync;
+    int fence_fd;
+    bool allow_fences;
+    bool draw_submitted;
 } QemuDmaBuf;
 
-enum display_scanout {
+enum display_scanout
+{
     SCANOUT_NONE,
     SCANOUT_SURFACE,
     SCANOUT_TEXTURE,
     SCANOUT_DMABUF,
 };
 
-typedef struct DisplayScanout {
+typedef struct DisplayScanout
+{
     enum display_scanout kind;
-    union {
+    union
+    {
         /* DisplaySurface *surface; is kept in QemuConsole */
         ScanoutTexture texture;
         QemuDmaBuf *dmabuf;
@@ -208,7 +218,8 @@ typedef struct DisplayScanout {
 typedef struct DisplayState DisplayState;
 typedef struct DisplayGLCtx DisplayGLCtx;
 
-typedef struct DisplayChangeListenerOps {
+typedef struct DisplayChangeListenerOps
+{
     const char *dpy_name;
 
     /* optional */
@@ -272,16 +283,19 @@ typedef struct DisplayChangeListenerOps {
 
 } DisplayChangeListenerOps;
 
-struct DisplayChangeListener {
+struct DisplayChangeListener
+{
     uint64_t update_interval;
     const DisplayChangeListenerOps *ops;
     DisplayState *ds;
     QemuConsole *con;
 
-    QLIST_ENTRY(DisplayChangeListener) next;
+    QLIST_ENTRY(DisplayChangeListener)
+    next;
 };
 
-typedef struct DisplayGLCtxOps {
+typedef struct DisplayGLCtxOps
+{
     bool (*dpy_gl_ctx_is_compatible_dcl)(DisplayGLCtx *dgc,
                                          DisplayChangeListener *dcl);
     QEMUGLContext (*dpy_gl_ctx_create)(DisplayGLCtx *dgc,
@@ -293,13 +307,14 @@ typedef struct DisplayGLCtxOps {
     void (*dpy_gl_ctx_create_texture)(DisplayGLCtx *dgc,
                                       DisplaySurface *surface);
     void (*dpy_gl_ctx_destroy_texture)(DisplayGLCtx *dgc,
-                                      DisplaySurface *surface);
+                                       DisplaySurface *surface);
     void (*dpy_gl_ctx_update_texture)(DisplayGLCtx *dgc,
                                       DisplaySurface *surface,
                                       int x, int y, int w, int h);
 } DisplayGLCtxOps;
 
-struct DisplayGLCtx {
+struct DisplayGLCtx
+{
     const DisplayGLCtxOps *ops;
 #ifdef CONFIG_OPENGL
     QemuGLShader *gls; /* optional shared shader */
@@ -417,15 +432,17 @@ static inline void console_write_ch(console_ch_t *dest, uint32_t ch)
     *dest = ch;
 }
 
-enum {
-    GRAPHIC_FLAGS_NONE     = 0,
+enum
+{
+    GRAPHIC_FLAGS_NONE = 0,
     /* require a console/display with GL callbacks */
-    GRAPHIC_FLAGS_GL       = 1 << 0,
+    GRAPHIC_FLAGS_GL = 1 << 0,
     /* require a console/display with DMABUF import */
-    GRAPHIC_FLAGS_DMABUF   = 1 << 1,
+    GRAPHIC_FLAGS_DMABUF = 1 << 1,
 };
 
-typedef struct GraphicHwOps {
+typedef struct GraphicHwOps
+{
     int (*get_flags)(void *opaque); /* optional, default 0 */
     void (*invalidate)(void *opaque);
     void (*gfx_update)(void *opaque);
@@ -489,7 +506,7 @@ void surface_gl_update_texture(QemuGLShader *gls,
 void surface_gl_render_texture(QemuGLShader *gls,
                                DisplaySurface *surface);
 void surface_gl_destroy_texture(QemuGLShader *gls,
-                               DisplaySurface *surface);
+                                DisplaySurface *surface);
 void surface_gl_setup_viewport(QemuGLShader *gls,
                                DisplaySurface *surface,
                                int ww, int wh);
@@ -497,7 +514,8 @@ void surface_gl_setup_viewport(QemuGLShader *gls,
 
 typedef struct QemuDisplay QemuDisplay;
 
-struct QemuDisplay {
+struct QemuDisplay
+{
     DisplayType type;
     void (*early_init)(DisplayOptions *opts);
     void (*init)(DisplayState *ds, DisplayOptions *opts);
@@ -517,7 +535,7 @@ int vnc_display_password(const char *id, const char *password);
 int vnc_display_pw_expire(const char *id, time_t expires);
 void vnc_parse(const char *str);
 int vnc_init_func(void *opaque, QemuOpts *opts, Error **errp);
-bool vnc_display_reload_certs(const char *id,  Error **errp);
+bool vnc_display_reload_certs(const char *id, Error **errp);
 
 /* input.c */
 int index_from_key(const char *key, size_t key_length);

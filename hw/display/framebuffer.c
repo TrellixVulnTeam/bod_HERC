@@ -30,19 +30,22 @@ void framebuffer_update_memory_section(
 {
     hwaddr src_len = (hwaddr)rows * src_width;
 
-    if (mem_section->mr) {
+    if (mem_section->mr)
+    {
         memory_region_set_log(mem_section->mr, false, DIRTY_MEMORY_VGA);
         memory_region_unref(mem_section->mr);
         mem_section->mr = NULL;
     }
 
     *mem_section = memory_region_find(root, base, src_len);
-    if (!mem_section->mr) {
+    if (!mem_section->mr)
+    {
         return;
     }
 
     if (int128_get64(mem_section->size) < src_len ||
-            !memory_region_is_ram(mem_section->mr)) {
+        !memory_region_is_ram(mem_section->mr))
+    {
         memory_region_unref(mem_section->mr);
         mem_section->mr = NULL;
         return;
@@ -55,12 +58,12 @@ void framebuffer_update_memory_section(
 void framebuffer_update_display(
     DisplaySurface *ds,
     MemoryRegionSection *mem_section,
-    int cols, /* Width in pixels.  */
-    int rows, /* Height in pixels.  */
-    int src_width, /* Length of source line, in bytes.  */
+    int cols,           /* Width in pixels.  */
+    int rows,           /* Height in pixels.  */
+    int src_width,      /* Length of source line, in bytes.  */
     int dest_row_pitch, /* Bytes between adjacent horizontal output pixels.  */
     int dest_col_pitch, /* Bytes between adjacent vertical output pixels.  */
-    int invalidate, /* nonzero to redraw the whole image.  */
+    int invalidate,     /* nonzero to redraw the whole image.  */
     drawfn fn,
     void *opaque,
     int *first_row, /* Input and output.  */
@@ -79,7 +82,8 @@ void framebuffer_update_display(
     *first_row = -1;
 
     mem = mem_section->mr;
-    if (!mem) {
+    if (!mem)
+    {
         return;
     }
 
@@ -87,10 +91,12 @@ void framebuffer_update_display(
     src = memory_region_get_ram_ptr(mem) + addr;
 
     dest = surface_data(ds);
-    if (dest_col_pitch < 0) {
+    if (dest_col_pitch < 0)
+    {
         dest -= dest_col_pitch * (cols - 1);
     }
-    if (dest_row_pitch < 0) {
+    if (dest_row_pitch < 0)
+    {
         dest -= dest_row_pitch * (rows - 1);
     }
     first = -1;
@@ -101,9 +107,11 @@ void framebuffer_update_display(
 
     snap = memory_region_snapshot_and_clear_dirty(mem, addr, src_width * rows,
                                                   DIRTY_MEMORY_VGA);
-    for (; i < rows; i++) {
+    for (; i < rows; i++)
+    {
         dirty = memory_region_snapshot_get_dirty(mem, snap, addr, src_width);
-        if (dirty || invalidate) {
+        if (dirty || invalidate)
+        {
             fn(opaque, dest, src, cols, dest_col_pitch);
             if (first == -1)
                 first = i;
@@ -114,7 +122,8 @@ void framebuffer_update_display(
         dest += dest_row_pitch;
     }
     g_free(snap);
-    if (first < 0) {
+    if (first < 0)
+    {
         return;
     }
     *first_row = first;

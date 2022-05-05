@@ -36,7 +36,7 @@
 #include "qemu/module.h"
 
 #define DEFAULT_VCRAM_SIZE 0x4000000
-#define BCM2835_FB_OFFSET  0x00100000
+#define BCM2835_FB_OFFSET 0x00100000
 
 /* Maximum permitted framebuffer size; experimentally determined on an rpi2 */
 #define XRES_MAX 3840
@@ -62,8 +62,10 @@ static void draw_line_src16(void *opaque, uint8_t *dst, const uint8_t *src,
     DisplaySurface *surface = qemu_console_surface(s->con);
     int bpp = surface_bits_per_pixel(surface);
 
-    while (width--) {
-        switch (s->config.bpp) {
+    while (width--)
+    {
+        switch (s->config.bpp)
+        {
         case 8:
             /* lookup palette starting at video ram base
              * TODO: cache translation, rather than doing this each time!
@@ -77,8 +79,8 @@ static void draw_line_src16(void *opaque, uint8_t *dst, const uint8_t *src,
         case 16:
             rgb565 = lduw_le_p(src);
             r = ((rgb565 >> 11) & 0x1f) << 3;
-            g = ((rgb565 >>  5) & 0x3f) << 2;
-            b = ((rgb565 >>  0) & 0x1f) << 3;
+            g = ((rgb565 >> 5) & 0x3f) << 2;
+            b = ((rgb565 >> 0) & 0x1f) << 3;
             src += 2;
             break;
         case 24:
@@ -102,14 +104,16 @@ static void draw_line_src16(void *opaque, uint8_t *dst, const uint8_t *src,
             break;
         }
 
-        if (s->config.pixo == 0) {
+        if (s->config.pixo == 0)
+        {
             /* swap to BGR pixel format */
             uint8_t tmp = r;
             r = b;
             b = tmp;
         }
 
-        switch (bpp) {
+        switch (bpp)
+        {
         case 8:
             *dst++ = rgb_to_pixel8(r, g, b);
             break;
@@ -146,7 +150,7 @@ static bool fb_use_offsets(BCM2835FBConfig *config)
      * prevent the guest setting this silly viewport setting, though...)
      */
     return config->xres_virtual > config->xres &&
-        config->yres_virtual > config->yres;
+           config->yres_virtual > config->yres;
 }
 
 static void fb_update_display(void *opaque)
@@ -159,19 +163,22 @@ static void fb_update_display(void *opaque)
     int dest_width = 0;
     uint32_t xoff = 0, yoff = 0;
 
-    if (s->lock || !s->config.xres) {
+    if (s->lock || !s->config.xres)
+    {
         return;
     }
 
     src_width = bcm2835_fb_get_pitch(&s->config);
-    if (fb_use_offsets(&s->config)) {
+    if (fb_use_offsets(&s->config))
+    {
         xoff = s->config.xoffset;
         yoff = s->config.yoffset;
     }
 
     dest_width = s->config.xres;
 
-    switch (surface_bits_per_pixel(surface)) {
+    switch (surface_bits_per_pixel(surface))
+    {
     case 0:
         return;
     case 8:
@@ -193,7 +200,8 @@ static void fb_update_display(void *opaque)
         break;
     }
 
-    if (s->invalidate) {
+    if (s->invalidate)
+    {
         hwaddr base = s->config.base + xoff + (hwaddr)yoff * src_width;
         framebuffer_update_memory_section(&s->fbsection, s->dma_mr,
                                           base,
@@ -205,7 +213,8 @@ static void fb_update_display(void *opaque)
                                src_width, dest_width, 0, s->invalidate,
                                draw_line_src16, s, &first, &last);
 
-    if (first >= 0) {
+    if (first >= 0)
+    {
         dpy_gfx_update(s->con, 0, first, s->config.xres,
                        last - first + 1);
     }
@@ -230,20 +239,25 @@ void bcm2835_fb_validate_config(BCM2835FBConfig *config)
      * These are not minima: a 40x40 framebuffer will be accepted.
      * They're only used as defaults if the guest asks for zero size.
      */
-    if (config->xres == 0) {
+    if (config->xres == 0)
+    {
         config->xres = XRES_SMALL;
     }
-    if (config->yres == 0) {
+    if (config->yres == 0)
+    {
         config->yres = YRES_SMALL;
     }
-    if (config->xres_virtual == 0) {
+    if (config->xres_virtual == 0)
+    {
         config->xres_virtual = config->xres;
     }
-    if (config->yres_virtual == 0) {
+    if (config->yres_virtual == 0)
+    {
         config->yres_virtual = config->yres;
     }
 
-    if (fb_use_offsets(config)) {
+    if (fb_use_offsets(config))
+    {
         /* Clip the offsets so the viewport is within the physical screen */
         config->xoffset = MIN(config->xoffset,
                               config->xres_virtual - config->xres);
@@ -303,7 +317,8 @@ static uint64_t bcm2835_fb_read(void *opaque, hwaddr offset, unsigned size)
     BCM2835FBState *s = opaque;
     uint32_t res = 0;
 
-    switch (offset) {
+    switch (offset)
+    {
     case MBOX_AS_DATA:
         res = MBOX_CHAN_FB;
         s->pending = false;
@@ -315,7 +330,7 @@ static uint64_t bcm2835_fb_read(void *opaque, hwaddr offset, unsigned size)
         break;
 
     default:
-        qemu_log_mask(LOG_GUEST_ERROR, "%s: Bad offset %"HWADDR_PRIx"\n",
+        qemu_log_mask(LOG_GUEST_ERROR, "%s: Bad offset %" HWADDR_PRIx "\n",
                       __func__, offset);
         return 0;
     }
@@ -328,7 +343,8 @@ static void bcm2835_fb_write(void *opaque, hwaddr offset, uint64_t value,
 {
     BCM2835FBState *s = opaque;
 
-    switch (offset) {
+    switch (offset)
+    {
     case MBOX_AS_DATA:
         /* bcm2835_mbox should check our pending status before pushing */
         assert(!s->pending);
@@ -338,7 +354,7 @@ static void bcm2835_fb_write(void *opaque, hwaddr offset, uint64_t value,
         break;
 
     default:
-        qemu_log_mask(LOG_GUEST_ERROR, "%s: Bad offset %"HWADDR_PRIx"\n",
+        qemu_log_mask(LOG_GUEST_ERROR, "%s: Bad offset %" HWADDR_PRIx "\n",
                       __func__, offset);
         return;
     }
@@ -356,7 +372,7 @@ static const VMStateDescription vmstate_bcm2835_fb = {
     .name = TYPE_BCM2835_FB,
     .version_id = 1,
     .minimum_version_id = 1,
-    .fields = (VMStateField[]) {
+    .fields = (VMStateField[]){
         VMSTATE_BOOL(lock, BCM2835FBState),
         VMSTATE_BOOL(invalidate, BCM2835FBState),
         VMSTATE_BOOL(pending, BCM2835FBState),
@@ -371,13 +387,11 @@ static const VMStateDescription vmstate_bcm2835_fb = {
         VMSTATE_UNUSED(8), /* Was pitch and size */
         VMSTATE_UINT32(config.pixo, BCM2835FBState),
         VMSTATE_UINT32(config.alpha, BCM2835FBState),
-        VMSTATE_END_OF_LIST()
-    }
-};
+        VMSTATE_END_OF_LIST()}};
 
 static const GraphicHwOps vgafb_ops = {
-    .invalidate  = fb_invalidate_display,
-    .gfx_update  = fb_update_display,
+    .invalidate = fb_invalidate_display,
+    .gfx_update = fb_update_display,
 };
 
 static void bcm2835_fb_init(Object *obj)
@@ -407,7 +421,8 @@ static void bcm2835_fb_realize(DeviceState *dev, Error **errp)
     BCM2835FBState *s = BCM2835_FB(dev);
     Object *obj;
 
-    if (s->vcram_base == 0) {
+    if (s->vcram_base == 0)
+    {
         error_setg(errp, "%s: required vcram-base property not set", __func__);
         return;
     }
@@ -431,7 +446,7 @@ static void bcm2835_fb_realize(DeviceState *dev, Error **errp)
 }
 
 static Property bcm2835_fb_props[] = {
-    DEFINE_PROP_UINT32("vcram-base", BCM2835FBState, vcram_base, 0),/*required*/
+    DEFINE_PROP_UINT32("vcram-base", BCM2835FBState, vcram_base, 0), /*required*/
     DEFINE_PROP_UINT32("vcram-size", BCM2835FBState, vcram_size,
                        DEFAULT_VCRAM_SIZE),
     DEFINE_PROP_UINT32("xres", BCM2835FBState, initial_config.xres, 640),
@@ -441,8 +456,7 @@ static Property bcm2835_fb_props[] = {
                        initial_config.pixo, 1), /* 1=RGB, 0=BGR */
     DEFINE_PROP_UINT32("alpha", BCM2835FBState,
                        initial_config.alpha, 2), /* alpha ignored */
-    DEFINE_PROP_END_OF_LIST()
-};
+    DEFINE_PROP_END_OF_LIST()};
 
 static void bcm2835_fb_class_init(ObjectClass *klass, void *data)
 {
@@ -455,10 +469,10 @@ static void bcm2835_fb_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo bcm2835_fb_info = {
-    .name          = TYPE_BCM2835_FB,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_BCM2835_FB,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(BCM2835FBState),
-    .class_init    = bcm2835_fb_class_init,
+    .class_init = bcm2835_fb_class_init,
     .instance_init = bcm2835_fb_init,
 };
 

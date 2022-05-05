@@ -21,14 +21,27 @@
 //#define DEBUG_SSD0303 1
 
 #ifdef DEBUG_SSD0303
-#define DPRINTF(fmt, ...) \
-do { printf("ssd0303: " fmt , ## __VA_ARGS__); } while (0)
-#define BADF(fmt, ...) \
-do { fprintf(stderr, "ssd0303: error: " fmt , ## __VA_ARGS__); exit(1);} while (0)
+#define DPRINTF(fmt, ...)                       \
+    do                                          \
+    {                                           \
+        printf("ssd0303: " fmt, ##__VA_ARGS__); \
+    } while (0)
+#define BADF(fmt, ...)                                          \
+    do                                                          \
+    {                                                           \
+        fprintf(stderr, "ssd0303: error: " fmt, ##__VA_ARGS__); \
+        exit(1);                                                \
+    } while (0)
 #else
-#define DPRINTF(fmt, ...) do {} while(0)
-#define BADF(fmt, ...) \
-do { fprintf(stderr, "ssd0303: error: " fmt , ## __VA_ARGS__);} while (0)
+#define DPRINTF(fmt, ...) \
+    do                    \
+    {                     \
+    } while (0)
+#define BADF(fmt, ...)                                          \
+    do                                                          \
+    {                                                           \
+        fprintf(stderr, "ssd0303: error: " fmt, ##__VA_ARGS__); \
+    } while (0)
 #endif
 
 /* Scaling factor for pixels.  */
@@ -41,7 +54,8 @@ enum ssd0303_mode
     SSD0303_CMD
 };
 
-enum ssd0303_cmd {
+enum ssd0303_cmd
+{
     SSD0303_CMD_NONE,
     SSD0303_CMD_SKIP1
 };
@@ -49,7 +63,8 @@ enum ssd0303_cmd {
 #define TYPE_SSD0303 "ssd0303"
 OBJECT_DECLARE_SIMPLE_TYPE(ssd0303_state, SSD0303)
 
-struct ssd0303_state {
+struct ssd0303_state
+{
     I2CSlave parent_obj;
 
     QemuConsole *con;
@@ -63,7 +78,7 @@ struct ssd0303_state {
     int redraw;
     enum ssd0303_mode mode;
     enum ssd0303_cmd cmd_state;
-    uint8_t framebuffer[132*8];
+    uint8_t framebuffer[132 * 8];
 };
 
 static uint8_t ssd0303_recv(I2CSlave *i2c)
@@ -77,7 +92,8 @@ static int ssd0303_send(I2CSlave *i2c, uint8_t data)
     ssd0303_state *s = SSD0303(i2c);
     enum ssd0303_cmd old_cmd_state;
 
-    switch (s->mode) {
+    switch (s->mode)
+    {
     case SSD0303_IDLE:
         DPRINTF("byte 0x%02x\n", data);
         if (data == 0x80)
@@ -89,7 +105,8 @@ static int ssd0303_send(I2CSlave *i2c, uint8_t data)
         break;
     case SSD0303_DATA:
         DPRINTF("data 0x%02x\n", data);
-        if (s->col < 132) {
+        if (s->col < 132)
+        {
             s->framebuffer[s->col + s->row * 132] = data;
             s->col++;
             s->redraw = 1;
@@ -98,11 +115,13 @@ static int ssd0303_send(I2CSlave *i2c, uint8_t data)
     case SSD0303_CMD:
         old_cmd_state = s->cmd_state;
         s->cmd_state = SSD0303_CMD_NONE;
-        switch (old_cmd_state) {
+        switch (old_cmd_state)
+        {
         case SSD0303_CMD_NONE:
             DPRINTF("cmd 0x%02x\n", data);
             s->mode = SSD0303_IDLE;
-            switch (data) {
+            switch (data)
+            {
             case 0x00 ... 0x0f: /* Set lower column address.  */
                 s->col = (s->col & 0xf0) | (data & 0xf);
                 break;
@@ -187,7 +206,8 @@ static int ssd0303_event(I2CSlave *i2c, enum i2c_event event)
 {
     ssd0303_state *s = SSD0303(i2c);
 
-    switch (event) {
+    switch (event)
+    {
     case I2C_FINISH:
         s->mode = SSD0303_IDLE;
         break;
@@ -218,7 +238,8 @@ static void ssd0303_update_display(void *opaque)
     if (!s->redraw)
         return;
 
-    switch (surface_bits_per_pixel(surface)) {
+    switch (surface_bits_per_pixel(surface))
+    {
     case 0:
         return;
     case 15:
@@ -240,27 +261,35 @@ static void ssd0303_update_display(void *opaque)
     dest_width *= MAGNIFY;
     memset(colortab, 0xff, dest_width);
     memset(colortab + dest_width, 0, dest_width);
-    if (s->flash) {
+    if (s->flash)
+    {
         colors[0] = colortab;
         colors[1] = colortab;
-    } else if (s->inverse) {
+    }
+    else if (s->inverse)
+    {
         colors[0] = colortab;
         colors[1] = colortab + dest_width;
-    } else {
+    }
+    else
+    {
         colors[0] = colortab + dest_width;
         colors[1] = colortab;
     }
     dest = surface_data(surface);
-    for (y = 0; y < 16; y++) {
+    for (y = 0; y < 16; y++)
+    {
         line = (y + s->start_line) & 63;
         src = s->framebuffer + 132 * (line >> 3) + 36;
         mask = 1 << (line & 7);
-        for (x = 0; x < 96; x++) {
+        for (x = 0; x < 96; x++)
+        {
             memcpy(dest, colors[(*src & mask) != 0], dest_width);
             dest += dest_width;
             src++;
         }
-        for (x = 1; x < MAGNIFY; x++) {
+        for (x = 1; x < MAGNIFY; x++)
+        {
             memcpy(dest, dest - dest_width * 96, dest_width * 96);
             dest += dest_width * 96;
         }
@@ -269,7 +298,7 @@ static void ssd0303_update_display(void *opaque)
     dpy_gfx_update(s->con, 0, 0, 96 * MAGNIFY, 16 * MAGNIFY);
 }
 
-static void ssd0303_invalidate_display(void * opaque)
+static void ssd0303_invalidate_display(void *opaque)
 {
     ssd0303_state *s = (ssd0303_state *)opaque;
     s->redraw = 1;
@@ -279,7 +308,7 @@ static const VMStateDescription vmstate_ssd0303 = {
     .name = "ssd0303_oled",
     .version_id = 1,
     .minimum_version_id = 1,
-    .fields = (VMStateField[]) {
+    .fields = (VMStateField[]){
         VMSTATE_INT32(row, ssd0303_state),
         VMSTATE_INT32(col, ssd0303_state),
         VMSTATE_INT32(start_line, ssd0303_state),
@@ -292,13 +321,11 @@ static const VMStateDescription vmstate_ssd0303 = {
         VMSTATE_UINT32(cmd_state, ssd0303_state),
         VMSTATE_BUFFER(framebuffer, ssd0303_state),
         VMSTATE_I2C_SLAVE(parent_obj, ssd0303_state),
-        VMSTATE_END_OF_LIST()
-    }
-};
+        VMSTATE_END_OF_LIST()}};
 
 static const GraphicHwOps ssd0303_ops = {
-    .invalidate  = ssd0303_invalidate_display,
-    .gfx_update  = ssd0303_update_display,
+    .invalidate = ssd0303_invalidate_display,
+    .gfx_update = ssd0303_update_display,
 };
 
 static void ssd0303_realize(DeviceState *dev, Error **errp)
@@ -322,10 +349,10 @@ static void ssd0303_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo ssd0303_info = {
-    .name          = TYPE_SSD0303,
-    .parent        = TYPE_I2C_SLAVE,
+    .name = TYPE_SSD0303,
+    .parent = TYPE_I2C_SLAVE,
     .instance_size = sizeof(ssd0303_state),
-    .class_init    = ssd0303_class_init,
+    .class_init = ssd0303_class_init,
 };
 
 static void ssd0303_register_types(void)

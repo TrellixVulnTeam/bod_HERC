@@ -37,7 +37,8 @@
 #define TYPE_ISA_VGA "isa-vga"
 OBJECT_DECLARE_SIMPLE_TYPE(ISAVGAState, ISA_VGA)
 
-struct ISAVGAState {
+struct ISAVGAState
+{
     ISADevice parent_obj;
 
     struct VGACommonState state;
@@ -62,7 +63,8 @@ static void vga_isa_realizefn(DeviceState *dev, Error **errp)
     const MemoryRegionPortio *vga_ports, *vbe_ports;
 
     s->global_vmstate = true;
-    if (!vga_common_init(s, OBJECT(dev), errp)) {
+    if (!vga_common_init(s, OBJECT(dev), errp))
+    {
         return;
     }
 
@@ -70,7 +72,8 @@ static void vga_isa_realizefn(DeviceState *dev, Error **errp)
     vga_io_memory = vga_init_io(s, OBJECT(dev), &vga_ports, &vbe_ports);
     isa_register_portio_list(isadev, &d->portio_vga,
                              0x3b0, vga_ports, s, "vga");
-    if (vbe_ports) {
+    if (vbe_ports)
+    {
         isa_register_portio_list(isadev, &d->portio_vbe,
                                  0x1ce, vbe_ports, s, "vbe");
     }
@@ -104,10 +107,10 @@ static void vga_isa_class_initfn(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo vga_isa_info = {
-    .name          = TYPE_ISA_VGA,
-    .parent        = TYPE_ISA_DEVICE,
+    .name = TYPE_ISA_VGA,
+    .parent = TYPE_ISA_DEVICE,
     .instance_size = sizeof(ISAVGAState),
-    .class_init    = vga_isa_class_initfn,
+    .class_init = vga_isa_class_initfn,
 };
 
 static void vga_isa_register_types(void)

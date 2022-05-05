@@ -40,25 +40,26 @@
 
 #define MAXX 1024
 #define MAXY 768
-#define TCX_DAC_NREGS    16
-#define TCX_THC_NREGS    0x1000
-#define TCX_DHC_NREGS    0x4000
-#define TCX_TEC_NREGS    0x1000
-#define TCX_ALT_NREGS    0x8000
-#define TCX_STIP_NREGS   0x800000
-#define TCX_BLIT_NREGS   0x800000
-#define TCX_RSTIP_NREGS  0x800000
-#define TCX_RBLIT_NREGS  0x800000
+#define TCX_DAC_NREGS 16
+#define TCX_THC_NREGS 0x1000
+#define TCX_DHC_NREGS 0x4000
+#define TCX_TEC_NREGS 0x1000
+#define TCX_ALT_NREGS 0x8000
+#define TCX_STIP_NREGS 0x800000
+#define TCX_BLIT_NREGS 0x800000
+#define TCX_RSTIP_NREGS 0x800000
+#define TCX_RBLIT_NREGS 0x800000
 
-#define TCX_THC_MISC     0x818
-#define TCX_THC_CURSXY   0x8fc
+#define TCX_THC_MISC 0x818
+#define TCX_THC_CURSXY 0x8fc
 #define TCX_THC_CURSMASK 0x900
 #define TCX_THC_CURSBITS 0x980
 
 #define TYPE_TCX "sun-tcx"
 OBJECT_DECLARE_SIMPLE_TYPE(TCXState, TCX)
 
-struct TCXState {
+struct TCXState
+{
     SysBusDevice parent_obj;
 
     QemuConsole *con;
@@ -100,7 +101,8 @@ static void tcx_set_dirty(TCXState *s, ram_addr_t addr, int len)
 {
     memory_region_set_dirty(&s->vram_mem, addr, len);
 
-    if (s->depth == 24) {
+    if (s->depth == 24)
+    {
         memory_region_set_dirty(&s->vram_mem, s->vram24_offset + addr * 4,
                                 len * 4);
         memory_region_set_dirty(&s->vram_mem, s->cplane_offset + addr * 4,
@@ -115,11 +117,12 @@ static int tcx_check_dirty(TCXState *s, DirtyBitmapSnapshot *snap,
 
     ret = memory_region_snapshot_get_dirty(&s->vram_mem, snap, addr, len);
 
-    if (s->depth == 24) {
+    if (s->depth == 24)
+    {
         ret |= memory_region_snapshot_get_dirty(&s->vram_mem, snap,
-                                       s->vram24_offset + addr * 4, len * 4);
+                                                s->vram24_offset + addr * 4, len * 4);
         ret |= memory_region_snapshot_get_dirty(&s->vram_mem, snap,
-                                       s->cplane_offset + addr * 4, len * 4);
+                                                s->cplane_offset + addr * 4, len * 4);
     }
 
     return ret;
@@ -129,7 +132,8 @@ static void update_palette_entries(TCXState *s, int start, int end)
 {
     int i;
 
-    for (i = start; i < end; i++) {
+    for (i = start; i < end; i++)
+    {
         s->palette[i] = rgb_to_pixel32(s->r[i], s->g[i], s->b[i]);
     }
     tcx_set_dirty(s, 0, memory_region_size(&s->vram_mem));
@@ -142,7 +146,8 @@ static void tcx_draw_line32(TCXState *s1, uint8_t *d,
     uint8_t val;
     uint32_t *p = (uint32_t *)d;
 
-    for (x = 0; x < width; x++) {
+    for (x = 0; x < width; x++)
+    {
         val = *s++;
         *p++ = s1->palette[val];
     }
@@ -160,11 +165,16 @@ static void tcx_draw_cursor32(TCXState *s1, uint8_t *d,
     bits = s1->cursbits[y];
     len = MIN(width - s1->cursx, 32);
     p = &p[s1->cursx];
-    for (x = 0; x < len; x++) {
-        if (mask & 0x80000000) {
-            if (bits & 0x80000000) {
+    for (x = 0; x < len; x++)
+    {
+        if (mask & 0x80000000)
+        {
+            if (bits & 0x80000000)
+            {
                 *p = s1->palette[259];
-            } else {
+            }
+            else
+            {
                 *p = s1->palette[258];
             }
         }
@@ -187,8 +197,10 @@ static inline void tcx24_draw_line32(TCXState *s1, uint8_t *d,
     uint8_t val, *p8;
     uint32_t *p = (uint32_t *)d;
     uint32_t dval;
-    for(x = 0; x < width; x++, s++, s24++) {
-        if (be32_to_cpu(*cplane) & 0x03000000) {
+    for (x = 0; x < width; x++, s++, s24++)
+    {
+        if (be32_to_cpu(*cplane) & 0x03000000)
+        {
             /* 24-bit direct, BGR order */
             p8 = (uint8_t *)s24;
             p8++;
@@ -196,7 +208,9 @@ static inline void tcx24_draw_line32(TCXState *s1, uint8_t *d,
             g = *p8++;
             r = *p8;
             dval = rgb_to_pixel32(r, g, b);
-        } else {
+        }
+        else
+        {
             /* 8-bit pseudocolor */
             val = *s;
             dval = s1->palette[val];
@@ -228,20 +242,26 @@ static void tcx_update_display(void *opaque)
     ds = 1024;
 
     snap = memory_region_snapshot_and_clear_dirty(&ts->vram_mem, 0x0,
-                                             memory_region_size(&ts->vram_mem),
-                                             DIRTY_MEMORY_VGA);
+                                                  memory_region_size(&ts->vram_mem),
+                                                  DIRTY_MEMORY_VGA);
 
-    for (y = 0; y < ts->height; y++, page += ds) {
-        if (tcx_check_dirty(ts, snap, page, ds)) {
+    for (y = 0; y < ts->height; y++, page += ds)
+    {
+        if (tcx_check_dirty(ts, snap, page, ds))
+        {
             if (y_start < 0)
                 y_start = y;
 
             tcx_draw_line32(ts, d, s, ts->width);
-            if (y >= ts->cursy && y < ts->cursy + 32 && ts->cursx < ts->width) {
+            if (y >= ts->cursy && y < ts->cursy + 32 && ts->cursx < ts->width)
+            {
                 tcx_draw_cursor32(ts, d, y, ts->width);
             }
-        } else {
-            if (y_start >= 0) {
+        }
+        else
+        {
+            if (y_start >= 0)
+            {
                 /* flush to display */
                 dpy_gfx_update(ts->con, 0, y_start,
                                ts->width, y - y_start);
@@ -251,7 +271,8 @@ static void tcx_update_display(void *opaque)
         s += ds;
         d += dd;
     }
-    if (y_start >= 0) {
+    if (y_start >= 0)
+    {
         /* flush to display */
         dpy_gfx_update(ts->con, 0, y_start,
                        ts->width, y - y_start);
@@ -281,20 +302,26 @@ static void tcx24_update_display(void *opaque)
     ds = 1024;
 
     snap = memory_region_snapshot_and_clear_dirty(&ts->vram_mem, 0x0,
-                                             memory_region_size(&ts->vram_mem),
-                                             DIRTY_MEMORY_VGA);
+                                                  memory_region_size(&ts->vram_mem),
+                                                  DIRTY_MEMORY_VGA);
 
-    for (y = 0; y < ts->height; y++, page += ds) {
-        if (tcx_check_dirty(ts, snap, page, ds)) {
+    for (y = 0; y < ts->height; y++, page += ds)
+    {
+        if (tcx_check_dirty(ts, snap, page, ds))
+        {
             if (y_start < 0)
                 y_start = y;
 
             tcx24_draw_line32(ts, d, s, ts->width, cptr, s24);
-            if (y >= ts->cursy && y < ts->cursy+32 && ts->cursx < ts->width) {
+            if (y >= ts->cursy && y < ts->cursy + 32 && ts->cursx < ts->width)
+            {
                 tcx_draw_cursor32(ts, d, y, ts->width);
             }
-        } else {
-            if (y_start >= 0) {
+        }
+        else
+        {
+            if (y_start >= 0)
+            {
                 /* flush to display */
                 dpy_gfx_update(ts->con, 0, y_start,
                                ts->width, y - y_start);
@@ -306,7 +333,8 @@ static void tcx24_update_display(void *opaque)
         cptr += ds;
         s24 += ds;
     }
-    if (y_start >= 0) {
+    if (y_start >= 0)
+    {
         /* flush to display */
         dpy_gfx_update(ts->con, 0, y_start,
                        ts->width, y - y_start);
@@ -340,11 +368,11 @@ static int vmstate_tcx_post_load(void *opaque, int version_id)
 }
 
 static const VMStateDescription vmstate_tcx = {
-    .name ="tcx",
+    .name = "tcx",
     .version_id = 4,
     .minimum_version_id = 4,
     .post_load = vmstate_tcx_post_load,
-    .fields = (VMStateField[]) {
+    .fields = (VMStateField[]){
         VMSTATE_UINT16(height, TCXState),
         VMSTATE_UINT16(width, TCXState),
         VMSTATE_UINT16(depth, TCXState),
@@ -353,9 +381,7 @@ static const VMStateDescription vmstate_tcx = {
         VMSTATE_BUFFER(b, TCXState),
         VMSTATE_UINT8(dac_index, TCXState),
         VMSTATE_UINT8(dac_state, TCXState),
-        VMSTATE_END_OF_LIST()
-    }
-};
+        VMSTATE_END_OF_LIST()}};
 
 static void tcx_reset(DeviceState *d)
 {
@@ -369,7 +395,7 @@ static void tcx_reset(DeviceState *d)
     s->r[256] = s->g[256] = s->b[256] = 255;
     s->r[258] = s->g[258] = s->b[258] = 255;
     update_palette_entries(s, 0, 260);
-    memset(s->vram, 0, MAXX*MAXY);
+    memset(s->vram, 0, MAXX * MAXY);
     memory_region_reset_dirty(&s->vram_mem, 0, MAXX * MAXY * (1 + 4 + 4),
                               DIRTY_MEMORY_VGA);
     s->dac_index = 0;
@@ -384,7 +410,8 @@ static uint64_t tcx_dac_readl(void *opaque, hwaddr addr,
     TCXState *s = opaque;
     uint32_t val = 0;
 
-    switch (s->dac_state) {
+    switch (s->dac_state)
+    {
     case 0:
         val = s->r[s->dac_index] << 24;
         s->dac_state++;
@@ -411,19 +438,24 @@ static void tcx_dac_writel(void *opaque, hwaddr addr, uint64_t val,
     TCXState *s = opaque;
     unsigned index;
 
-    switch (addr) {
+    switch (addr)
+    {
     case 0: /* Address */
         s->dac_index = val >> 24;
         s->dac_state = 0;
         break;
     case 4:  /* Pixel colours */
     case 12: /* Overlay (cursor) colours */
-        if (addr & 8) {
+        if (addr & 8)
+        {
             index = (s->dac_index & 3) + 256;
-        } else {
+        }
+        else
+        {
             index = s->dac_index;
         }
-        switch (s->dac_state) {
+        switch (s->dac_state)
+        {
         case 0:
             s->r[index] = val >> 24;
             update_palette_entries(s, index, index + 1);
@@ -472,22 +504,32 @@ static void tcx_stip_writel(void *opaque, hwaddr addr,
     int i;
     uint32_t col;
 
-    if (!(addr & 4)) {
+    if (!(addr & 4))
+    {
         s->tmpblit = val;
-    } else {
+    }
+    else
+    {
         addr = (addr >> 3) & 0xfffff;
         col = cpu_to_be32(s->tmpblit);
-        if (s->depth == 24) {
-            for (i = 0; i < 32; i++)  {
-                if (val & 0x80000000) {
+        if (s->depth == 24)
+        {
+            for (i = 0; i < 32; i++)
+            {
+                if (val & 0x80000000)
+                {
                     s->vram[addr + i] = s->tmpblit;
                     s->vram24[addr + i] = col;
                 }
                 val <<= 1;
             }
-        } else {
-            for (i = 0; i < 32; i++)  {
-                if (val & 0x80000000) {
+        }
+        else
+        {
+            for (i = 0; i < 32; i++)
+            {
+                if (val & 0x80000000)
+                {
                     s->vram[addr + i] = s->tmpblit;
                 }
                 val <<= 1;
@@ -504,23 +546,33 @@ static void tcx_rstip_writel(void *opaque, hwaddr addr,
     int i;
     uint32_t col;
 
-    if (!(addr & 4)) {
+    if (!(addr & 4))
+    {
         s->tmpblit = val;
-    } else {
+    }
+    else
+    {
         addr = (addr >> 3) & 0xfffff;
         col = cpu_to_be32(s->tmpblit);
-        if (s->depth == 24) {
-            for (i = 0; i < 32; i++) {
-                if (val & 0x80000000) {
+        if (s->depth == 24)
+        {
+            for (i = 0; i < 32; i++)
+            {
+                if (val & 0x80000000)
+                {
                     s->vram[addr + i] = s->tmpblit;
                     s->vram24[addr + i] = col;
                     s->cplane[addr + i] = col;
                 }
                 val <<= 1;
             }
-        } else {
-            for (i = 0; i < 32; i++)  {
-                if (val & 0x80000000) {
+        }
+        else
+        {
+            for (i = 0; i < 32; i++)
+            {
+                if (val & 0x80000000)
+                {
                     s->vram[addr + i] = s->tmpblit;
                 }
                 val <<= 1;
@@ -571,24 +623,33 @@ static void tcx_blit_writel(void *opaque, hwaddr addr,
     uint32_t adsr, len;
     int i;
 
-    if (!(addr & 4)) {
+    if (!(addr & 4))
+    {
         s->tmpblit = val;
-    } else {
+    }
+    else
+    {
         addr = (addr >> 3) & 0xfffff;
         adsr = val & 0xffffff;
         len = ((val >> 24) & 0x1f) + 1;
-        if (adsr == 0xffffff) {
+        if (adsr == 0xffffff)
+        {
             memset(&s->vram[addr], s->tmpblit, len);
-            if (s->depth == 24) {
+            if (s->depth == 24)
+            {
                 val = s->tmpblit & 0xffffff;
                 val = cpu_to_be32(val);
-                for (i = 0; i < len; i++) {
+                for (i = 0; i < len; i++)
+                {
                     s->vram24[addr + i] = val;
                 }
             }
-        } else {
+        }
+        else
+        {
             memcpy(&s->vram[addr], &s->vram[adsr], len);
-            if (s->depth == 24) {
+            if (s->depth == 24)
+            {
                 memcpy(&s->vram24[addr], &s->vram24[adsr], len * 4);
             }
         }
@@ -597,31 +658,40 @@ static void tcx_blit_writel(void *opaque, hwaddr addr,
 }
 
 static void tcx_rblit_writel(void *opaque, hwaddr addr,
-                         uint64_t val, unsigned size)
+                             uint64_t val, unsigned size)
 {
     TCXState *s = opaque;
     uint32_t adsr, len;
     int i;
 
-    if (!(addr & 4)) {
+    if (!(addr & 4))
+    {
         s->tmpblit = val;
-    } else {
+    }
+    else
+    {
         addr = (addr >> 3) & 0xfffff;
         adsr = val & 0xffffff;
         len = ((val >> 24) & 0x1f) + 1;
-        if (adsr == 0xffffff) {
+        if (adsr == 0xffffff)
+        {
             memset(&s->vram[addr], s->tmpblit, len);
-            if (s->depth == 24) {
+            if (s->depth == 24)
+            {
                 val = s->tmpblit & 0xffffff;
                 val = cpu_to_be32(val);
-                for (i = 0; i < len; i++) {
+                for (i = 0; i < len; i++)
+                {
                     s->vram24[addr + i] = val;
                     s->cplane[addr + i] = val;
                 }
             }
-        } else {
+        }
+        else
+        {
             memcpy(&s->vram[addr], &s->vram[adsr], len);
-            if (s->depth == 24) {
+            if (s->depth == 24)
+            {
                 memcpy(&s->vram24[addr], &s->vram24[adsr], len * 4);
                 memcpy(&s->cplane[addr], &s->cplane[adsr], len * 4);
             }
@@ -664,50 +734,60 @@ static void tcx_invalidate_cursor_position(TCXState *s)
 
     /* invalidate only near the cursor */
     ymin = s->cursy;
-    if (ymin >= s->height) {
+    if (ymin >= s->height)
+    {
         return;
     }
     ymax = MIN(s->height, ymin + 32);
     start = ymin * 1024;
-    end   = ymax * 1024;
+    end = ymax * 1024;
 
     tcx_set_dirty(s, start, end - start);
 }
 
 static uint64_t tcx_thc_readl(void *opaque, hwaddr addr,
-                            unsigned size)
+                              unsigned size)
 {
     TCXState *s = opaque;
     uint64_t val;
 
-    if (addr == TCX_THC_MISC) {
+    if (addr == TCX_THC_MISC)
+    {
         val = s->thcmisc | 0x02000000;
-    } else {
+    }
+    else
+    {
         val = 0;
     }
     return val;
 }
 
 static void tcx_thc_writel(void *opaque, hwaddr addr,
-                         uint64_t val, unsigned size)
+                           uint64_t val, unsigned size)
 {
     TCXState *s = opaque;
 
-    if (addr == TCX_THC_CURSXY) {
+    if (addr == TCX_THC_CURSXY)
+    {
         tcx_invalidate_cursor_position(s);
         s->cursx = val >> 16;
         s->cursy = val;
         tcx_invalidate_cursor_position(s);
-    } else if (addr >= TCX_THC_CURSMASK && addr < TCX_THC_CURSMASK + 128) {
+    }
+    else if (addr >= TCX_THC_CURSMASK && addr < TCX_THC_CURSMASK + 128)
+    {
         s->cursmask[(addr - TCX_THC_CURSMASK) >> 2] = val;
         tcx_invalidate_cursor_position(s);
-    } else if (addr >= TCX_THC_CURSBITS && addr < TCX_THC_CURSBITS + 128) {
+    }
+    else if (addr >= TCX_THC_CURSBITS && addr < TCX_THC_CURSBITS + 128)
+    {
         s->cursbits[(addr - TCX_THC_CURSBITS) >> 2] = val;
         tcx_invalidate_cursor_position(s);
-    } else if (addr == TCX_THC_MISC) {
+    }
+    else if (addr == TCX_THC_MISC)
+    {
         s->thcmisc = val;
     }
-
 }
 
 static const MemoryRegionOps tcx_thc_ops = {
@@ -721,13 +801,13 @@ static const MemoryRegionOps tcx_thc_ops = {
 };
 
 static uint64_t tcx_dummy_readl(void *opaque, hwaddr addr,
-                            unsigned size)
+                                unsigned size)
 {
     return 0;
 }
 
 static void tcx_dummy_writel(void *opaque, hwaddr addr,
-                         uint64_t val, unsigned size)
+                             uint64_t val, unsigned size)
 {
     return;
 }
@@ -817,7 +897,7 @@ static void tcx_realizefn(DeviceState *dev, Error **errp)
     char *fcode_filename;
 
     memory_region_init_ram_nomigrate(&s->vram_mem, OBJECT(s), "tcx.vram",
-                           s->vram_size * (1 + 4 + 4), &error_fatal);
+                                     s->vram_size * (1 + 4 + 4), &error_fatal);
     vmstate_register_ram_global(&s->vram_mem);
     memory_region_set_log(&s->vram_mem, true, DIRTY_MEMORY_VGA);
     vram_base = memory_region_get_ram_ptr(&s->vram_mem);
@@ -825,10 +905,12 @@ static void tcx_realizefn(DeviceState *dev, Error **errp)
     /* 10/ROM : FCode ROM */
     vmstate_register_ram_global(&s->rom);
     fcode_filename = qemu_find_file(QEMU_FILE_TYPE_BIOS, TCX_ROM_FILE);
-    if (fcode_filename) {
+    if (fcode_filename)
+    {
         ret = load_image_mr(fcode_filename, &s->rom);
         g_free(fcode_filename);
-        if (ret < 0 || ret > FCODE_MAX_ROM_SIZE) {
+        if (ret < 0 || ret > FCODE_MAX_ROM_SIZE)
+        {
             warn_report("tcx: could not load prom '%s'", TCX_ROM_FILE);
         }
     }
@@ -861,7 +943,8 @@ static void tcx_realizefn(DeviceState *dev, Error **errp)
     sysbus_init_mmio(sbd, &s->vram_cplane);
 
     /* 9/THC24bits : NetBSD writes here even with 8-bit display: dummy */
-    if (s->depth == 8) {
+    if (s->depth == 8)
+    {
         memory_region_init_io(&s->thc24, OBJECT(s), &tcx_dummy_ops, s,
                               "tcx.thc24", TCX_THC_NREGS);
         sysbus_init_mmio(sbd, &s->thc24);
@@ -869,9 +952,12 @@ static void tcx_realizefn(DeviceState *dev, Error **errp)
 
     sysbus_init_irq(sbd, &s->irq);
 
-    if (s->depth == 8) {
+    if (s->depth == 8)
+    {
         s->con = graphic_console_init(dev, 0, &tcx_ops, s);
-    } else {
+    }
+    else
+    {
         s->con = graphic_console_init(dev, 0, &tcx24_ops, s);
     }
     s->thcmisc = 0;
@@ -881,9 +967,9 @@ static void tcx_realizefn(DeviceState *dev, Error **errp)
 
 static Property tcx_properties[] = {
     DEFINE_PROP_UINT32("vram_size", TCXState, vram_size, -1),
-    DEFINE_PROP_UINT16("width",    TCXState, width,     -1),
-    DEFINE_PROP_UINT16("height",   TCXState, height,    -1),
-    DEFINE_PROP_UINT16("depth",    TCXState, depth,     -1),
+    DEFINE_PROP_UINT16("width", TCXState, width, -1),
+    DEFINE_PROP_UINT16("height", TCXState, height, -1),
+    DEFINE_PROP_UINT16("depth", TCXState, depth, -1),
     DEFINE_PROP_END_OF_LIST(),
 };
 
@@ -898,11 +984,11 @@ static void tcx_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo tcx_info = {
-    .name          = TYPE_TCX,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_TCX,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(TCXState),
     .instance_init = tcx_initfn,
-    .class_init    = tcx_class_init,
+    .class_init = tcx_class_init,
 };
 
 static void tcx_register_types(void)

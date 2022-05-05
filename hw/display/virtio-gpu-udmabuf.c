@@ -34,33 +34,37 @@ static void virtio_gpu_create_udmabuf(struct virtio_gpu_simple_resource *res)
     int udmabuf, i;
 
     udmabuf = udmabuf_fd();
-    if (udmabuf < 0) {
+    if (udmabuf < 0)
+    {
         return;
     }
 
     list = g_malloc0(sizeof(struct udmabuf_create_list) +
                      sizeof(struct udmabuf_create_item) * res->iov_cnt);
 
-    for (i = 0; i < res->iov_cnt; i++) {
+    for (i = 0; i < res->iov_cnt; i++)
+    {
         rcu_read_lock();
         rb = qemu_ram_block_from_host(res->iov[i].iov_base, false, &offset);
         rcu_read_unlock();
 
-        if (!rb || rb->fd < 0) {
+        if (!rb || rb->fd < 0)
+        {
             g_free(list);
             return;
         }
 
-        list->list[i].memfd  = rb->fd;
+        list->list[i].memfd = rb->fd;
         list->list[i].offset = offset;
-        list->list[i].size   = res->iov[i].iov_len;
+        list->list[i].size = res->iov[i].iov_len;
     }
 
     list->count = res->iov_cnt;
     list->flags = UDMABUF_FLAGS_CLOEXEC;
 
     res->dmabuf_fd = ioctl(udmabuf, UDMABUF_CREATE_LIST, list);
-    if (res->dmabuf_fd < 0) {
+    if (res->dmabuf_fd < 0)
+    {
         warn_report("%s: UDMABUF_CREATE_LIST: %s", __func__,
                     strerror(errno));
     }
@@ -71,7 +75,8 @@ static void virtio_gpu_remap_udmabuf(struct virtio_gpu_simple_resource *res)
 {
     res->remapped = mmap(NULL, res->blob_size, PROT_READ,
                          MAP_SHARED, res->dmabuf_fd, 0);
-    if (res->remapped == MAP_FAILED) {
+    if (res->remapped == MAP_FAILED)
+    {
         warn_report("%s: dmabuf mmap failed: %s", __func__,
                     strerror(errno));
         res->remapped = NULL;
@@ -80,11 +85,13 @@ static void virtio_gpu_remap_udmabuf(struct virtio_gpu_simple_resource *res)
 
 static void virtio_gpu_destroy_udmabuf(struct virtio_gpu_simple_resource *res)
 {
-    if (res->remapped) {
+    if (res->remapped)
+    {
         munmap(res->remapped, res->blob_size);
         res->remapped = NULL;
     }
-    if (res->dmabuf_fd >= 0) {
+    if (res->dmabuf_fd >= 0)
+    {
         close(res->dmabuf_fd);
         res->dmabuf_fd = -1;
     }
@@ -95,13 +102,16 @@ static int find_memory_backend_type(Object *obj, void *opaque)
     bool *memfd_backend = opaque;
     int ret;
 
-    if (object_dynamic_cast(obj, TYPE_MEMORY_BACKEND)) {
+    if (object_dynamic_cast(obj, TYPE_MEMORY_BACKEND))
+    {
         HostMemoryBackend *backend = MEMORY_BACKEND(obj);
         RAMBlock *rb = backend->mr.ram_block;
 
-        if (rb && rb->fd > 0) {
+        if (rb && rb->fd > 0)
+        {
             ret = fcntl(rb->fd, F_GET_SEALS);
-            if (ret > 0) {
+            if (ret > 0)
+            {
                 *memfd_backend = true;
             }
         }
@@ -117,7 +127,8 @@ bool virtio_gpu_have_udmabuf(void)
     bool memfd_backend = false;
 
     udmabuf = udmabuf_fd();
-    if (udmabuf < 0) {
+    if (udmabuf < 0)
+    {
         return false;
     }
 
@@ -132,15 +143,20 @@ void virtio_gpu_init_udmabuf(struct virtio_gpu_simple_resource *res)
     void *pdata = NULL;
 
     res->dmabuf_fd = -1;
-    if (res->iov_cnt == 1) {
+    if (res->iov_cnt == 1)
+    {
         pdata = res->iov[0].iov_base;
-    } else {
+    }
+    else
+    {
         virtio_gpu_create_udmabuf(res);
-        if (res->dmabuf_fd < 0) {
+        if (res->dmabuf_fd < 0)
+        {
             return;
         }
         virtio_gpu_remap_udmabuf(res);
-        if (!res->remapped) {
+        if (!res->remapped)
+        {
             return;
         }
         pdata = res->remapped;
@@ -151,7 +167,8 @@ void virtio_gpu_init_udmabuf(struct virtio_gpu_simple_resource *res)
 
 void virtio_gpu_fini_udmabuf(struct virtio_gpu_simple_resource *res)
 {
-    if (res->remapped) {
+    if (res->remapped)
+    {
         virtio_gpu_destroy_udmabuf(res);
     }
 }
@@ -167,15 +184,17 @@ static void virtio_gpu_free_dmabuf(VirtIOGPU *g, VGPUDMABuf *dmabuf)
 }
 
 static VGPUDMABuf
-*virtio_gpu_create_dmabuf(VirtIOGPU *g,
-                          uint32_t scanout_id,
-                          struct virtio_gpu_simple_resource *res,
-                          struct virtio_gpu_framebuffer *fb,
-                          struct virtio_gpu_rect *r)
+    *
+    virtio_gpu_create_dmabuf(VirtIOGPU *g,
+                             uint32_t scanout_id,
+                             struct virtio_gpu_simple_resource *res,
+                             struct virtio_gpu_framebuffer *fb,
+                             struct virtio_gpu_rect *r)
 {
     VGPUDMABuf *dmabuf;
 
-    if (res->dmabuf_fd < 0) {
+    if (res->dmabuf_fd < 0)
+    {
         return NULL;
     }
 
@@ -207,11 +226,13 @@ int virtio_gpu_update_dmabuf(VirtIOGPU *g,
     VGPUDMABuf *new_primary, *old_primary = NULL;
 
     new_primary = virtio_gpu_create_dmabuf(g, scanout_id, res, fb, r);
-    if (!new_primary) {
+    if (!new_primary)
+    {
         return -EINVAL;
     }
 
-    if (g->dmabuf.primary[scanout_id]) {
+    if (g->dmabuf.primary[scanout_id])
+    {
         old_primary = g->dmabuf.primary[scanout_id];
     }
 
@@ -221,7 +242,8 @@ int virtio_gpu_update_dmabuf(VirtIOGPU *g,
                         new_primary->buf.scanout_height);
     dpy_gl_scanout_dmabuf(scanout->con, &new_primary->buf);
 
-    if (old_primary) {
+    if (old_primary)
+    {
         virtio_gpu_free_dmabuf(g, old_primary);
     }
 

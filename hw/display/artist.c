@@ -31,7 +31,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(ARTISTState, ARTIST)
 #define ROP8OFF
 #endif
 
-struct vram_buffer {
+struct vram_buffer
+{
     MemoryRegion mr;
     uint8_t *data;
     unsigned int size;
@@ -39,7 +40,8 @@ struct vram_buffer {
     unsigned int height;
 };
 
-struct ARTISTState {
+struct ARTISTState
+{
     SysBusDevice parent_obj;
 
     QemuConsole *con;
@@ -104,7 +106,8 @@ struct ARTISTState {
     int draw_line_pattern;
 };
 
-typedef enum {
+typedef enum
+{
     ARTIST_BUFFER_AP = 1,
     ARTIST_BUFFER_OVERLAY = 2,
     ARTIST_BUFFER_CURSOR1 = 6,
@@ -113,7 +116,8 @@ typedef enum {
     ARTIST_BUFFER_CMAP = 15,
 } artist_buffer_t;
 
-typedef enum {
+typedef enum
+{
     VRAM_IDX = 0x1004a0,
     VRAM_BITMASK = 0x1005a0,
     VRAM_WRITE_INCR_X = 0x100600,
@@ -145,7 +149,8 @@ typedef enum {
     CURSOR_CTRL = 0x300104,
 } artist_reg_t;
 
-typedef enum {
+typedef enum
+{
     ARTIST_ROP_CLEAR = 0,
     ARTIST_ROP_COPY = 3,
     ARTIST_ROP_XOR = 6,
@@ -153,39 +158,42 @@ typedef enum {
     ARTIST_ROP_SET = 15,
 } artist_rop_t;
 
-#define REG_NAME(_x) case _x: return " "#_x;
+#define REG_NAME(_x) \
+    case _x:         \
+        return " " #_x;
 static const char *artist_reg_name(uint64_t addr)
 {
-    switch ((artist_reg_t)addr) {
-    REG_NAME(VRAM_IDX);
-    REG_NAME(VRAM_BITMASK);
-    REG_NAME(VRAM_WRITE_INCR_X);
-    REG_NAME(VRAM_WRITE_INCR_X2);
-    REG_NAME(VRAM_WRITE_INCR_Y);
-    REG_NAME(VRAM_START);
-    REG_NAME(BLOCK_MOVE_SIZE);
-    REG_NAME(BLOCK_MOVE_SOURCE);
-    REG_NAME(FG_COLOR);
-    REG_NAME(BG_COLOR);
-    REG_NAME(PLANE_MASK);
-    REG_NAME(VRAM_START_TRIGGER);
-    REG_NAME(VRAM_SIZE_TRIGGER);
-    REG_NAME(BLOCK_MOVE_DEST_TRIGGER);
-    REG_NAME(BLOCK_MOVE_SIZE_TRIGGER);
-    REG_NAME(TRANSFER_DATA);
-    REG_NAME(CONTROL_PLANE);
-    REG_NAME(IMAGE_BITMAP_OP);
-    REG_NAME(DST_SRC_BM_ACCESS);
-    REG_NAME(DST_BM_ACCESS);
-    REG_NAME(SRC_BM_ACCESS);
-    REG_NAME(CURSOR_POS);
-    REG_NAME(CURSOR_CTRL);
-    REG_NAME(LINE_XY);
-    REG_NAME(PATTERN_LINE_START);
-    REG_NAME(LINE_SIZE);
-    REG_NAME(LINE_END);
-    REG_NAME(FONT_WRITE_INCR_Y);
-    REG_NAME(FONT_WRITE_START);
+    switch ((artist_reg_t)addr)
+    {
+        REG_NAME(VRAM_IDX);
+        REG_NAME(VRAM_BITMASK);
+        REG_NAME(VRAM_WRITE_INCR_X);
+        REG_NAME(VRAM_WRITE_INCR_X2);
+        REG_NAME(VRAM_WRITE_INCR_Y);
+        REG_NAME(VRAM_START);
+        REG_NAME(BLOCK_MOVE_SIZE);
+        REG_NAME(BLOCK_MOVE_SOURCE);
+        REG_NAME(FG_COLOR);
+        REG_NAME(BG_COLOR);
+        REG_NAME(PLANE_MASK);
+        REG_NAME(VRAM_START_TRIGGER);
+        REG_NAME(VRAM_SIZE_TRIGGER);
+        REG_NAME(BLOCK_MOVE_DEST_TRIGGER);
+        REG_NAME(BLOCK_MOVE_SIZE_TRIGGER);
+        REG_NAME(TRANSFER_DATA);
+        REG_NAME(CONTROL_PLANE);
+        REG_NAME(IMAGE_BITMAP_OP);
+        REG_NAME(DST_SRC_BM_ACCESS);
+        REG_NAME(DST_BM_ACCESS);
+        REG_NAME(SRC_BM_ACCESS);
+        REG_NAME(CURSOR_POS);
+        REG_NAME(CURSOR_CTRL);
+        REG_NAME(LINE_XY);
+        REG_NAME(PATTERN_LINE_START);
+        REG_NAME(LINE_SIZE);
+        REG_NAME(LINE_END);
+        REG_NAME(FONT_WRITE_INCR_Y);
+        REG_NAME(FONT_WRITE_START);
     }
     return "";
 }
@@ -216,7 +224,8 @@ static void artist_invalidate_lines(struct vram_buffer *buf,
 
     size = height * buf->width;
 
-    if (start + size <= buf->size) {
+    if (start + size <= buf->size)
+    {
         memory_region_set_dirty(&buf->mr, start, size);
     }
 }
@@ -243,9 +252,12 @@ static struct vram_buffer *vram_write_buffer(ARTISTState *s)
 
 static uint8_t artist_get_color(ARTISTState *s)
 {
-    if (s->image_bitmap_op & 2) {
+    if (s->image_bitmap_op & 2)
+    {
         return s->fg_color;
-    } else {
+    }
+    else
+    {
         return s->bg_color;
     }
 }
@@ -262,7 +274,8 @@ static void artist_rop8(ARTISTState *s, struct vram_buffer *buf,
     uint8_t plane_mask;
     uint8_t *dst;
 
-    if (offset >= buf->size) {
+    if (offset >= buf->size)
+    {
         qemu_log_mask(LOG_GUEST_ERROR,
                       "rop8 offset:%u bufsize:%u\n", offset, buf->size);
         return;
@@ -270,7 +283,8 @@ static void artist_rop8(ARTISTState *s, struct vram_buffer *buf,
     dst = buf->data + offset;
     plane_mask = s->plane_mask & 0xff;
 
-    switch (op) {
+    switch (op)
+    {
     case ARTIST_ROP_CLEAR:
         *dst &= ~plane_mask;
         break;
@@ -315,7 +329,8 @@ static void artist_get_cursor_pos(ARTISTState *s, int *x, int *y)
     int lx;
 
     /* ignore if uninitialized */
-    if (s->cursor_pos == 0) {
+    if (s->cursor_pos == 0)
+    {
         *x = *y = 0;
         return;
     }
@@ -331,11 +346,13 @@ static void artist_get_cursor_pos(ARTISTState *s, int *x, int *y)
     *x -= (s->cursor_cntrl & 0xf0) >> 4;
     *y -= (s->cursor_cntrl & 0x0f);
 
-    if (*x > s->width) {
+    if (*x > s->width)
+    {
         *x = s->width;
     }
 
-    if (*y > s->height) {
+    if (*y > s->height)
+    {
         *y = s->height;
     }
 }
@@ -350,8 +367,8 @@ static void artist_invalidate_cursor(ARTISTState *s)
 
 static void block_move(ARTISTState *s,
                        unsigned int source_x, unsigned int source_y,
-                       unsigned int dest_x,   unsigned int dest_y,
-                       unsigned int width,    unsigned int height)
+                       unsigned int dest_x, unsigned int dest_y,
+                       unsigned int width, unsigned int height)
 {
     struct vram_buffer *buf;
     int line, endline, lineincr, startcolumn, endcolumn, columnincr, column;
@@ -359,7 +376,8 @@ static void block_move(ARTISTState *s,
 
     trace_artist_block_move(source_x, source_y, dest_x, dest_y, width, height);
 
-    if (s->control_plane != 0) {
+    if (s->control_plane != 0)
+    {
         /* We don't support CONTROL_PLANE accesses */
         qemu_log_mask(LOG_UNIMP, "%s: CONTROL_PLANE: %08x\n", __func__,
                       s->control_plane);
@@ -367,43 +385,54 @@ static void block_move(ARTISTState *s,
     }
 
     buf = &s->vram_buffer[ARTIST_BUFFER_AP];
-    if (height > buf->height) {
+    if (height > buf->height)
+    {
         height = buf->height;
     }
-    if (width > buf->width) {
+    if (width > buf->width)
+    {
         width = buf->width;
     }
 
-    if (dest_y > source_y) {
+    if (dest_y > source_y)
+    {
         /* move down */
         line = height - 1;
         endline = -1;
         lineincr = -1;
-    } else {
+    }
+    else
+    {
         /* move up */
         line = 0;
         endline = height;
         lineincr = 1;
     }
 
-    if (dest_x > source_x) {
+    if (dest_x > source_x)
+    {
         /* move right */
         startcolumn = width - 1;
         endcolumn = -1;
         columnincr = -1;
-    } else {
+    }
+    else
+    {
         /* move left */
         startcolumn = 0;
         endcolumn = width;
         columnincr = 1;
     }
 
-    for ( ; line != endline; line += lineincr) {
+    for (; line != endline; line += lineincr)
+    {
         src = source_x + ((line + source_y) * buf->width) + startcolumn;
         dst = dest_x + ((line + dest_y) * buf->width) + startcolumn;
 
-        for (column = startcolumn; column != endcolumn; column += columnincr) {
-            if (dst >= buf->size || src >= buf->size) {
+        for (column = startcolumn; column != endcolumn; column += columnincr)
+        {
+            if (dst >= buf->size || src >= buf->size)
+            {
                 continue;
             }
             artist_rop8(s, buf, dst, buf->data[src]);
@@ -417,7 +446,7 @@ static void block_move(ARTISTState *s,
 
 static void fill_window(ARTISTState *s,
                         unsigned int startx, unsigned int starty,
-                        unsigned int width,  unsigned int height)
+                        unsigned int width, unsigned int height)
 {
     unsigned int offset;
     uint8_t color = artist_get_color(s);
@@ -427,14 +456,16 @@ static void fill_window(ARTISTState *s,
     trace_artist_fill_window(startx, starty, width, height,
                              s->image_bitmap_op, s->control_plane);
 
-    if (s->control_plane != 0) {
+    if (s->control_plane != 0)
+    {
         /* We don't support CONTROL_PLANE accesses */
         qemu_log_mask(LOG_UNIMP, "%s: CONTROL_PLANE: %08x\n", __func__,
                       s->control_plane);
         return;
     }
 
-    if (s->reg_100080 == 0x7d) {
+    if (s->reg_100080 == 0x7d)
+    {
         /*
          * Not sure what this register really does, but
          * 0x7d seems to enable autoincremt of the Y axis
@@ -446,10 +477,12 @@ static void fill_window(ARTISTState *s,
 
     buf = &s->vram_buffer[ARTIST_BUFFER_AP];
 
-    for (y = starty; y < starty + height; y++) {
+    for (y = starty; y < starty + height; y++)
+    {
         offset = y * s->width;
 
-        for (x = startx; x < startx + width; x++) {
+        for (x = startx; x < startx + width; x++)
+        {
             artist_rop8(s, buf, offset + x, color);
         }
     }
@@ -469,28 +502,36 @@ static void draw_line(ARTISTState *s,
     trace_artist_draw_line(x1, y1, x2, y2);
 
     if ((x1 >= buf->width && x2 >= buf->width) ||
-        (y1 >= buf->height && y2 >= buf->height)) {
-	return;
+        (y1 >= buf->height && y2 >= buf->height))
+    {
+        return;
     }
 
-
-    if (update_start) {
+    if (update_start)
+    {
         s->vram_start = (x2 << 16) | y2;
     }
 
-    if (x2 > x1) {
+    if (x2 > x1)
+    {
         dx = x2 - x1;
-    } else {
+    }
+    else
+    {
         dx = x1 - x2;
     }
-    if (y2 > y1) {
+    if (y2 > y1)
+    {
         dy = y2 - y1;
-    } else {
+    }
+    else
+    {
         dy = y1 - y2;
     }
 
     c1 = false;
-    if (dy > dx) {
+    if (dy > dx)
+    {
         t = y2;
         y2 = x2;
         x2 = t;
@@ -506,7 +547,8 @@ static void draw_line(ARTISTState *s,
         c1 = true;
     }
 
-    if (x1 > x2) {
+    if (x1 > x2)
+    {
         t = y2;
         y2 = y1;
         y1 = t;
@@ -520,34 +562,47 @@ static void draw_line(ARTISTState *s,
     diago = (dy - dx) << 1;
     e = (dy << 1) - dx;
 
-    if (y1 <= y2) {
+    if (y1 <= y2)
+    {
         incy = 1;
-    } else {
+    }
+    else
+    {
         incy = -1;
     }
     x = x1;
     y = y1;
     color = artist_get_color(s);
 
-    do {
+    do
+    {
         unsigned int ofs;
 
-        if (c1) {
+        if (c1)
+        {
             ofs = x * s->width + y;
-        } else {
+        }
+        else
+        {
             ofs = y * s->width + x;
         }
 
-        if (skip_pix > 0) {
+        if (skip_pix > 0)
+        {
             skip_pix--;
-        } else {
+        }
+        else
+        {
             artist_rop8(s, buf, ofs, color);
         }
 
-        if (e > 0) {
-            y  += incy;
-            e  += diago;
-        } else {
+        if (e > 0)
+        {
+            y += incy;
+            e += diago;
+        }
+        else
+        {
             e += horiz;
         }
         x++;
@@ -611,37 +666,45 @@ static void draw_line_xy(ARTISTState *s, bool update_start)
     endx = startx;
     endy = starty;
 
-    if (sizex > 0) {
+    if (sizex > 0)
+    {
         endx = startx + linexy;
     }
 
-    if (sizex < 0) {
+    if (sizex < 0)
+    {
         endx = startx;
         startx -= linexy;
     }
 
-    if (sizey > 0) {
+    if (sizey > 0)
+    {
         endy = starty + linexy;
     }
 
-    if (sizey < 0) {
+    if (sizey < 0)
+    {
         endy = starty;
         starty -= linexy;
     }
 
-    if (startx < 0) {
+    if (startx < 0)
+    {
         startx = 0;
     }
 
-    if (endx < 0) {
+    if (endx < 0)
+    {
         endx = 0;
     }
 
-    if (starty < 0) {
+    if (starty < 0)
+    {
         starty = 0;
     }
 
-    if (endy < 0) {
+    if (endy < 0)
+    {
         endy = 0;
     }
 
@@ -673,16 +736,22 @@ static void font_write16(ARTISTState *s, uint16_t val)
     buf = &s->vram_buffer[ARTIST_BUFFER_AP];
 
     if (startx >= buf->width || starty >= buf->height ||
-        offset + 16 >= buf->size) {
+        offset + 16 >= buf->size)
+    {
         return;
     }
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < 16; i++)
+    {
         mask = 1 << (15 - i);
-        if (val & mask) {
+        if (val & mask)
+        {
             artist_rop8(s, buf, offset + i, color);
-        } else {
-            if (!(s->image_bitmap_op & 0x20000000)) {
+        }
+        else
+        {
+            if (!(s->image_bitmap_op & 0x20000000))
+            {
                 artist_rop8(s, buf, offset + i, s->bg_color);
             }
         }
@@ -693,13 +762,15 @@ static void font_write16(ARTISTState *s, uint16_t val)
 static void font_write(ARTISTState *s, uint32_t val)
 {
     font_write16(s, val >> 16);
-    if (++s->font_write_pos_y == artist_get_y(s->blockmove_size)) {
+    if (++s->font_write_pos_y == artist_get_y(s->blockmove_size))
+    {
         s->vram_start += (s->blockmove_size & 0xffff0000);
         return;
     }
 
     font_write16(s, val & 0xffff);
-    if (++s->font_write_pos_y == artist_get_y(s->blockmove_size)) {
+    if (++s->font_write_pos_y == artist_get_y(s->blockmove_size))
+    {
         s->vram_start += (s->blockmove_size & 0xffff0000);
         return;
     }
@@ -715,7 +786,8 @@ static void combine_write_reg(hwaddr addr, uint64_t val, int size, void *out)
     addr ^= 3;
 #endif
 
-    switch (size) {
+    switch (size)
+    {
     case 1:
         *(uint8_t *)(out + (addr & 3)) = val;
         break;
@@ -739,8 +811,10 @@ static void artist_vram_write4(ARTISTState *s, struct vram_buffer *buf,
     int i;
     int mask = s->vram_bitmask >> 28;
 
-    for (i = 0; i < 4; i++) {
-        if (!(s->image_bitmap_op & 0x20000000) || (mask & 8)) {
+    for (i = 0; i < 4; i++)
+    {
+        if (!(s->image_bitmap_op & 0x20000000) || (mask & 8))
+        {
             artist_rop8(s, buf, offset + i, data >> 24);
             data <<= 8;
             mask <<= 1;
@@ -756,14 +830,20 @@ static void artist_vram_write32(ARTISTState *s, struct vram_buffer *buf,
     uint32_t mask, vram_bitmask = s->vram_bitmask >> ((4 - size) * 8);
     int i, pix_count = size * 8;
 
-    for (i = 0; i < pix_count && offset + i < buf->size; i++) {
+    for (i = 0; i < pix_count && offset + i < buf->size; i++)
+    {
         mask = 1 << (pix_count - 1 - i);
 
-        if (!(s->image_bitmap_op & 0x20000000) || (vram_bitmask & mask)) {
-            if (data & mask) {
+        if (!(s->image_bitmap_op & 0x20000000) || (vram_bitmask & mask))
+        {
+            if (data & mask)
+            {
                 artist_rop8(s, buf, offset + i, fg);
-            } else {
-                if (!(s->image_bitmap_op & 0x10000002)) {
+            }
+            else
+            {
+                if (!(s->image_bitmap_op & 0x10000002))
+                {
                     artist_rop8(s, buf, offset + i, bg);
                 }
             }
@@ -788,7 +868,8 @@ static int vram_bit_write(ARTISTState *s, uint32_t pos, int posy,
 {
     struct vram_buffer *buf = vram_write_buffer(s);
 
-    switch (s->dst_bm_access >> 16) {
+    switch (s->dst_bm_access >> 16)
+    {
     case 0x3ba0:
     case 0xbbe0:
         artist_vram_write4(s, buf, pos, bswap32(data));
@@ -825,7 +906,8 @@ static int vram_bit_write(ARTISTState *s, uint32_t pos, int posy,
     }
 
     if (vram_write_bufidx(s) == ARTIST_BUFFER_CURSOR1 ||
-        vram_write_bufidx(s) == ARTIST_BUFFER_CURSOR2) {
+        vram_write_bufidx(s) == ARTIST_BUFFER_CURSOR2)
+    {
         artist_invalidate_cursor(s);
     }
     return pos;
@@ -848,17 +930,20 @@ static uint64_t artist_vram_read(void *opaque, hwaddr addr, unsigned size)
     uint64_t val;
 
     buf = vram_read_buffer(s);
-    if (!buf->size) {
+    if (!buf->size)
+    {
         return 0;
     }
 
     offset = get_vram_offset(s, buf, addr >> 2, 0);
 
-    if (offset > buf->size) {
+    if (offset > buf->size)
+    {
         return 0;
     }
 
-    switch (s->src_bm_access >> 16) {
+    switch (s->src_bm_access >> 16)
+    {
     case 0x3ba0:
         val = *(uint32_t *)(buf->data + offset);
         break;
@@ -886,7 +971,8 @@ static void artist_reg_write(void *opaque, hwaddr addr, uint64_t val,
 
     trace_artist_reg_write(size, addr, artist_reg_name(addr & ~3ULL), val);
 
-    switch (addr & ~3ULL) {
+    switch (addr & ~3ULL)
+    {
     case 0x100080:
         combine_write_reg(addr, val, size, &s->reg_100080);
         break;
@@ -934,15 +1020,21 @@ static void artist_reg_write(void *opaque, hwaddr addr, uint64_t val,
     case VRAM_SIZE_TRIGGER:
         combine_write_reg(addr, val, size, &s->vram_size);
 
-        if (size == 2 && !(addr & 2)) {
+        if (size == 2 && !(addr & 2))
+        {
             height = artist_get_y(s->blockmove_size);
-        } else {
+        }
+        else
+        {
             height = artist_get_y(s->vram_size);
         }
 
-        if (size == 2 && (addr & 2)) {
+        if (size == 2 && (addr & 2))
+        {
             width = artist_get_x(s->blockmove_size);
-        } else {
+        }
+        else
+        {
             width = artist_get_x(s->vram_size);
         }
 
@@ -953,9 +1045,12 @@ static void artist_reg_write(void *opaque, hwaddr addr, uint64_t val,
 
     case LINE_XY:
         combine_write_reg(addr, val, size, &s->line_xy);
-        if (s->draw_line_pattern) {
+        if (s->draw_line_pattern)
+        {
             draw_line_pattern_next(s);
-        } else {
+        }
+        else
+        {
             draw_line_xy(s, true);
         }
         break;
@@ -1073,8 +1168,7 @@ static void artist_reg_write(void *opaque, hwaddr addr, uint64_t val,
         break;
 
     default:
-        qemu_log_mask(LOG_UNIMP, "%s: unknown register: reg=%08" HWADDR_PRIx
-                      " val=%08" PRIx64 " size=%d\n",
+        qemu_log_mask(LOG_UNIMP, "%s: unknown register: reg=%08" HWADDR_PRIx " val=%08" PRIx64 " size=%d\n",
                       __func__, addr, val, size);
         break;
     }
@@ -1090,7 +1184,8 @@ static uint64_t combine_read_reg(hwaddr addr, int size, void *in)
     addr ^= 3;
 #endif
 
-    switch (size) {
+    switch (size)
+    {
     case 1:
         return *(uint8_t *)(in + (addr & 3));
 
@@ -1111,14 +1206,16 @@ static uint64_t artist_reg_read(void *opaque, hwaddr addr, unsigned size)
     ARTISTState *s = opaque;
     uint32_t val = 0;
 
-    switch (addr & ~3ULL) {
+    switch (addr & ~3ULL)
+    {
         /* Unknown status registers */
     case 0:
         break;
 
     case 0x211110:
         val = (s->width << 16) | s->height;
-        if (s->depth == 1) {
+        if (s->depth == 1)
+        {
             val |= 1 << 31;
         }
         break;
@@ -1161,8 +1258,7 @@ static uint64_t artist_reg_read(void *opaque, hwaddr addr, unsigned size)
         break;
 
     default:
-        qemu_log_mask(LOG_UNIMP, "%s: unknown register: %08" HWADDR_PRIx
-                      " size %d\n", __func__, addr, size);
+        qemu_log_mask(LOG_UNIMP, "%s: unknown register: %08" HWADDR_PRIx " size %d\n", __func__, addr, size);
         break;
     }
     val = combine_read_reg(addr, size, &val);
@@ -1190,7 +1286,7 @@ static void artist_draw_cursor(ARTISTState *s)
 {
     DisplaySurface *surface = qemu_console_surface(s->con);
     uint32_t *data = (uint32_t *)surface_data(surface);
-    struct vram_buffer *cursor0, *cursor1 , *buf;
+    struct vram_buffer *cursor0, *cursor1, *buf;
     int cx, cy, cursor_pos_x, cursor_pos_y;
 
     cursor0 = &s->vram_buffer[ARTIST_BUFFER_CURSOR1];
@@ -1199,24 +1295,31 @@ static void artist_draw_cursor(ARTISTState *s)
 
     artist_get_cursor_pos(s, &cursor_pos_x, &cursor_pos_y);
 
-    for (cy = 0; cy < s->cursor_height; cy++) {
+    for (cy = 0; cy < s->cursor_height; cy++)
+    {
 
-        for (cx = 0; cx < s->cursor_width; cx++) {
+        for (cx = 0; cx < s->cursor_width; cx++)
+        {
 
             if (cursor_pos_y + cy < 0 ||
                 cursor_pos_x + cx < 0 ||
                 cursor_pos_y + cy > buf->height - 1 ||
-                cursor_pos_x + cx > buf->width) {
+                cursor_pos_x + cx > buf->width)
+            {
                 continue;
             }
 
             int dstoffset = (cursor_pos_y + cy) * s->width +
-                (cursor_pos_x + cx);
+                            (cursor_pos_x + cx);
 
-            if (cursor0->data[cy * cursor0->width + cx]) {
+            if (cursor0->data[cy * cursor0->width + cx])
+            {
                 data[dstoffset] = 0;
-            } else {
-                if (cursor1->data[cy * cursor1->width + cx]) {
+            }
+            else
+            {
+                if (cursor1->data[cy * cursor1->width + cx])
+                {
                     data[dstoffset] = 0xffffff;
                 }
             }
@@ -1233,7 +1336,8 @@ static void artist_draw_line(void *opaque, uint8_t *d, const uint8_t *src,
 
     cmap = (uint32_t *)(s->vram_buffer[ARTIST_BUFFER_CMAP].data + 0x400);
 
-    for (x = 0; x < s->width; x++) {
+    for (x = 0; x < s->width; x++)
+    {
         *data++ = cmap[*src++];
     }
 }
@@ -1243,7 +1347,6 @@ static void artist_update_display(void *opaque)
     ARTISTState *s = opaque;
     DisplaySurface *surface = qemu_console_surface(s->con);
     int first = 0, last;
-
 
     framebuffer_update_display(surface, &s->fbsection, s->width, s->height,
                                s->width, s->width * 4, 0, 0, artist_draw_line,
@@ -1262,7 +1365,7 @@ static void artist_invalidate(void *opaque)
 }
 
 static const GraphicHwOps artist_ops = {
-    .invalidate  = artist_invalidate,
+    .invalidate = artist_invalidate,
     .gfx_update = artist_update_display,
 };
 
@@ -1303,13 +1406,15 @@ static void artist_realizefn(DeviceState *dev, Error **errp)
     struct vram_buffer *buf;
     hwaddr offset = 0;
 
-    if (s->width > 2048 || s->height > 2048) {
+    if (s->width > 2048 || s->height > 2048)
+    {
         error_report("artist: screen size can not exceed 2048 x 2048 pixel.");
         s->width = MIN(s->width, 2048);
         s->height = MIN(s->height, 2048);
     }
 
-    if (s->width < 640 || s->height < 480) {
+    if (s->width < 640 || s->height < 480)
+    {
         error_report("artist: minimum screen size is 640 x 480 pixel.");
         s->width = MAX(s->width, 640);
         s->height = MAX(s->height, 480);
@@ -1359,7 +1464,7 @@ static const VMStateDescription vmstate_artist = {
     .version_id = 2,
     .minimum_version_id = 2,
     .post_load = vmstate_artist_post_load,
-    .fields = (VMStateField[]) {
+    .fields = (VMStateField[]){
         VMSTATE_UINT16(height, ARTISTState),
         VMSTATE_UINT16(width, ARTISTState),
         VMSTATE_UINT16(depth, ARTISTState),
@@ -1393,14 +1498,12 @@ static const VMStateDescription vmstate_artist = {
         VMSTATE_UINT32(font_write1, ARTISTState),
         VMSTATE_UINT32(font_write2, ARTISTState),
         VMSTATE_UINT32(font_write_pos_y, ARTISTState),
-        VMSTATE_END_OF_LIST()
-    }
-};
+        VMSTATE_END_OF_LIST()}};
 
 static Property artist_properties[] = {
-    DEFINE_PROP_UINT16("width",        ARTISTState, width, 1280),
-    DEFINE_PROP_UINT16("height",       ARTISTState, height, 1024),
-    DEFINE_PROP_UINT16("depth",        ARTISTState, depth, 8),
+    DEFINE_PROP_UINT16("width", ARTISTState, width, 1280),
+    DEFINE_PROP_UINT16("height", ARTISTState, height, 1024),
+    DEFINE_PROP_UINT16("depth", ARTISTState, depth, 8),
     DEFINE_PROP_END_OF_LIST(),
 };
 
@@ -1419,11 +1522,11 @@ static void artist_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo artist_info = {
-    .name          = TYPE_ARTIST,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_ARTIST,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(ARTISTState),
     .instance_init = artist_initfn,
-    .class_init    = artist_class_init,
+    .class_init = artist_class_init,
 };
 
 static void artist_register_types(void)

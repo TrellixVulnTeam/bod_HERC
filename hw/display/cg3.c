@@ -41,26 +41,26 @@
 /* Change to 1 to enable debugging */
 #define DEBUG_CG3 0
 
-#define CG3_ROM_FILE  "QEMU,cgthree.bin"
+#define CG3_ROM_FILE "QEMU,cgthree.bin"
 #define FCODE_MAX_ROM_SIZE 0x10000
 
-#define CG3_REG_SIZE            0x20
+#define CG3_REG_SIZE 0x20
 
-#define CG3_REG_BT458_ADDR      0x0
-#define CG3_REG_BT458_COLMAP    0x4
-#define CG3_REG_FBC_CTRL        0x10
-#define CG3_REG_FBC_STATUS      0x11
-#define CG3_REG_FBC_CURSTART    0x12
-#define CG3_REG_FBC_CUREND      0x13
-#define CG3_REG_FBC_VCTRL       0x14
+#define CG3_REG_BT458_ADDR 0x0
+#define CG3_REG_BT458_COLMAP 0x4
+#define CG3_REG_FBC_CTRL 0x10
+#define CG3_REG_FBC_STATUS 0x11
+#define CG3_REG_FBC_CURSTART 0x12
+#define CG3_REG_FBC_CUREND 0x13
+#define CG3_REG_FBC_VCTRL 0x14
 
 /* Control register flags */
-#define CG3_CR_ENABLE_INTS      0x80
+#define CG3_CR_ENABLE_INTS 0x80
 
 /* Status register flags */
-#define CG3_SR_PENDING_INT      0x80
-#define CG3_SR_1152_900_76_B    0x60
-#define CG3_SR_ID_COLOR         0x01
+#define CG3_SR_PENDING_INT 0x80
+#define CG3_SR_1152_900_76_B 0x60
+#define CG3_SR_ID_COLOR 0x01
 
 #define CG3_VRAM_SIZE 0x100000
 #define CG3_VRAM_OFFSET 0x800000
@@ -68,7 +68,8 @@
 #define TYPE_CG3 "cgthree"
 OBJECT_DECLARE_SIMPLE_TYPE(CG3State, CG3)
 
-struct CG3State {
+struct CG3State
+{
     SysBusDevice parent_obj;
 
     QemuConsole *con;
@@ -97,7 +98,8 @@ static void cg3_update_display(void *opaque)
     ram_addr_t page;
     DirtyBitmapSnapshot *snap = NULL;
 
-    if (surface_bits_per_pixel(surface) != 32) {
+    if (surface_bits_per_pixel(surface) != 32)
+    {
         return;
     }
     width = s->width;
@@ -107,36 +109,47 @@ static void cg3_update_display(void *opaque)
     pix = memory_region_get_ram_ptr(&s->vram_mem);
     data = (uint32_t *)surface_data(surface);
 
-    if (!s->full_update) {
+    if (!s->full_update)
+    {
         snap = memory_region_snapshot_and_clear_dirty(&s->vram_mem, 0x0,
-                                              memory_region_size(&s->vram_mem),
-                                              DIRTY_MEMORY_VGA);
+                                                      memory_region_size(&s->vram_mem),
+                                                      DIRTY_MEMORY_VGA);
     }
 
-    for (y = 0; y < height; y++) {
+    for (y = 0; y < height; y++)
+    {
         int update;
 
         page = (ram_addr_t)y * width;
 
-        if (s->full_update) {
+        if (s->full_update)
+        {
             update = 1;
-        } else {
+        }
+        else
+        {
             update = memory_region_snapshot_get_dirty(&s->vram_mem, snap, page,
                                                       width);
         }
 
-        if (update) {
-            if (y_start < 0) {
+        if (update)
+        {
+            if (y_start < 0)
+            {
                 y_start = y;
             }
 
-            for (x = 0; x < width; x++) {
+            for (x = 0; x < width; x++)
+            {
                 dval = *pix++;
                 dval = (s->r[dval] << 16) | (s->g[dval] << 8) | s->b[dval];
                 *data++ = dval;
             }
-        } else {
-            if (y_start >= 0) {
+        }
+        else
+        {
+            if (y_start >= 0)
+            {
                 dpy_gfx_update(s->con, 0, y_start, width, y - y_start);
                 y_start = -1;
             }
@@ -145,11 +158,13 @@ static void cg3_update_display(void *opaque)
         }
     }
     s->full_update = 0;
-    if (y_start >= 0) {
+    if (y_start >= 0)
+    {
         dpy_gfx_update(s->con, 0, y_start, width, y - y_start);
     }
     /* vsync interrupt? */
-    if (s->regs[0] & CG3_CR_ENABLE_INTS) {
+    if (s->regs[0] & CG3_CR_ENABLE_INTS)
+    {
         s->regs[1] |= CG3_SR_PENDING_INT;
         qemu_irq_raise(s->irq);
     }
@@ -168,7 +183,8 @@ static uint64_t cg3_reg_read(void *opaque, hwaddr addr, unsigned size)
     CG3State *s = opaque;
     int val;
 
-    switch (addr) {
+    switch (addr)
+    {
     case CG3_REG_BT458_ADDR:
     case CG3_REG_BT458_COLMAP:
         val = 0;
@@ -185,9 +201,9 @@ static uint64_t cg3_reg_read(void *opaque, hwaddr addr, unsigned size)
         break;
     default:
         qemu_log_mask(LOG_UNIMP,
-                  "cg3: Unimplemented register read "
-                  "reg 0x%" HWADDR_PRIx " size 0x%x\n",
-                  addr, size);
+                      "cg3: Unimplemented register read "
+                      "reg 0x%" HWADDR_PRIx " size 0x%x\n",
+                      addr, size);
         val = 0;
         break;
     }
@@ -204,21 +220,25 @@ static void cg3_reg_write(void *opaque, hwaddr addr, uint64_t val,
     int i;
 
     trace_cg3_write(addr, val, size);
-    switch (addr) {
+    switch (addr)
+    {
     case CG3_REG_BT458_ADDR:
         s->dac_index = val;
         s->dac_state = 0;
         break;
     case CG3_REG_BT458_COLMAP:
         /* This register can be written to as either a long word or a byte */
-        if (size == 1) {
+        if (size == 1)
+        {
             val <<= 24;
         }
 
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < size; i++)
+        {
             regval = val >> 24;
 
-            switch (s->dac_state) {
+            switch (s->dac_state)
+            {
             case 0:
                 s->r[s->dac_index] = regval;
                 s->dac_state++;
@@ -244,7 +264,8 @@ static void cg3_reg_write(void *opaque, hwaddr addr, uint64_t val,
         s->regs[0] = val;
         break;
     case CG3_REG_FBC_STATUS:
-        if (s->regs[1] & CG3_SR_PENDING_INT) {
+        if (s->regs[1] & CG3_SR_PENDING_INT)
+        {
             /* clear interrupt */
             s->regs[1] &= ~CG3_SR_PENDING_INT;
             qemu_irq_lower(s->irq);
@@ -255,9 +276,9 @@ static void cg3_reg_write(void *opaque, hwaddr addr, uint64_t val,
         break;
     default:
         qemu_log_mask(LOG_UNIMP,
-                  "cg3: Unimplemented register write "
-                  "reg 0x%" HWADDR_PRIx " size 0x%x value 0x%" PRIx64 "\n",
-                  addr, size, val);
+                      "cg3: Unimplemented register write "
+                      "reg 0x%" HWADDR_PRIx " size 0x%x value 0x%" PRIx64 "\n",
+                      addr, size, val);
         break;
     }
 }
@@ -301,10 +322,12 @@ static void cg3_realizefn(DeviceState *dev, Error **errp)
     /* FCode ROM */
     vmstate_register_ram_global(&s->rom);
     fcode_filename = qemu_find_file(QEMU_FILE_TYPE_BIOS, CG3_ROM_FILE);
-    if (fcode_filename) {
+    if (fcode_filename)
+    {
         ret = load_image_mr(fcode_filename, &s->rom);
         g_free(fcode_filename);
-        if (ret < 0 || ret > FCODE_MAX_ROM_SIZE) {
+        if (ret < 0 || ret > FCODE_MAX_ROM_SIZE)
+        {
             warn_report("cg3: could not load prom '%s'", CG3_ROM_FILE);
         }
     }
@@ -334,7 +357,7 @@ static const VMStateDescription vmstate_cg3 = {
     .version_id = 1,
     .minimum_version_id = 1,
     .post_load = vmstate_cg3_post_load,
-    .fields = (VMStateField[]) {
+    .fields = (VMStateField[]){
         VMSTATE_UINT16(height, CG3State),
         VMSTATE_UINT16(width, CG3State),
         VMSTATE_UINT16(depth, CG3State),
@@ -343,9 +366,7 @@ static const VMStateDescription vmstate_cg3 = {
         VMSTATE_BUFFER(b, CG3State),
         VMSTATE_UINT8(dac_index, CG3State),
         VMSTATE_UINT8(dac_state, CG3State),
-        VMSTATE_END_OF_LIST()
-    }
-};
+        VMSTATE_END_OF_LIST()}};
 
 static void cg3_reset(DeviceState *d)
 {
@@ -362,10 +383,10 @@ static void cg3_reset(DeviceState *d)
 }
 
 static Property cg3_properties[] = {
-    DEFINE_PROP_UINT32("vram-size",    CG3State, vram_size, -1),
-    DEFINE_PROP_UINT16("width",        CG3State, width,     -1),
-    DEFINE_PROP_UINT16("height",       CG3State, height,    -1),
-    DEFINE_PROP_UINT16("depth",        CG3State, depth,     -1),
+    DEFINE_PROP_UINT32("vram-size", CG3State, vram_size, -1),
+    DEFINE_PROP_UINT16("width", CG3State, width, -1),
+    DEFINE_PROP_UINT16("height", CG3State, height, -1),
+    DEFINE_PROP_UINT16("depth", CG3State, depth, -1),
     DEFINE_PROP_END_OF_LIST(),
 };
 
@@ -380,11 +401,11 @@ static void cg3_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo cg3_info = {
-    .name          = TYPE_CG3,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_CG3,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(CG3State),
     .instance_init = cg3_initfn,
-    .class_init    = cg3_class_init,
+    .class_init = cg3_class_init,
 };
 
 static void cg3_register_types(void)

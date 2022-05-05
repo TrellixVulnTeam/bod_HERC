@@ -11,7 +11,8 @@ typedef struct RAMFBStandaloneState RAMFBStandaloneState;
 DECLARE_INSTANCE_CHECKER(RAMFBStandaloneState, RAMFB,
                          TYPE_RAMFB_DEVICE)
 
-struct RAMFBStandaloneState {
+struct RAMFBStandaloneState
+{
     SysBusDevice parent_obj;
     QemuConsole *con;
     RAMFBState *state;
@@ -21,9 +22,12 @@ static void display_update_wrapper(void *dev)
 {
     RAMFBStandaloneState *ramfb = RAMFB(dev);
 
-    if (0 /* native driver active */) {
+    if (0 /* native driver active */)
+    {
         /* non-standalone device would run native display update here */;
-    } else {
+    }
+    else
+    {
         ramfb_display_update(ramfb->con, ramfb->state);
     }
 }
@@ -51,10 +55,10 @@ static void ramfb_class_initfn(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo ramfb_info = {
-    .name          = TYPE_RAMFB_DEVICE,
-    .parent        = TYPE_SYS_BUS_DEVICE,
+    .name = TYPE_RAMFB_DEVICE,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(RAMFBStandaloneState),
-    .class_init    = ramfb_class_initfn,
+    .class_init = ramfb_class_initfn,
 };
 
 static void ramfb_register_types(void)
