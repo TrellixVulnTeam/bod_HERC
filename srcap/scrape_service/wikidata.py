@@ -2,7 +2,7 @@ import sys
 from qwikidata import typedefs
 import asyncio
 import time
-from uitls.SPRQL import SPRQL_GEN
+from ResourceDiscovery.main import get_wikidataDb
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 
@@ -57,6 +57,7 @@ async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: 
 
 
 async def __aio_get_entity_dict_from_api(Q, session=None):
+    wikidataDb = await get_wikidataDb()
     q_dict = await wikidataDb.find_one({'title': Q})
     if (q_dict is None) or ("daedtime" not in q_dict.keys()):
         q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
