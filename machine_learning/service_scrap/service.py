@@ -5,7 +5,7 @@ import sys
 from urllib.parse import urljoin, urlparse
 from machine_learning.service_scrap.scrap.reddit import reddit_redditwebsite, PushShift_redditwebsite, Mix_redditwebsite
 from machine_learning.service_scrap.scrap.feed import feed
-from machine_learning.service_scrap.scrap.website import website, website1, website_bs, website_markdown
+from machine_learning.service_scrap.scrap.website import website,  website_bs, website_markdown
 from machine_learning.service_scrap.data_pull.wikidata import wikidata_extact2
 
 from urllib.parse import urljoin
@@ -14,12 +14,10 @@ from pathlib import Path
 scrape_wheres = {
     "wikidata": wikidata_extact2
 }
-website1
 scrape_types = {
     "feed": [feed],
-    # "website": [website, website_bs, website_markdown],
-    "website": [website1],
-    "unknown": [website1],
+    "website": [website, website_bs, website_markdown],
+    "unknown": [website],
 }
 scrape_toplevel = [
     reddit_redditwebsite,

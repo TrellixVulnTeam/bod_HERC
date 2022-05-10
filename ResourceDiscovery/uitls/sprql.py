@@ -1,3 +1,4 @@
+import sys
 import aiohttp
 import asyncio
 import aiofiles
@@ -15,15 +16,19 @@ async def SPRQL_GEN(sparql, endpoint, file_name, lock, online=True):
                             async with session.request('POST', endpoint, data={'format': 'json', 'query': sparql}) as r:
                                 async with aiofiles.open(file_name, mode='wb') as f:
                                     if r.ok:
-                                        async for data, _ in r.content.iter_chunks():
-                                            await f.write(data)
+                                        data = await r.read()
+                                        await f.write(data)
                                         break
                                     elif r.status == 503:
                                         await asyncio.sleep(10*60)
                                         continue
                                     else:
                                         await asyncio.sleep(10)
-                except BaseException as e:
+                except:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(
+                        exc_tb.tb_frame.f_code.co_filename)[1]
+                    print(exc_type, fname, exc_tb.tb_lineno)
                     print("download fails with except will retry")
             size = 0
             async with aiofiles.open(file_name, mode='rb') as fs:
