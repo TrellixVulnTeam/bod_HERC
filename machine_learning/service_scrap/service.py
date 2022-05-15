@@ -16,7 +16,7 @@ scrape_wheres = {
 }
 scrape_types = {
     "feed": [feed],
-    "website": [website, website_bs, website_markdown],
+    "website": [website],
     "unknown": [website],
 }
 scrape_toplevel = [
@@ -67,13 +67,13 @@ async def do_someting2(resource, url=None):
         if resource["type"] in scrape_types.keys():
             thngs_i_could_do = thngs_i_could_do + \
                 scrape_types[resource["type"]]
-    if len(thngs_i_could_do) > 0:
+    if len(thngs_i_could_do) == 0:
+        return None, None, None, {}, []
+    else:
         d = random.choice(thngs_i_could_do)
         b = d(url, resource)
         c = await b
         return c
-    else:
-        return None, None, None, {}, []
 
 
 async def do_someting(p=None, type=None, url=None, id=None):
@@ -132,6 +132,7 @@ async def Getdata():
                 else:
                     url = None
                 a2 = await do_someting2(resource, url)
+                # print(a2)
                 data, mime, lang, data_, url2 = a2
                 if data is None:
                     continue
@@ -140,6 +141,7 @@ async def Getdata():
                 url = o.scheme + "://" + o.netloc
                 for url in url2:
                     data_ = await get_class_data(i_doc, o.path, data_=data_)
+
                 yield data_, mime,  data, lang
             else:
                 data, mime, lang, data_, urls = await do_toplevel(i_doc["to_url"])

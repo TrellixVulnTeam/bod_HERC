@@ -1,10 +1,14 @@
 import socket
+from urllib.parse import urljoin
 from urllib.request import urlopen
 import aiohttp
 from bs4 import BeautifulSoup
 import urllib
 import markdown
+from regex import B
 from urllib3 import request
+
+from ResourceDiscovery.uitls.robot import Robots
 headers = {
     "User-Agent": ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) FeedScaner"),
     "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"),
@@ -37,34 +41,66 @@ headers = {
 #     return None, None, None, exter_cat, [url]
 
 
-async def website(url, id=None):
-    exter_cat = {}
-    for i in range(20):
-        try:
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(family=socket.AF_INET, verify_ssl=False)) as session:
+async def website(url, id=None, count=10, rb=None):
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(family=socket.AF_INET, verify_ssl=False)) as session:
+        exter_cat = {}
+        robot = urljoin(url, '/robots.txt')
+        if rb is None or rb.url == robot:
+            rb = Robots()
+            await rb.read(session)
+            if rb.disallow_all:
+                return None, None, None, exter_cat, [url]
+        for i in range(20):
+            try:
                 async with session.get(url, ssl=False, headers=headers) as response:
-                    if response.status_code == 200:
+                    if response.ok:
                         try:
                             soup = await response.text()
                         except:
-                            spup = await response.text('ISO-8859-1')
+                            soup = await response.text('ISO-8859-1')
+                        if len(soup) < 1000:
+                            break
                         try:
-                            soup = BeautifulSoup(spup, 'html.parser')
+                            soup = BeautifulSoup(soup, 'html.parser')
+                            result = soup.find(
+                                "meta", attrs={"http-equiv": "Refresh"})
+                            if result:
+                                wait, text = result["content"].split(";")
+                                if text.strip().lower().startswith("url="):
+                                    url = text[4:]
+                                    if count != 0:
+                                        return website(url, id=id, count=count-1)
+                            result = soup.find("frameset")
+                            if result:
+                                # skip on frameset
+                                break
+                            result = soup.find("frame")
+                            if result:
+                                # skip on frame
+                                break
+                            for s in soup.select('frameset'):
+                                s.extract()
                             for s in soup.select('script'):
                                 s.extract()
                             for s in soup.select('link'):
                                 s.extract()
                             for s in soup.select('style'):
                                 s.extract()
-                            if soup.has_attr('some_attribute'):
+                            for s in soup.select('html'):
+                                if s.has_attr('lang'):
+                                    lang = s.html["lang"]
+                            for s in soup.select('body'):
+                                if s.has_attr('lang'):
+                                    lang = s.html["lang"]
+                            if soup.has_attr('lang'):
                                 lang = soup.html["lang"]
                             else:
                                 lang = "unknown"
                         except:
                             pass
                         return str(soup), "html", lang, exter_cat, [url]
-        except:
-            pass
+            except:
+                pass
     return None, None, None, exter_cat, [url]
 
 

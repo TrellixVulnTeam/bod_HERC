@@ -17,7 +17,7 @@ async def wikidata_extact2(resource, data={}):
         if resource["value"] not in data["wikidata_value"]:
             data["wikidata_value"].append(resource["value"])
 
-    if "data" in resource.keys():
+    if "data" in resource.keys() and resource["data"] is not None:
         for i_resource in resource["data"]:
             key_data = ("wikidata_"+list(i_resource.keys())[0])
             key_resource = (list(i_resource.keys())[0])

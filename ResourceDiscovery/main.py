@@ -137,7 +137,8 @@ async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=Non
             Q = get_q(item)
             data = await wikidata_linked(Q, session=session, sem=sem)
             await resource_add(url, item=Q, type_=type_, data=data, prop=prop, value=value)
-            isGood, feeds = await scanHTML(html, url)
+        isGood, feeds = await scanHTML(html, url)
+        async with sem:
             for feed in feeds:
                 try:
                     check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
@@ -151,7 +152,6 @@ async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=Non
 
 
 async def do_thing(datas, bar_done, name="", prop="", sem=None, type_=None, value_name=None):
-    print("test")
     pending2 = []
     # timeout = aiohttp.ClientTimeout(total=90)
     try:
@@ -183,8 +183,12 @@ async def do_thing(datas, bar_done, name="", prop="", sem=None, type_=None, valu
         print(type(exc_obj), exc_type, fname, exc_tb.tb_lineno)
 
 
+def check():
+    pass
+
+
 async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_name=None):
-    sem = asyncio.Semaphore(700)
+    sem = asyncio.Semaphore(50)
     things = []
     count = 0
     pending = []
@@ -199,12 +203,9 @@ async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_na
                 count = size
                 things.append(data_i)
                 bar_start.update()
-                if len(things) > 500:
+                if len(things) > 100:
                     await do_thing(things, bar_done, name=name, sem=sem, prop=prop, type_=type_, value_name=value_name)
                     things = []
-                if len(pending) != 0:
-                    await asyncio.wait(pending)
-                    pending = []
                 if count == 0:
                     continue
         except:

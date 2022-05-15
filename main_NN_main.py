@@ -7,3 +7,4 @@ from utils import asynchronous_thread_task
 new_loop = asyncio.new_event_loop()
 b = threading.Thread(target=asynchronous_thread_task, args=(NN_main, new_loop))
 b.start()
+b.join()

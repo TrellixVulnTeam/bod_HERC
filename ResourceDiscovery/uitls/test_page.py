@@ -51,7 +51,6 @@ async def test_page(url, session, rb, sem=None):
                         text = await response.text('ISO-8859-1')
                     return True, False, text, response.status, mime
         except OSError as e:
-            print("e", e)
             return check_wesite, False, "", 000, ""
         except asyncio.exceptions.TimeoutError:
             check_wesite = True
