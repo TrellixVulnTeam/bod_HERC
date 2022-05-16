@@ -34,7 +34,6 @@ class PositionalEncoding(nn.Module):
 
 
 class TransformerModel(nn.Module):
-
     def __init__(self, ntoken: int, d_model: int, nhead: int, d_hid: int,
                  nlayers: int, dropout: float = 0.5):
         super().__init__()
@@ -72,4 +71,4 @@ class TransformerModel(nn.Module):
         src, src_mask = self.encoder(src)
         output = self.transformer_encoder(src, src_mask)
         output = self.decoder(output)
-        return output
+        return output, src_mask

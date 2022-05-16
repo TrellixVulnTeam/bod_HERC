@@ -7,6 +7,8 @@ from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 
 import motor.motor_asyncio
+
+from ResourceDiscovery.uitls.sprql import SPRQL_GEN
 data_sprql = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
@@ -17,7 +19,7 @@ wikidataDb = scrap.wikidata
 
 
 async def sprql_wikidata(qurry, file_name):
-    return SPRQL_GEN(qurry, data_sprql, file_name, online=True)
+    return SPRQL_GEN(qurry, file_name, online=True)
 
 
 def get_q(Q):

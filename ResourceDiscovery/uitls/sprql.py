@@ -5,25 +5,26 @@ import aiofiles
 import ijson
 import os
 
+endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
-async def SPRQL_GEN(sparql, endpoint, file_name, lock, online=True):
+
+async def SPRQL_GEN(sparql, file_name, endpoint=endpoint, online=True):
     for i in range(10):
         try:
             while online:
                 try:
-                    async with lock:
-                        async with aiohttp.ClientSession(headers={"Accept": "application/json"}) as session:
-                            async with session.request('POST', endpoint, data={'format': 'json', 'query': sparql}) as r:
-                                async with aiofiles.open(file_name, mode='wb') as f:
-                                    if r.ok:
-                                        data = await r.read()
-                                        await f.write(data)
-                                        break
-                                    elif r.status == 503:
-                                        await asyncio.sleep(10*60)
-                                        continue
-                                    else:
-                                        await asyncio.sleep(10)
+                    async with aiohttp.ClientSession(headers={"Accept": "application/json"}) as session:
+                        async with session.request('POST', endpoint, data={'format': 'json', 'query': sparql}) as r:
+                            async with aiofiles.open(file_name, mode='wb') as f:
+                                if r.ok:
+                                    data = await r.read()
+                                    await f.write(data)
+                                    break
+                                elif r.status == 503:
+                                    await asyncio.sleep(10*60)
+                                    continue
+                                else:
+                                    await asyncio.sleep(10)
                 except:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(

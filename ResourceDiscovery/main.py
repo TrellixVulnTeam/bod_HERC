@@ -1,3 +1,4 @@
+from srcap.scrape_service.wikidata import Wikidata_qurry_property3
 from srcap.uitls.prgoress import get_the_manager
 from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog
 from ResourceDiscovery.uitls.wikidata import wikidata_linked, get_q
@@ -197,7 +198,7 @@ async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_na
     bar_start = manager.counter(total=1, desc='bar_start', unit='ticks')
     while True:
         try:
-            async for data_i, size in SPRQL_GEN(quarry, sprql_endpoint, name+".json", lock_SPRQL):
+            async for data_i, size in SPRQL_GEN(quarry,  name+".json"):
                 bar_done.total = size
                 bar_start.total = size
                 count = size
@@ -220,6 +221,9 @@ async def main_ResourceDiscovery(name):
             while not await get_wikidata(name="official_website", type_="website", prop="P856", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_website):
                 pass
         except:
+            pass
+        quarry=""
+        async for data_i, size in SPRQL_GEN(Wikidata_qurry_property3,  "Wikidata_qurry_property3.json"):
             pass
         # await offical_blog(lock_SPRQL)
         # await feeds(lock_SPRQL)

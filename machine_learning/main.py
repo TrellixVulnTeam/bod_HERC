@@ -1,4 +1,5 @@
 
+from machine_learning.uitls.NNNN import training_block
 from machine_learning.uitls.TransformerModel import TransformerModel
 import asyncio
 from torch.utils.data import Dataset, DataLoader
@@ -20,7 +21,7 @@ d_hid = 200  # dimension of the feedforward network model in nn.TransformerEncod
 nlayers = 2  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
 nhead = 2  # number of heads in nn.MultiheadAttention
 dropout = 0.2  # dropout probability
-model = TransformerModel(ntokens, emsize, nhead, d_hid, nlayers, dropout)
+model = training_block(ntokens, emsize, nhead, d_hid, nlayers, dropout)
 
 
 def text_embedding(text):
@@ -38,5 +39,4 @@ async def NN_main(name):
         if len(data[2]) < 40167:
             print(len(data[2]))
             mask, basepairs = text_embedding(data[2])
-            output = model(basepairs, mask)
-            # print(data)
+            output = model.train(basepairs, mask, data[0])
