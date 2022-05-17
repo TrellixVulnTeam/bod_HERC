@@ -23,11 +23,12 @@ class training_block(nn.Module):
         self.outputs = {}
 
     def forward(self, src, mask):
-        output = {}
+        outputs = {}
         output, src_mask = self.model(src, src_mask=mask)
         for name in self.outputs.keys():
-            output[name] = self.outputs[name]['output'](output, src_mask)
-        return output
+            print(name)
+            outputs[name] = self.outputs[name]['output'](output, src_mask)
+        return outputs
 
     def train(self, basepairs, mask, targets):
         # make  sure we have all the Lables
@@ -46,13 +47,13 @@ class training_block(nn.Module):
                             size, self.ntokens)
                         pass
         # do that modle thing
-        output, src_mask = self.model(basepairs, src_mask=mask)
+        outputs = self(basepairs, mask=mask)
         for name in targets.keys():
             size = len(self.outputs[name]['label'])
             a_out = [0] * size
             for ii in targets[name]:
                 index = self.outputs[name]['label'].index(ii)
                 a_out[index] = 1
-            print(output[0].size())
-            xx = self.outputs[name]['output'](output, src_mask)
+            print(outputs[name].size())
+            xx = outputs[name]
             print(xx)
