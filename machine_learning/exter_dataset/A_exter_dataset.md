@@ -298,3 +298,26 @@ site:
 site:
 ## Covid-HeRA
 site:
+# other2 
+## SVDC Fake News Dataset
+site:
+## ISOT Fake News Dataset
+site:
+## Horne 2017 Fake News Data
+site:
+## PeerSum
+site:
+## Pubmed
+site:
+## Multi-XScience
+site:
+## Semantic Scholar
+site:
+## CiteWorth
+site:
+## ScienceIE
+site:
+## Webis-STEREO-21
+site:
+## STEM-ECR
+site:

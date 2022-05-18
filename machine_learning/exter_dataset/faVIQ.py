@@ -1,0 +1,5 @@
+url = "https://nlp.cs.washington.edu/ambigqa/data/faviq_a_set_v1.2.zip"
+url = "https://nlp.cs.washington.edu/ambigqa/data/faviq_r_set_v1.2.zip"
+url = "https://nlp.cs.washington.edu/ambigqa/data/wikipedia_20190801.jsonl"
+url = "https://nlp.cs.washington.edu/ambigqa/data/fact_correction_a_set.zip"
+url = "https://nlp.cs.washington.edu/ambigqa/data/fact_correction_r_set.zip"
