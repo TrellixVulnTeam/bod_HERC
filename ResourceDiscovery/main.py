@@ -1,6 +1,6 @@
 from srcap.scrape_service.wikidata import Wikidata_qurry_property3
 from srcap.uitls.prgoress import get_the_manager
-from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog
+from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog, SPARQL_all_ddd, SPARQL_all_fff, SPARQL_all_cccc
 from ResourceDiscovery.uitls.wikidata import wikidata_linked, get_q
 from ResourceDiscovery.uitls.test_page import test_page
 from ResourceDiscovery.uitls.sprql import SPRQL_GEN
@@ -24,10 +24,6 @@ from progress.bar import Bar
 
 debug = False
 
-
-async def resource_cleanup():
-    wikidataDb = await get_wikidataDb()
-    pass
 
 headers = {
     "User-Agent": ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) FeedScaner"),
@@ -136,37 +132,54 @@ async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=Non
             if not check_website or not check_webpage:
                 return False
             Q = get_q(item)
-            data = await wikidata_linked(Q, session=session, sem=sem)
+            data = await wikidata_linked(Q, session=session)
             await resource_add(url, item=Q, type_=type_, data=data, prop=prop, value=value)
-        isGood, feeds = await scanHTML(html, url)
-        async with sem:
-            for feed in feeds:
-                try:
-                    check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
-                    check, urls = feedCheck(html)
-                    if check:
-                        await resource_add(feed, type_="feed")
-                except:
-                    pass
+        if type_ != "feed":
+            isGood, feeds = await scanHTML(html, url)
+            async with sem:
+                for feed in feeds:
+                    try:
+                        check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
+                        check, urls = feedCheck(html)
+                        if check:
+                            await resource_add(feed, type_="feed")
+                    except:
+                        pass
+        else:
+            try:
+                check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
+                await resource_add(feed, type_="feed")
+            except:
+                pass
     except:
         pass
 
 
-async def do_thing(datas, bar_done, name="", prop="", sem=None, type_=None, value_name=None):
+async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=None, prop="", sem=None, type_=None, value_name=None):
     pending2 = []
     # timeout = aiohttp.ClientTimeout(total=90)
     try:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)) as session:
             for data in datas:
                 try:
-                    if "item" not in data.keys():
-                        continue
-                    item = data["item"]["value"]
-                    url = data[name]["value"]
+                    # Get item
+                    if name_item_id is not None:
+                        item = data[name_item_id]["value"]
+                    else:
+                        if "item" not in data.keys():
+                            continue
+                        item = data["item"]["value"]
+                    # Get URL
+                    if name_prop_url is not None:
+                        url = data[name_prop_url]["value"]
+                    else:
+                        url = data[name]["value"]
+                    # Get Value
                     if value_name is not None:
                         value = data[value_name]["value"]
                     else:
                         value = None
+
                     pending2.append(asyncio.create_task(get_ting(
                         item, url, prop, type_=type_, sem=sem, value=value, where="wikidata", session=session)))
                 except:
@@ -188,17 +201,17 @@ def check():
     pass
 
 
-async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_name=None):
+async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_name=None, dodgy=True):
     sem = asyncio.Semaphore(50)
     things = []
     count = 0
     pending = []
     manager = get_the_manager()
-    bar_done = manager.counter(total=1, desc='bar_done', unit='ticks')
-    bar_start = manager.counter(total=1, desc='bar_start', unit='ticks')
+    bar_done = manager.counter(total=1, desc='bar_done: '+name, unit='ticks')
+    bar_start = manager.counter(total=1, desc='bar_start: '+name, unit='ticks')
     while True:
         try:
-            async for data_i, size in SPRQL_GEN(quarry,  name+".json"):
+            async for data_i, size in SPRQL_GEN(quarry,  name+".json", dodgy=dodgy):
                 bar_done.total = size
                 bar_start.total = size
                 count = size
@@ -214,6 +227,20 @@ async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_na
         return True
 
 
+async def main_ResourceDiscovery_Q_gen(lock_SPRQL):
+    async for data_i, size in SPRQL_GEN(SPARQL_all_ddd,  "SPARQL_all_ddd.json"):
+        Q = get_q(data_i["type_of_Wikidata_property"]["value"])
+        text_ddd = SPARQL_all_fff % (Q)
+        async for data_i_x2, size in SPRQL_GEN(text_ddd,  "SPARQL_all_fff.json"):
+            P = get_q(data_i_x2["type_of_Wikidata_property"]["value"])
+            text_ccc = SPARQL_all_cccc % (P)
+            formatter_URL = data_i_x2["formatter_URL"]["value"]
+            async for data_i_x3, size in SPRQL_GEN(text_ccc,  "SPARQL_all_cccc.json"):
+                while not await get_wikidata(name="item", type_="unknown", prop=P, lock_SPRQL=lock_SPRQL, quarry=text_ccc, dodgy=True):
+                    pass
+        # formatter URL
+
+
 async def main_ResourceDiscovery(name):
     lock_SPRQL = asyncio.Lock()
     while True:
@@ -222,8 +249,17 @@ async def main_ResourceDiscovery(name):
                 pass
         except:
             pass
-        quarry=""
-        async for data_i, size in SPRQL_GEN(Wikidata_qurry_property3,  "Wikidata_qurry_property3.json"):
+        try:
+            while not await get_wikidata(name="SPARQL_offical_blog", type_="blog", prop="P1581", lock_SPRQL=lock_SPRQL, quarry=SPARQL_offical_blog):
+                pass
+        except:
             pass
-        # await offical_blog(lock_SPRQL)
-        # await feeds(lock_SPRQL)
+        try:
+            while not await get_wikidata(name="SPARQL_all_feeds", type_="feed", prop="P1019", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_feeds):
+                pass
+        except:
+            pass
+        await main_ResourceDiscovery_Q_gen(lock_SPRQL)
+
+# await offical_blog(lock_SPRQL)
+# await feeds(lock_SPRQL)

@@ -5,7 +5,6 @@ import time
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 
-from ResourceDiscovery.uitls.db import get_wikidataDb
 
 data_sprql = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
@@ -21,7 +20,7 @@ def get_q(Q):
 WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
 
 
-async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None, sem=None) -> typedefs.EntityDict:
+async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
     url = "{}/{}.json".format(base_url, entity_id)
     exc_obj = None
     for i in range(10):
@@ -43,20 +42,16 @@ async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: 
     raise exc_obj
 
 
-async def __aio_get_entity_dict_from_api(Q, session=None, sem=None):
-    # db = await get_wikidataDb()
-    # q_dict = db.find_one({'title': Q})
-    # if (q_dict is None) or ("daedtime" not in q_dict.keys()):
-    q_dict = await aio_get_entity_dict_from_api2(Q, session=session, sem=sem)
-    # q_dict["daedtime"] = (86400*30) + int(time.time())
-    # await db.insert_one(q_dict)
+async def __aio_get_entity_dict_from_api(Q, session=None):
+    q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
+    print(q_dict)
     q_ = WikidataItem(q_dict)
     return q_, q_dict
 
 
-async def wikidata_linked(Q,  session=None, sem=None):
+async def wikidata_linked(Q,  session=None):
     data = []
-    q_, q_dict = await __aio_get_entity_dict_from_api(Q, session=session, sem=sem)
+    q_, q_dict = await __aio_get_entity_dict_from_api(Q, session=session)
     claim_groups = q_.get_truthy_claim_groups()
     for claim in q_dict["claims"]:
         claims = claim_groups[claim]

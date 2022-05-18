@@ -18,6 +18,7 @@ scrape_types = {
     "feed": [feed],
     "website": [website],
     "unknown": [website],
+    "blog": [website],
 }
 scrape_toplevel = [
     reddit_redditwebsite,

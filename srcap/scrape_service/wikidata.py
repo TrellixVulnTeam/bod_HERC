@@ -2,7 +2,7 @@ import sys
 from qwikidata import typedefs
 import asyncio
 import time
-from ResourceDiscovery.main import get_wikidataDb
+from ResourceDiscovery.uitls.db import get_wikidataDb
 from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
 from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 

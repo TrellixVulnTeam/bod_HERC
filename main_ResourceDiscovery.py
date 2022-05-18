@@ -7,3 +7,4 @@ new_loop = asyncio.new_event_loop()
 a = threading.Thread(target=asynchronous_thread_task,
                      args=(main_ResourceDiscovery, new_loop))
 a.start()
+a.join()

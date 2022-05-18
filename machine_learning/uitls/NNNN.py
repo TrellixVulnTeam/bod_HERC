@@ -3,15 +3,16 @@ import torch.nn as nn
 from machine_learning.uitls.TransformerModel import TransformerModel, TransformerEncoderLayer, TransformerEncoder
 
 
-class brain_box(nn.Module):
+class classifierOutput(nn.Module):
     def __init__(self, out_features, in_features, dropout=0.5):
         super().__init__()
         self.out_features = out_features
         self.transformer_encoder = nn.Linear(in_features, out_features)
+        self.dropout = nn.Dropout(out_features)
 
     def forward(self, src, mask):
         print(src[0][0].size())
-        return (self.transformer_encoder(src[0][0]))
+        return (self.transformer_encoder(self.dropout(src[0][0])))
 
 
 class training_block(nn.Module):
@@ -40,10 +41,10 @@ class training_block(nn.Module):
                     self.outputs[name]["label"].append(name_lib)
                     size = len(self.outputs[name]["label"])
                     if "output" not in self.outputs[name].keys():
-                        self.outputs[name]["output"] = brain_box(
+                        self.outputs[name]["output"] = classifierOutput(
                             size, self.ntokens)
                     if size != self.outputs[name]["output"].out_features:
-                        self.outputs[name]["output"] = brain_box(
+                        self.outputs[name]["output"] = classifierOutput(
                             size, self.ntokens)
                         pass
         # do that modle thing
@@ -54,6 +55,5 @@ class training_block(nn.Module):
             for ii in targets[name]:
                 index = self.outputs[name]['label'].index(ii)
                 a_out[index] = 1
-            print(outputs[name].size())
             xx = outputs[name]
             print(xx)
