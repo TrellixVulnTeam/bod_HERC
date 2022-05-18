@@ -1,4 +1,5 @@
 
+import os
 from machine_learning.uitls.NNNN import training_block
 from machine_learning.uitls.TransformerModel import TransformerModel
 import asyncio
@@ -40,3 +41,6 @@ async def NN_main(name):
             print(len(data[2]))
             mask, basepairs = text_embedding(data[2])
             output = model.train(basepairs, mask, data[0])
+print(os.path.dirname(os.path.realpath(__file__)))
+
+print(os.path.dirname(os.path.realpath(__file__)))
