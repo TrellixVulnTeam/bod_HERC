@@ -97,7 +97,7 @@ site:https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UL
 site:https://github.com/Rowan1697/FakeNews
 ## NELA-GT-2020  
 site: https://github.com/MELALab/nela-gt
-## User Preference-aware Fake News Detection   UPFD-GOS
+## User Preference-aware Fake News Detection  UPFD-GOS
 site: https://github.com/pyg-team/pytorch_geometric/
 ## Weibo21 
 site:https://github.com/kennqiang/MDFEND-Weibo21
@@ -231,3 +231,70 @@ site: https://github.com/dcaled/FTR-18/
 ## https://www.kaggle.com/datasets/saurabhbagchi/sarcasm-detection-through-nlp
 ## https://www.kaggle.com/code/raghavkhemka/sarcasm-detection-using-bert-92-accuracy
 ## https://www.kaggle.com/datasets/theynalzada/news-headlines-for-sarcasm-detection
+
+
+# other
+## PANACEA (PANACEA dataset - Heterogeneous COVID-19 Claims)
+site:https://zenodo.org/record/6493847#.YoVMuHXMJhE
+## COVID-19 Disinfo (COVID-19 Disinformation Twitter Dataset)
+site:https://github.com/firojalam/COVID-19-disinformation
+## COVID-19 Fake News Dataset (COVID19 Fake News Detection in 
+site:English)
+## WebEdit
+site:
+## RotoEdit
+site:
+## Monant Medical Misinformation
+site:
+## MSJudge
+site:
+## HoaxItaly
+site:
+## Evidence-based Factual Error Correction
+site:
+## EmoCause
+site:
+## COVMis-Stance
+site:
+## User Preference-aware Fake News Detection UPFD
+site:
+## JUSTICE
+site:
+## GermEval 2021 
+site:
+## Climate Claims
+site:
+## HoVer
+site:
+## DialFact
+site:
+## BuzzFeed-Webis Fake News Corpus 2016
+site:
+## COVID-Fact
+site:
+## PUBHEALTH
+site:
+## ClaimBuster
+site:
+## EntailmentBank
+site:
+## ProofWriter
+site:
+## MultiFC
+site:
+## ECHR
+site:
+## REDDIT-12K
+site:
+## SciFact
+site:
+## TabFact
+site:
+## LAMA
+site:
+## HotpotQA
+site:
+## NewsCLIPpings
+site:
+## Covid-HeRA
+site:
