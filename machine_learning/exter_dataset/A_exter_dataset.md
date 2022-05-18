@@ -50,7 +50,6 @@ site:https://github.com/kocohub/korean-hate-speech
 site: https://github.com/intelligence-csd-auth-gr/Ethos-Hate-Speech-Dataset
 ## AraCOVID19-MFH 
 site: https://github.com/MohamedHadjAmeur/AraCOVID19-MFH
-## DKhate
 ## HatemojiCheck
 site:https://github.com/HannahKirk/Hatemoji
 ## ToLD-Br
@@ -70,7 +69,7 @@ site: https://github.com/uds-lsv/mphasis
 site:https://zenodo.org/record/4773875#.YoSndCPMKV4
 ## The ComMA
 site: https://competitions.codalab.org/competitions/35482
-## ToxiGen 
+
 
 # Fake News Detection
 ## LIAR
@@ -97,8 +96,9 @@ site:https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UL
 ## BanFakeNews
 site:https://github.com/Rowan1697/FakeNews
 ## NELA-GT-2020  
-## User Preference-aware Fake News Detection 
+site: https://github.com/MELALab/nela-gt
 ## User Preference-aware Fake News Detection   UPFD-GOS
+site: https://github.com/pyg-team/pytorch_geometric/
 ## Weibo21 
 site:https://github.com/kennqiang/MDFEND-Weibo21
 ## Fake News Filipino Dataset
@@ -108,19 +108,20 @@ site: pip install mumin
 ## UPFD-POL 
 
 # Document Ranking
+## MQ2010
+site:https://www.microsoft.com/en-us/research/project/letor-learning-rank-information-retrieval/
 ## MQ2008
-site:
+site:https://www.microsoft.com/en-us/research/project/letor-learning-rank-information-retrieval/letor-3-0/
 ## MSLR WEB30K
-site:
+site: https://www.microsoft.com/en-us/research/project/mslr/
 ## Istella LETOR
-site:
+site: http://blog.istella.it/istella-learning-to-rank-dataset/
 
 # emotion-classification
 ## ROCStories
 site:https://cs.rochester.edu/nlp/rocstories/
 ## EmotionLines
 site:http://doraemon.iis.sinica.edu.tw/emotionlines/download.html
-## ISEAR
 ## EmoBank
 site:https://github.com/JULIELab/EmoBank
 ## Story Commonsense 
