@@ -8,11 +8,11 @@ class classifierOutput(nn.Module):
         super().__init__()
         self.out_features = out_features
         self.transformer_encoder = nn.Linear(in_features, out_features)
-        self.dropout = nn.Dropout(out_features)
+        # self.dropout = nn.Dropout(out_features)
 
     def forward(self, src, mask):
         print(src[0][0].size())
-        return (self.transformer_encoder(self.dropout(src[0][0])))
+        return (self.transformer_encoder((src[0][0])))
 
 
 class training_block(nn.Module):

@@ -1,4 +1,4 @@
-async def wikidata_extact2(resource, data={}):
+async def wikidata_extact(resource, data={}):
     if "prop" in resource.keys():
         if "wikidata_prop" not in data.keys():
             data["wikidata_prop"] = []

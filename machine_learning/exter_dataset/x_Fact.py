@@ -3,5 +3,8 @@ from git import Repo
 url = "https://github.com/utahnlp/x-fact"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 dir_fs = os.path.join(dir_fs, "repo", 'x-fact')
-Repo.clone_from(url,  dir_fs)
+try:
+    Repo.clone_from(url,  dir_fs)
+except:
+    pass
 repo = Repo(dir_fs)

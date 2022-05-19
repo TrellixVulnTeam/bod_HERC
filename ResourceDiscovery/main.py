@@ -1,3 +1,4 @@
+from ResourceDiscovery.alt_savices.common_crawl import get_some_CC
 from srcap.scrape_service.wikidata import Wikidata_qurry_property3
 from srcap.uitls.prgoress import get_the_manager
 from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog, SPARQL_all_ddd, SPARQL_all_fff, SPARQL_all_cccc
@@ -42,6 +43,22 @@ headers = {
 }
 
 
+async def check_resource(url, type_, where):
+    wikidataDb = await get_wikidataDb()
+    a = urlparse(url)
+    query3 = {
+        "to_url":  a.scheme+"://"+a.netloc,
+        "points": {"$elemMatch": {
+            "where": where,
+            "path": a.path,
+            "type": type_,
+            "datetime": {"$lte":  time.time() - 2592000}
+        }
+        }
+    }
+    return await wikidataDb.count_documents(query3) != 0
+
+
 async def resource_add(url, data=None, item=None, value=None, prop=None, type_="unknown", where="wikidata"):
 
     a = urlparse(url)
@@ -70,7 +87,6 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
                 "path": a.path,
                 "type": type_,
                 "datetime": time.time(),
-                "data":  data
             }]
         }
         if prop is not None:
@@ -79,6 +95,8 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
             c["points"][0]["value"] = value
         if item is not None:
             c["points"][0]["item"] = item
+        if data is not None:
+            c["points"][0]["data"] = data
         await wikidataDb.insert_one(c)
     elif await wikidataDb.count_documents(query3) != 0:
         # update
@@ -94,6 +112,8 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
             c["$set"]["points.$.value"] = value
         if item is not None:
             c["$set"]["points.$.item"] = item
+        if data is not None:
+            c["$set"]["points.$.data"] = data
         # await wikidataDb.update_one(query3, c)
     else:
         # ADD DATA BIT
@@ -115,12 +135,16 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
             c["$push"]["points"]["value"] = value
         if item is None:
             c["$push"]["points"]["item"] = item
+        if data is not None:
+            c["$push"]["points"]["data"] = data
         await wikidataDb.update_one(doc_to_url, c)
 
 sprql_endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
-async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=None, session=None):
+async def get_ting(url, prop=None, item=None, sem=None, data=None, type_="unknown", where="wikidata", value=None, session=None):
+    if await check_resource(url, type_, where):
+        return
     try:
         async with sem:
             rb = Robots(urljoin(url, '/robots.txt'))
@@ -131,9 +155,12 @@ async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=Non
             check_website, check_webpage, html, status, mime = a
             if not check_website or not check_webpage:
                 return False
-            Q = get_q(item)
-            data = await wikidata_linked(Q, session=session)
-            await resource_add(url, item=Q, type_=type_, data=data, prop=prop, value=value)
+            if item == None:
+                Q = get_q(item)
+                data = await wikidata_linked(Q, session=session)
+            else:
+                Q = None
+            await resource_add(url, item=Q, type_=type_, data=data, prop=prop, value=value, type_=type_, where=where)
         if type_ != "feed":
             isGood, feeds = await scanHTML(html, url)
             async with sem:
@@ -155,7 +182,7 @@ async def get_ting(item, url, prop,  sem=None, type_=None, where=None, value=Non
         pass
 
 
-async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=None, prop="", sem=None, type_=None, value_name=None):
+async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=None, where="wikidata", prop="", sem=None, type_=None, value_name=None):
     pending2 = []
     # timeout = aiohttp.ClientTimeout(total=90)
     try:
@@ -181,7 +208,7 @@ async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=No
                         value = None
 
                     pending2.append(asyncio.create_task(get_ting(
-                        item, url, prop, type_=type_, sem=sem, value=value, where="wikidata", session=session)))
+                        url, prop=prop, item=item, type_=type_, sem=sem, value=value, where=where, session=session)))
                 except:
                     pass
                 bar_done.update()
@@ -227,6 +254,24 @@ async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_na
         return True
 
 
+async def main_inyourarea(lock_SPRQL):
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)) as session:
+        url = "https://www.inyourarea.co.uk/"
+        pass
+
+
+async def main_mediabiasfactcheck(lock_SPRQL):
+    pass
+
+
+async def main_allsides(lock_SPRQL):
+    pass
+
+
+async def main_news(lock_SPRQL):
+    pass
+
+
 async def main_ResourceDiscovery_Q_gen(lock_SPRQL):
     async for data_i, size in SPRQL_GEN(SPARQL_all_ddd,  "SPARQL_all_ddd.json"):
         Q = get_q(data_i["type_of_Wikidata_property"]["value"])
@@ -239,6 +284,11 @@ async def main_ResourceDiscovery_Q_gen(lock_SPRQL):
                 while not await get_wikidata(name="item", type_="unknown", prop=P, lock_SPRQL=lock_SPRQL, quarry=text_ccc, dodgy=True):
                     pass
         # formatter URL
+
+
+async def FFFFF(name):
+    async for i in get_some_CC():
+        print(i)
 
 
 async def main_ResourceDiscovery(name):
@@ -260,6 +310,8 @@ async def main_ResourceDiscovery(name):
         except:
             pass
         await main_ResourceDiscovery_Q_gen(lock_SPRQL)
+        # CC
+        # NEWS SCORES UK
 
 # await offical_blog(lock_SPRQL)
 # await feeds(lock_SPRQL)
