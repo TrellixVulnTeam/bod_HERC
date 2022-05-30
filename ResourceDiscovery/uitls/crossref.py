@@ -9,7 +9,7 @@ while True:
     res = cr.works(offset=offset)
     pbar.total = res["message"]["total-results"]
     for item in res["message"]["items"]:
-        print(json.dumps(item))
+        
         pbar.update()
     offset = offset + len(res["message"]["items"])
     if res["message"]["total-results"] == offset:

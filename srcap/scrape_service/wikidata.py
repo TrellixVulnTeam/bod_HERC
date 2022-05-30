@@ -1,103 +1,103 @@
-import sys
-from qwikidata import typedefs
-import asyncio
-import time
-from ResourceDiscovery.uitls.db import get_wikidataDb
-from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
-from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
+# import sys
+# from qwikidata import typedefs
+# import asyncio
+# import time
+# from ResourceDiscovery.uitls.db import get_wikidataDb
+# from qwikidata.entity import WikidataItem, WikidataLexeme, WikidataProperty
+# from qwikidata.datavalue import WikibaseEntityId, Time, Quantity, GlobeCoordinate
 
-import motor.motor_asyncio
+# import motor.motor_asyncio
 
 from ResourceDiscovery.uitls.sprql import SPRQL_GEN
 data_sprql = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
-myclient = motor.motor_asyncio.AsyncIOMotorClient()
+# myclient = motor.motor_asyncio.AsyncIOMotorClient()
 
-scrap = myclient.scrap
-wikidataDb = scrap.wikidata
-
-
-async def sprql_wikidata(qurry, file_name):
-    return SPRQL_GEN(qurry, file_name, online=True)
+# scrap = myclient.scrap
+# wikidataDb = scrap.wikidata
 
 
-def get_q(Q):
-    Q = Q.replace(
-        "https://www.wikidata.org/entity/", "")
-    Q = Q.replace(
-        "http://www.wikidata.org/entity/", "")
-    return Q
+# async def sprql_wikidata(qurry, file_name):
+#     return SPRQL_GEN(qurry, file_name, online=True)
 
 
-WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
+# def get_q(Q):
+#     Q = Q.replace(
+#         "https://www.wikidata.org/entity/", "")
+#     Q = Q.replace(
+#         "http://www.wikidata.org/entity/", "")
+#     return Q
 
 
-async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
-    url = "{}/{}.json".format(base_url, entity_id)
-    exc_obj = None
-    count = 10
-    while count != 0:
-        try:
-            async with session.post(url) as response:
-                if response.ok:
-                    entity_dict_full = await response.json()
-                elif response.status == 503:
-                    await asyncio.sleep(10*60)
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    continue
-                else:
-                    count = count - 1
-                    continue
-                returned_entity_id = next(iter(entity_dict_full["entities"]))
-                entity_dict = entity_dict_full["entities"][returned_entity_id]
-                return entity_dict
-        except:
-            await asyncio.sleep(10)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-    raise exc_obj
+# WIKIDATA_LDI_URL = "https://www.wikidata.org/wiki/Special:EntityData"
 
 
-async def __aio_get_entity_dict_from_api(Q, session=None):
-    wikidataDb = await get_wikidataDb()
-    q_dict = await wikidataDb.find_one({'title': Q})
-    if (q_dict is None) or ("daedtime" not in q_dict.keys()):
-        q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
-        q_dict["daedtime"] = (86400*30) + int(time.time())
-        await wikidataDb.insert_one(q_dict)
-    q_ = WikidataItem(q_dict)
-    return q_, q_dict
+# async def aio_get_entity_dict_from_api2(entity_id: typedefs.EntityId, base_url: str = WIKIDATA_LDI_URL, session=None) -> typedefs.EntityDict:
+#     url = "{}/{}.json".format(base_url, entity_id)
+#     exc_obj = None
+#     count = 10
+#     while count != 0:
+#         try:
+#             async with session.post(url) as response:
+#                 if response.ok:
+#                     entity_dict_full = await response.json()
+#                 elif response.status == 503:
+#                     await asyncio.sleep(10*60)
+#                     exc_type, exc_obj, exc_tb = sys.exc_info()
+#                     continue
+#                 else:
+#                     count = count - 1
+#                     continue
+#                 returned_entity_id = next(iter(entity_dict_full["entities"]))
+#                 entity_dict = entity_dict_full["entities"][returned_entity_id]
+#                 return entity_dict
+#         except:
+#             await asyncio.sleep(10)
+#             exc_type, exc_obj, exc_tb = sys.exc_info()
+#     raise exc_obj
 
 
-async def wikidata_linked(Q, magic=[], session=None):
-    dos = []
-    data = []
-    q_, q_dict = await __aio_get_entity_dict_from_api(Q, session=session)
-    claim_groups = q_.get_truthy_claim_groups()
-    for claim in q_dict["claims"]:
-        claims = claim_groups[claim]
-        if len(claims) > 0:
-            for claim in claims:
-                try:
-                    if isinstance(claim.mainsnak.datavalue, GlobeCoordinate):
-                        value = claim.mainsnak.datavalue.value
-                    elif isinstance(claim.mainsnak.datavalue, Time):
-                        value = claim.mainsnak.datavalue.value
-                        data.append({claim.property_id: value['time']})
-                        continue
-                    elif isinstance(claim.mainsnak.datavalue, WikibaseEntityId):
-                        value = claim.mainsnak.datavalue.value
-                        data.append({claim.property_id: value['id']})
-                        continue
-                    elif claim.property_id in magic:
-                        value = claim.mainsnak.datavalue.value
-                        if "formatter_URL" in magic[claim.property_id].keys():
-                            for formatter_URL in magic[claim.property_id]["formatter_URL"]:
-                                url = formatter_URL.replace("$1", value)
-                                dos.append(url)
-                except:
-                    pass
-    return data, dos
+# async def __aio_get_entity_dict_from_api(Q, session=None):
+#     wikidataDb = await get_wikidataDb()
+#     q_dict = await wikidataDb.find_one({'title': Q})
+#     if (q_dict is None) or ("daedtime" not in q_dict.keys()):
+#         q_dict = await aio_get_entity_dict_from_api2(Q, session=session)
+#         q_dict["daedtime"] = (86400*30) + int(time.time())
+#         await wikidataDb.insert_one(q_dict)
+#     q_ = WikidataItem(q_dict)
+#     return q_, q_dict
+
+
+# async def wikidata_linked(Q, magic=[], session=None):
+#     dos = []
+#     data = []
+#     q_, q_dict = await __aio_get_entity_dict_from_api(Q, session=session)
+#     claim_groups = q_.get_truthy_claim_groups()
+#     for claim in q_dict["claims"]:
+#         claims = claim_groups[claim]
+#         if len(claims) > 0:
+#             for claim in claims:
+#                 try:
+#                     if isinstance(claim.mainsnak.datavalue, GlobeCoordinate):
+#                         value = claim.mainsnak.datavalue.value
+#                     elif isinstance(claim.mainsnak.datavalue, Time):
+#                         value = claim.mainsnak.datavalue.value
+#                         data.append({claim.property_id: value['time']})
+#                         continue
+#                     elif isinstance(claim.mainsnak.datavalue, WikibaseEntityId):
+#                         value = claim.mainsnak.datavalue.value
+#                         data.append({claim.property_id: value['id']})
+#                         continue
+#                     elif claim.property_id in magic:
+#                         value = claim.mainsnak.datavalue.value
+#                         if "formatter_URL" in magic[claim.property_id].keys():
+#                             for formatter_URL in magic[claim.property_id]["formatter_URL"]:
+#                                 url = formatter_URL.replace("$1", value)
+#                                 dos.append(url)
+#                 except:
+#                     pass
+#     return data, dos
 
 
 SPARQL_all_website = """

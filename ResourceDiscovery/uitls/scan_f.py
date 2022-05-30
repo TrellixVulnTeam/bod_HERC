@@ -284,5 +284,5 @@ async def scanHTML(text, url_):
             isGood = True
         return isGood, feeds
     except BaseException as e:
-        return len(feeds) > 0, feeds
+        return isGood, feeds
     return isGood, feeds

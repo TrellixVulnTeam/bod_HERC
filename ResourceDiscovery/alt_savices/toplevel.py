@@ -1110,7 +1110,6 @@ toplevels = [
     ".virgin",
     ".visa",
     ".vista",
-    ".vistaprint",
     ".vivo",
     ".volkswagen",
     ".volvo",

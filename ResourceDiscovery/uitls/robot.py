@@ -1,6 +1,7 @@
 import asyncio
 import os
 import sys
+import time
 from urllib import robotparser
 
 import aiohttp
@@ -23,23 +24,50 @@ headers = {
 
 
 class Robots(robotparser.RobotFileParser):
-    async def read(self, session):
+    async def read(self, session=None,db=None):
+        robots =  None
+        if db is not None:
+            robots = await db.get_robots()
+            ccc = {
+                "url":self.url
+            }
+            data = await robots.find_one(ccc) 
+            deadline = time.time() + 24*60*60
+            if (data is not None) and (data["datetime"] < deadline):
+                self.disallow_all = data["disallow_all"]
+                self.allow_all = data["allow_all"]
+                self.parse(data["text"])
+                return self.disallow_all
         for i in range(5):
             try:
-                async with session.get(self.url, ssl=False, headers=headers, max_redirects=30) as response:
+                async with session.get(self.url, headers=headers, max_redirects=30) as response:
                     if response.status in (401, 403):
                         self.disallow_all = True
-                        return False
+                        check = False
                     elif response.status >= 400 and response.status < 500:
                         self.allow_all = True
-                        return True
+                        check =  True
                     else:
                         try:
                             raw = await response.text()
+                            check =True
                         except:
                             raw = await response.text('ISO-8859-1')
+                            check =True
                         self.parse(raw)
-                    return True
+                    if data is None:
+                        await robots.insert_one({"url":self.url,"disallow_all":self.disallow_all,"allow_all":self.allow_all,"datetime": time.time(),"text":raw})
+                    else:
+                        await robots.update_one(
+                            ccc,
+                            {
+                                "url":self.url,
+                                "disallow_all":self.disallow_all,
+                                "allow_all":self.allow_all,
+                                "datetime": time.time(),
+                                "text":raw
+                            })
+                    return check
             except aiohttp.ClientConnectorError as e:
                 self.disallow_all = True
                 return False

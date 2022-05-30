@@ -12,7 +12,6 @@ news_urls = [
     "https://www.washingtonpost.com/"
 ]
 
-news_inyourarea = "https://www.inyourarea.co.uk"
 commoncrawl = "https://index.commoncrawl.org/"
 news_left_right = [
     "https://www.allsides.com",
@@ -170,3 +169,7 @@ fact_check_urls = [
     "https://rebaltica.lv/",
     "https://usafacts.org/",
 ]
+# opinionbee
+# democracyclub.org.uk
+# electoralcommission
+# members-api.parliament

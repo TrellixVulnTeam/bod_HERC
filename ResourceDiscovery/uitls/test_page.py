@@ -23,7 +23,7 @@ headers = {
 }
 
 
-async def test_page(url, session, rb, sem=None):
+async def test_page(url, session, rb):
     if not rb.can_fetch("*", url):
         return False, False, "", 000, ""
     time = rb.request_rate("*")
@@ -31,18 +31,18 @@ async def test_page(url, session, rb, sem=None):
     check_wesite = True
     if time is not None:
         await asyncio.sleep(time)
-    for i in range(5):
+    for i in range(2):
         try:
-            async with session.get(url, ssl=False, headers=headers, max_redirects=30) as response:
+            async with session.get(url, ssl=False, headers=headers, max_redirects=3) as response:
                 try:
                     mime = response.headers['content-type']
                 except:
                     mime = ""
                 if response.ok:
                     try:
-                        text = await response.text()
+                            text = await response.text()
                     except:
-                        text = await response.text('ISO-8859-1')
+                            text = await response.text('ISO-8859-1')
                     return True, True, text, response.status, mime
                 else:
                     try:

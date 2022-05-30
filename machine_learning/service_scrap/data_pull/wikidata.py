@@ -1,4 +1,5 @@
 async def wikidata_extact(resource, data={}):
+    
     if "prop" in resource.keys():
         if "wikidata_prop" not in data.keys():
             data["wikidata_prop"] = []
@@ -31,7 +32,7 @@ async def wikidata_extact(resource, data={}):
 
 
 # def wikidata_extact(resource, data={}):
-#     print("resource", resource.keys())
+#     
 #     if "data" in resource.keys():
 #         if "item" in resource.keys():
 #             if "wikidata_item" not in data.keys():

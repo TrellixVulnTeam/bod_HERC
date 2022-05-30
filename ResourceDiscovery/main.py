@@ -1,5 +1,10 @@
+from random import random
+from anyio import sleep
+from numpy import append
+from ResourceDiscovery.alt_savices.allsides import get_all_sides
 from ResourceDiscovery.alt_savices.common_crawl import get_some_CC
-from srcap.scrape_service.wikidata import Wikidata_qurry_property3
+from ResourceDiscovery.alt_savices.url import news_urls, news_left_right
+# from srcap.scrape_service.wikidata import Wikidata_qurry_property3
 from srcap.uitls.prgoress import get_the_manager
 from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog, SPARQL_all_ddd, SPARQL_all_fff, SPARQL_all_cccc
 from ResourceDiscovery.uitls.wikidata import wikidata_linked, get_q
@@ -8,20 +13,29 @@ from ResourceDiscovery.uitls.sprql import SPRQL_GEN
 from ResourceDiscovery.uitls.scan_f import scanHTML
 from ResourceDiscovery.uitls.robot import Robots
 from ResourceDiscovery.uitls.feedCheck import feedCheck
-from ResourceDiscovery.uitls.db import get_wikidataDb
+from ResourceDiscovery.uitls.db import  motor_c
 import asyncio
 import os
 import socket
 import sys
 import time
+import csv
+import asyncio
 from urllib.parse import urljoin, urlparse
 from urllib import robotparser
 from alive_progress import alive_bar
-
+import gc
 import aiohttp
 import enlighten
 from progress.bar import Bar
+from pympler.tracker import SummaryTracker
+from pympler import muppy
+from pympler import summary
+import random
 
+all_objects = muppy.get_objects()
+
+tracker = SummaryTracker()
 
 debug = False
 
@@ -43,8 +57,8 @@ headers = {
 }
 
 
-async def check_resource(url, type_, where):
-    wikidataDb = await get_wikidataDb()
+async def check_resource(url, type_, where,db=None):
+    wikidataDb = await  db.get_ResourceDiscovery()
     a = urlparse(url)
     query3 = {
         "to_url":  a.scheme+"://"+a.netloc,
@@ -52,14 +66,14 @@ async def check_resource(url, type_, where):
             "where": where,
             "path": a.path,
             "type": type_,
-            "datetime": {"$lte":  time.time() - 2592000}
+            "datetime": {"$lte":  time.time() + 2592000}
         }
         }
     }
-    return await wikidataDb.count_documents(query3) != 0
+    return (await wikidataDb.count_documents(query3)) != 0
 
 
-async def resource_add(url, data=None, item=None, value=None, prop=None, type_="unknown", where="wikidata"):
+async def resource_add(url, db=None,data=None, item=None, value=None, prop=None, type_="unknown", where="wikidata"):
 
     a = urlparse(url)
     doc_to_url = {
@@ -75,7 +89,7 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
         }
         }
     }
-    wikidataDb = await get_wikidataDb()
+    wikidataDb = await db.get_ResourceDiscovery()
     # ax = await wikidata_linked(Q, magic=[], session=session)
     if await wikidataDb.count_documents(doc_to_url) == 0:
         # ADD DOC
@@ -142,51 +156,101 @@ async def resource_add(url, data=None, item=None, value=None, prop=None, type_="
 sprql_endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
-async def get_ting(url, prop=None, item=None, sem=None, data=None, type_="unknown", where="wikidata", value=None, session=None):
-    if await check_resource(url, type_, where):
-        return
+async def get_ting(url,lock,db=None, prop=None, item=None, sem=None, data=[], type_="unknown", where="wikidata", value=None, session=None):
+
     try:
         async with sem:
+            
+            if await check_resource(url, type_, where,db=db):
+                gc.collect()
+                return True
+            
+            
             rb = Robots(urljoin(url, '/robots.txt'))
-            await rb.read(session)
+            await rb.read(session,db=db)
+            
             if rb.disallow_all:
+                gc.collect()
+                
                 return False
-            a = await test_page(url, session, rb, sem=sem)
+            
+            
+            a = await test_page(url, session, rb)
+            
             check_website, check_webpage, html, status, mime = a
+            
             if not check_website or not check_webpage:
+                gc.collect()
                 return False
-            if item == None:
+            
+            if type_ != "feed":
+                isGood_HTML, feeds = await scanHTML(html, url)
+                if not isGood_HTML:
+                    gc.collect()
+                    return False
+            
+            
+            if type(item) == list:
+                for i in item:
+                    Q = get_q(i)
+                    data = {** await wikidata_linked(Q,lock,db=db, session=session), **data}
+            elif item is not None:
                 Q = get_q(item)
-                data = await wikidata_linked(Q, session=session)
+                data = (await wikidata_linked(Q,lock,db=db, session=session))+data
             else:
                 Q = None
-            await resource_add(url, item=Q, type_=type_, data=data, prop=prop, value=value, type_=type_, where=where)
-        if type_ != "feed":
-            isGood, feeds = await scanHTML(html, url)
-            async with sem:
+            
+            if type_ != "feed":
+                if isGood_HTML:
+                    await resource_add(url, data=data,db=db, item=Q, type_=type_, prop=prop, value=value, where=where)
+                    
                 for feed in feeds:
-                    try:
-                        check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
-                        check, urls = feedCheck(html)
-                        if check:
-                            await resource_add(feed, type_="feed")
-                    except:
-                        pass
-        else:
-            try:
-                check_website, check_webpage, html, status, mime = await test_page(feed, session, rb, sem=sem)
-                await resource_add(feed, type_="feed")
-            except:
-                pass
-    except:
-        pass
+                        try:
+                            check_website, check_webpage, html, status, mime = await test_page(feed, session, rb)
+                            if not check_webpage:
+                                continue
+                            # if ("xhtml" not in mime) and ("xml" not in mime) and ("json" not in mime) and (mime != ""):
+                            #     continue
+                            # if html is None:
+                            #     continue
+                            # if "{" not in html and "<" not in html:
+                            #     continue
+                            # if status != 200:
+                            #     continue
+                            check, urls = feedCheck(html)
+                            if check:
+                                await resource_add(feed,db=db, type_="feed")
+                                
+                        except:
+                            exc_type, exc_obj, exc_tb = sys.exc_info()
+                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                            
+                            
+            else:
+                try:
+                    
+                    check_website, check_webpage, html, status, mime = await test_page(feed, session, rb)
+                    await resource_add(feed, type_="feed")
+                    
+                except:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    
+                    
+    except BaseException as e:
+        gc.collect()
+        return False
+    gc.collect()
+    return True
 
 
-async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=None, where="wikidata", prop="", sem=None, type_=None, value_name=None):
-    pending2 = []
-    # timeout = aiohttp.ClientTimeout(total=90)
-    try:
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)) as session:
+async def do_thing(datas, bar_done,lock,db=None, name="", name_item_id=None, name_prop_url=None, where="wikidata", prop="", sem=None, type_=None, value_name=None):
+    timeout = aiohttp.ClientTimeout(10)
+    connector = aiohttp.TCPConnector(family=socket.AF_INET, verify_ssl=False)
+    async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
+        pending2 = []
+        # timeout = aiohttp.ClientTimeout(total=90)
+        try:
             for data in datas:
                 try:
                     # Get item
@@ -206,29 +270,24 @@ async def do_thing(datas, bar_done, name="", name_item_id=None, name_prop_url=No
                         value = data[value_name]["value"]
                     else:
                         value = None
-
                     pending2.append(asyncio.create_task(get_ting(
-                        url, prop=prop, item=item, type_=type_, sem=sem, value=value, where=where, session=session)))
+                        url,lock, prop=prop,db=db, item=item, type_=type_, sem=sem, value=value, session=session, where=where)))
                 except:
                     pass
                 bar_done.update()
-                if len(pending2) > 350:
+                if len(pending2) > 50:
                     await asyncio.wait(pending2)
                     pending2 = []
-        if len(pending2) != 0:
-            await asyncio.wait(pending2)
-    except:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(
-            exc_tb.tb_frame.f_code.co_filename)[1]
-        print(type(exc_obj), exc_type, fname, exc_tb.tb_lineno)
+            if len(pending2) != 0:
+                await asyncio.wait(pending2)
+        except:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(
+                exc_tb.tb_frame.f_code.co_filename)[1]
+            
 
 
-def check():
-    pass
-
-
-async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_name=None, dodgy=True):
+async def get_wikidata(name, prop, quarry, lock_SPRQL, db=None, type_="unknown", value_name=None, dodgy=True):
     sem = asyncio.Semaphore(50)
     things = []
     count = 0
@@ -236,36 +295,95 @@ async def get_wikidata(name, prop, quarry, lock_SPRQL, type_="unknown", value_na
     manager = get_the_manager()
     bar_done = manager.counter(total=1, desc='bar_done: '+name, unit='ticks')
     bar_start = manager.counter(total=1, desc='bar_start: '+name, unit='ticks')
+    lock = asyncio.Lock()
     while True:
         try:
-            async for data_i, size in SPRQL_GEN(quarry,  name+".json", dodgy=dodgy):
+            async for data_i, size in SPRQL_GEN(quarry,name+".json",db=db, dodgy=dodgy):
                 bar_done.total = size
                 bar_start.total = size
                 count = size
                 things.append(data_i)
                 bar_start.update()
                 if len(things) > 100:
-                    await do_thing(things, bar_done, name=name, sem=sem, prop=prop, type_=type_, value_name=value_name)
+                    await do_thing(things, bar_done,lock,db=db, name=name, sem=sem, prop=prop, type_=type_, value_name=value_name)
                     things = []
                 if count == 0:
                     continue
         except:
             continue
         return True
-
+ 
 
 async def main_inyourarea(lock_SPRQL):
-    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)) as session:
-        url = "https://www.inyourarea.co.uk/"
-        pass
+    out = {}
+    postcodes =[]
+    with open('/home/william/Code/Python/bod/ResourceDiscovery/alt_savices/ukpostcodes.csv', newline='') as csvfile:
+        row_count = len(csvfile.readlines())
+    manager = get_the_manager()
+    pbar = manager.counter(total=row_count, desc='Basic', unit='ticks')
+    with open('/home/william/Code/Python/bod/ResourceDiscovery/alt_savices/ukpostcodes.csv', newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for i in spamreader:
+            postcode = i[1].replace(" ", "")
+            postcodes.append(postcode)
+    for i in range(10):
+        postcode = random.choice(postcodes)
+        while True:
+            try:
+                postcode = i[1].replace(" ", "")
+                url_postcode = "https://production.inyourarea.co.uk/api/localPublications/{postcode}".format(
+                    postcode=postcode)
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url_postcode) as resp:
+                        data = await resp.json()
+                        for site in data:
+                            if postcode not in out.keys():
+                                out[postcode] = [site]
+                            else:
+                                out[postcode].append(site)
+                await sleep(25)
+                pbar.update()
+                break
+            except BaseException as e:
+                continue
+        for url in out.keys():
+            await get_ting("http://"+url, data=out[url],
+                           type_="website", where="inyourarea")
 
+    # "https://production.inyourarea.co.uk/facade/contentplus/50.922998/-0.749568/0?legacyPostcode=PO180HH"
+    # "https://production.inyourarea.co.uk/facade/feed/PO180HH/Singleton,Charlton,West%20Dean,East%20Dean,Cocking"
+    # async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)) as session:
+    #     async with session.post(url) as r:
+    #         pass
 
-async def main_mediabiasfactcheck(lock_SPRQL):
-    pass
+    #     # await get_ting(url, prop=None, item=None, sem=None, data=None,
+    #     #    type_="website", where="inyourarea", value=None, session=None)
+    #     pass
 
 
 async def main_allsides(lock_SPRQL):
-    pass
+    rss_website = "https://www.allsides.com/news/rss"
+    site_website = "https://www.allsides.com/"
+    data = {}
+    for item in get_all_sides():
+        if item["AllSides Bias Rating"] is not None:
+            data["AllSides Bias Rating"] = item["AllSides Bias Rating"]
+        if item['Community Feedback'] is not None:
+            data["Community Feedback"] = item["Community Feedback"]
+        if item['type'] is not None:
+            data["type"] = item["type"]
+        if item['Facebook Page'] is not None:
+            await get_ting(item['Facebook Page'], type_="facebook",
+                           where="allsides", data=data)
+            pass
+        if item['Twitter Page'] is not None:
+            await get_ting(item['Twitter Page'], type_="twitter",
+                           where="allsides", data=data)
+            pass
+        if item['website'] is not None:
+            await get_ting(item['website'], type_="website",
+                           where="allsides", data=data)
+            pass
 
 
 async def main_news(lock_SPRQL):
@@ -273,6 +391,8 @@ async def main_news(lock_SPRQL):
 
 
 async def main_ResourceDiscovery_Q_gen(lock_SPRQL):
+    manager = get_the_manager()
+    aaas = []
     async for data_i, size in SPRQL_GEN(SPARQL_all_ddd,  "SPARQL_all_ddd.json"):
         Q = get_q(data_i["type_of_Wikidata_property"]["value"])
         text_ddd = SPARQL_all_fff % (Q)
@@ -280,38 +400,161 @@ async def main_ResourceDiscovery_Q_gen(lock_SPRQL):
             P = get_q(data_i_x2["type_of_Wikidata_property"]["value"])
             text_ccc = SPARQL_all_cccc % (P)
             formatter_URL = data_i_x2["formatter_URL"]["value"]
-            async for data_i_x3, size in SPRQL_GEN(text_ccc,  "SPARQL_all_cccc.json"):
-                while not await get_wikidata(name="item", type_="unknown", prop=P, lock_SPRQL=lock_SPRQL, quarry=text_ccc, dodgy=True):
-                    pass
+            aaa.append({"text_ccc":text_ccc,"formatter_URL":formatter_URL,"P":P})
+    for ix in range(10):
+        aaa = random.choice(aaas)
+        async for data_i_x3, size in SPRQL_GEN(aaa["text_ccc"],  "SPARQL_all_cccc.json"):
+            while not await get_wikidata(name="item", type_="unknown", prop=aaa["P"], lock_SPRQL=lock_SPRQL, quarry=aaa["text_ccc"], dodgy=True):
+                pass
         # formatter URL
 
 
-async def FFFFF(name):
-    async for i in get_some_CC():
-        print(i)
+async def UK_news_source(lock_SPRQL,db):
+    connector = aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=connector) as session:
+        for url in news_urls:
+            await get_ting(url, type_="website", where="internal", session=session,db=db)
+        for url in news_left_right:
+            await get_ting(url, type_="website", where="internal", session=session,db=db)
+
+
+async def common_crawl_walk(lock_SPRQL,db):
+    connector = aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=connector) as session:
+        async for i in get_some_CC():
+            type_ = "unknown"
+            a = urlparse(i["url"])
+            url = a.scheme + "://" + a.hostname
+            if "html" in i["mime"]:
+                type_ = "webpage"
+            elif "xml" in i["mime"]:
+                url = i["url"]
+                type_ = "feed"
+            elif "xml" in i["mime"]:
+                url = i["url"]
+                type_ = "feed"
+            else:
+                pass
+                # wen
+            await get_ting(url, db=db,session=session, type_=type_, where="common crawl")
+
+
+async def candidates_democracyclub():
+    manager = get_the_manager()
+    pbar = manager.counter(
+        total=1, desc='candidates_democracyclub', unit='ticks')
+    url_next = "https://candidates.democracyclub.org.uk/api/v0.9/persons/"
+    ppl = {}
+    while url_next is not None:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url_next) as resp:
+                data = await resp.json()
+                pbar.total = data["count"]
+                for i in data["results"]:
+                    id = i["id"]
+                    if id not in ppl.keys():
+                        ppl[id] = {}
+                    # ppl[id]["gender"] = i["person"]["gender"]
+                    for x in (i["memberships"]):
+                        if x["elected"]:
+                            ppl[id]["elected_on_behalf_of_name"] = {
+                                "value": x["on_behalf_of"]["name"], "type": "Quantity"}
+                            ppl[id]["elected_on_behalf_of_id"] = {
+                                "value": x["on_behalf_of"]["id"], "type": "Quantity"}
+                            ppl[id]["elected_post_label"] = {
+                                "value": x["post"]["label"], "type": "Quantity"}
+                            ppl[id]["elected_post_id"] = {
+                                "value": x["post"]["id"], "type": "Quantity"}
+                            ppl[id]["elected_election_id"] = {
+                                "value": x["election"]["id"], "type": "Quantity"}
+                            ppl[id]["elected_election_name"] = {
+                                "value": x["election"]["name"], "type": "Quantity"}
+                            pass
+                        ppl[id]["ran_in_on_behalf_of_name"] = {
+                            "value": x["on_behalf_of"]["name"], "type": "Quantity"}
+                        ppl[id]["ran_in_on_behalf_of_id"] = {
+                            "value": x["on_behalf_of"]["id"], "type": "Quantity"}
+                        ppl[id]["ran_in_post_label"] = {
+                            "value": x["post"]["label"], "type": "Quantity"}
+                        ppl[id]["ran_in_post_id"] = {
+                            "value": x["post"]["id"], "type": "Quantity"}
+                        ppl[id]["ran_in_election_id"] = {
+                            "value": x["election"]["id"], "type": "Quantity"}
+                        ppl[id]["ran_in_election_name"] = {
+                            "value": x["election"]["name"], "type": "Quantity"}
+                    pbar.update()
+                if "next" in data.keys():
+                    url_next = data["next"]
+                else:
+                    url_next = None
+    return ppl
+
+
+async def data_parliament():
+    pass
+
+
+async def candidates_democracyclub_organizations():
+    organizations = {}
+    url_next = "https://candidates.democracyclub.org.uk/api/v0.9/organizations/"
+    connector = aiohttp.TCPConnector(family=socket.AF_INET,   verify_ssl=False)
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(70), connector=connector) as session:
+        async with session.get(url_next) as resp:
+            data = await resp.json()
+            for i in data["results"]:
+                organizations[i["id"]] = {}
+
+                for x in i["identifiers"]:
+                    if x["scheme"] == "popit-organization":
+                        pass
+                        
+                    elif x["scheme"] == "electoral-commission":
+                        pass
+                        
+                    else:
+                        pass
+                        
+
+                i["classification"]
+                i["parent"]
+                i["register"]
+                i["register"]
+            pass
+    pass
 
 
 async def main_ResourceDiscovery(name):
     lock_SPRQL = asyncio.Lock()
+    db = motor_c()
+    # await candidates_democracyclub()
+    # await candidates_democracyclub_organizations()
     while True:
         try:
-            while not await get_wikidata(name="official_website", type_="website", prop="P856", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_website):
+            while not await get_wikidata(name="official_website",db=db, type_="website", prop="P856", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_website):
                 pass
         except:
             pass
+        
         try:
-            while not await get_wikidata(name="SPARQL_offical_blog", type_="blog", prop="P1581", lock_SPRQL=lock_SPRQL, quarry=SPARQL_offical_blog):
+            while not await get_wikidata(name="SPARQL_offical_blog",db=db, type_="blog", prop="P1581", lock_SPRQL=lock_SPRQL, quarry=SPARQL_offical_blog):
                 pass
         except:
             pass
+        
         try:
-            while not await get_wikidata(name="SPARQL_all_feeds", type_="feed", prop="P1019", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_feeds):
+            while not await get_wikidata(name="SPARQL_all_feeds",db=db, type_="feed", prop="P1019", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_feeds):
                 pass
         except:
             pass
-        await main_ResourceDiscovery_Q_gen(lock_SPRQL)
-        # CC
-        # NEWS SCORES UK
-
+        await common_crawl_walk(lock_SPRQL,db)
+        await UK_news_source(lock_SPRQL,db)
+        await main_inyourarea(lock_SPRQL,db)
+        await main_ResourceDiscovery_Q_gen(lock_SPRQL,db)
 # await offical_blog(lock_SPRQL)
 # await feeds(lock_SPRQL)
+"https://candidates.democracyclub.org.uk/api/v0.9/persons/"
+"https://candidates.democracyclub.org.uk/api/v0.9/organizations/"
+"https://candidates.democracyclub.org.uk/api/v0.9/posts/"
+"https://candidates.democracyclub.org.uk/api/v0.9/party_sets/"
+"https://candidates.democracyclub.org.uk/api/v0.9/post_elections/"
+"TheyWorkForYou"

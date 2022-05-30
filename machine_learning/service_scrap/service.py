@@ -133,7 +133,7 @@ async def Getdata():
                 else:
                     url = None
                 a2 = await do_someting2(resource, url)
-                # print(a2)
+                # 
                 data, mime, lang, data_, url2 = a2
                 if data is None:
                     continue

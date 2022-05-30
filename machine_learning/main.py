@@ -38,9 +38,10 @@ def text_embedding(text):
 async def NN_main(name):
     async for data in Getdata():
         if len(data[2]) < 40167:
-            print(len(data[2]))
-            mask, basepairs = text_embedding(data[2])
-            output = model.train(basepairs, mask, data[0])
-print(os.path.dirname(os.path.realpath(__file__)))
+            pass
+            
+            # mask, basepairs = text_embedding(data[2])
+            # output = model.train(basepairs, mask, data[0])
 
-print(os.path.dirname(os.path.realpath(__file__)))
+
+

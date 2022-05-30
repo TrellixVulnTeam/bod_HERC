@@ -10,7 +10,7 @@ from regex import E
 endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
-async def SPRQL_GEN(sparql, file_name, online=True, dodgy=False):
+async def SPRQL_GEN(sparql, file_name, db=None,online=True, dodgy=False):
     for i in range(5):
         try:
             if online:
@@ -32,9 +32,9 @@ async def SPRQL_GEN(sparql, file_name, online=True, dodgy=False):
                         exc_type, exc_obj, exc_tb = sys.exc_info()
                         fname = os.path.split(
                             exc_tb.tb_frame.f_code.co_filename)[1]
-                        print(exc_type, fname, exc_tb.tb_lineno)
-                        print(exc_obj)
-                        print("download fails with except will retry")
+                        
+                        
+                        
                         await asyncio.sleep(10)
 
             size = 0
@@ -65,6 +65,6 @@ async def SPRQL_GEN(sparql, file_name, online=True, dodgy=False):
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(
                 exc_tb.tb_frame.f_code.co_filename)[1]
-            print(type(exc_obj), exc_type, fname, exc_tb.tb_lineno)
+            
             continue
     size = 0

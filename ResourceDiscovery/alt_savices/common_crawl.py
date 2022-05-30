@@ -3,6 +3,8 @@ import aiohttp
 import asyncio
 import random
 import ResourceDiscovery.alt_savices.toplevel as toplevel
+
+import enlighten
 mime_filter = [
     "html",
     "rss",
@@ -48,8 +50,6 @@ async def get_some_CC():
                             good = True
                             break
                         else:
-                            print("wait for 20 & status:",
-                                  response.status, " & url: ", url)
                             await asyncio.sleep(20)
                 if not good:
                     continue
@@ -74,22 +74,22 @@ async def get_some_CC():
                                 try:
                                     data = json.loads(newline)
                                     if data["url"] in seen_url:
-                                        print("i know this one[")
+                                        
                                         continue
                                     else:
-                                        print("cat")
-                                    seen_url.add(data["url"])
-                                    yield data
-                                    good = True
+                                        
+                                        seen_url.add(data["url"])
+                                        yield data
+                                        good = True
                                 except:
-                                    print("error", text)
+                                    pass
+                                    
                             if good:
                                 break
                         elif response.status == 404:
                             break
                         else:
-                            print("wait for 20 & status:",
-                                  response.status, " & url: ", url)
+                            pass
                             await asyncio.sleep(20)
                     if good:
                         break

@@ -11,7 +11,7 @@ class classifierOutput(nn.Module):
         # self.dropout = nn.Dropout(out_features)
 
     def forward(self, src, mask):
-        print(src[0][0].size())
+        
         return (self.transformer_encoder((src[0][0])))
 
 
@@ -27,7 +27,7 @@ class training_block(nn.Module):
         outputs = {}
         output, src_mask = self.model(src, src_mask=mask)
         for name in self.outputs.keys():
-            print(name)
+            
             outputs[name] = self.outputs[name]['output'](output, src_mask)
         return outputs
 
@@ -56,4 +56,4 @@ class training_block(nn.Module):
                 index = self.outputs[name]['label'].index(ii)
                 a_out[index] = 1
             xx = outputs[name]
-            print(xx)
+            

@@ -36,9 +36,126 @@ headers = {
 #                     htext = response.read()
 #                     return str(htext), "html", "unknown", exter_cat, [url]
 #         except BaseException as e:
-#             print(e)
+#             
 #             pass
 #     return None, None, None, exter_cat, [url]
+
+def recursiveChildren(x):
+    a = {}
+    for child in x.childGenerator():
+        has_property =child.has_attr("property")
+        has_rel =child.has_attr("rel")
+        has_rev =child.has_attr("rev")
+        has_resource =child.has_attr("resource")
+        has_href =child.has_attr("href")
+        has_content =child.has_attr("content")
+        has_datatype =child.has_attr("datatype")
+        has_about =child.has_attr("about")
+        has_typeof =child.has_attr("typeof")
+        has_class =child.has_attr("class")
+        has_src =child.has_attr("src")
+        has_type =child.has_attr("type")
+        has_typeof =child.has_attr("typeof")
+        has_vocab =child.has_attr("vocab")
+        has_src =child.has_attr("src")
+        # RDFa
+        if has_property and has_content and has_typeof:
+            data =recursiveChildren(child)
+            
+            pass
+        elif has_typeof and has_vocab:
+            recursiveChildren(child)
+            pass
+        elif has_property and has_content:
+            data =recursiveChildren(child)
+            pass
+        elif has_property and has_rel and has_datatype:
+            data =recursiveChildren(child)
+            pass
+        elif has_property and has_rev and has_datatype:
+            data =recursiveChildren(child)
+            pass
+        elif has_property and has_href and has_datatype:
+            data =recursiveChildren(child)
+            property =child.get('property')
+            print(property)
+            href =child.get('href')
+            datatype =child.get('datatype')
+            pass
+        elif has_property and has_resource and has_datatype:
+            property =child.get('property')
+            print(property)
+            resource =child.get('resource')
+            datatype =child.get('datatype')
+            data =recursiveChildren(child)
+            pass
+        elif has_property and has_src and has_datatype:
+            property =child.get('property')
+            src =child.get('src')
+            datatype =child.get('datatype')
+            data =recursiveChildren(child)
+            pass
+        elif has_property and has_rel:
+            data =recursiveChildren(child)
+            rel =child.get('rel')
+            property =child.get('property')
+            pass
+        elif has_property and has_rev:
+            data =recursiveChildren(child)
+            rev =child.get('rev')
+            property =child.get('property')
+            print(property)
+            pass
+        elif has_property and has_href:
+            data =recursiveChildren(child)
+            href =child.get('href')
+            property =child.get('property')
+            print(property)
+            pass
+        elif has_property and has_resource:
+            data =recursiveChildren(child)
+            resource =child.get('resource')
+            property =child.get('property')
+            print(property)
+            pass
+        elif has_property and has_src:
+            data =recursiveChildren(child)
+            resource =child.get('resource')
+            property =child.get('property')
+            print(property)
+            src =child.get('src')
+            pass
+        elif has_property and has_datatype:
+            data =recursiveChildren(child)
+            pass
+        elif has_vocab and has_datatype:
+            data =recursiveChildren(child)
+            pass
+        elif has_property:
+            property =child.get('property')
+            print(property)
+            data =recursiveChildren(child)
+            pass
+        elif has_about:
+            data =recursiveChildren(child)
+            pass
+        elif has_typeof:
+            data =recursiveChildren(child)
+            pass
+        elif has_vocab:
+            data =recursiveChildren(child)
+            pass
+        #  
+        elif has_class and has_content:
+            pass
+        elif has_class:
+            pass
+        if has_type and has_src:
+            pass
+    # json-dl
+    return a
+
+
 
 
 async def website(url, id=None, count=10, rb=None):
@@ -78,6 +195,7 @@ async def website(url, id=None, count=10, rb=None):
                             if result:
                                 # skip on frame
                                 break
+                            recursiveChildren(soup)
                             for s in soup.select('frameset'):
                                 s.extract()
                             for s in soup.select('script'):
