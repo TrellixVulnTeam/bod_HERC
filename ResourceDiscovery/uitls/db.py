@@ -12,3 +12,5 @@ class motor_c:
         return self.scrap.db
     async def get_robots(self):
         return self.scrap.robots
+    async def get_dns(self):
+        return self.scrap.DNS

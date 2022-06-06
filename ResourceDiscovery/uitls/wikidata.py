@@ -96,28 +96,27 @@ async def wikidata_linked(Q,lock,db,  session=None, magic=[]):
         if len(claims) > 0:
             for claim in claims:
                 try:
-                    if isinstance(claim.mainsnak.datavalue, Time):
+                    # if isinstance(claim.mainsnak.datavalue, Time):
+                    #     value = claim.mainsnak.datavalue.value
+                    #     data.append(
+                    #         {claim.property_id: value['time'], "type": "Time"})
+                    #     continue
+                    # elif isinstance(claim.mainsnak.datavalue, Quantity):
+                    #     value = claim.mainsnak.datavalue.value
+                    #     data.append(
+                    #         {claim.property_id: value['amount'], "type": "Quantity"})
+                    #     continue
+                    if isinstance(claim.mainsnak.datavalue, WikibaseEntityId):
                         value = claim.mainsnak.datavalue.value
-                        data.append(
-                            {claim.property_id: value['time'], "type": "Time"})
+                        try:
+                            cc = {
+                                claim.property_id: value['id'],
+                                "type": "WikibaseEntityId"
+                            }
+                            data.append(cc)
+                        except:
+                            pass
                         continue
-                    elif isinstance(claim.mainsnak.datavalue, Quantity):
-                        value = claim.mainsnak.datavalue.value
-                        data.append(
-                            {claim.property_id: value['amount'], "type": "Quantity"})
-                        continue
-                    elif isinstance(claim.mainsnak.datavalue, WikibaseEntityId):
-                        value = claim.mainsnak.datavalue.value
-                        # try:
-                        #     cc = {
-                        #         'id': value['id'],
-                        #         "unit": value['unit'],
-                        #         "type": "WikibaseEntityId"
-                        #     }
-                        #     data.append(cc)
-                        # except:
-                        #     pass
-                        # continue
                 except:
                     pass
     return data

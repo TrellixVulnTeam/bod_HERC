@@ -44,9 +44,11 @@ class Robots(robotparser.RobotFileParser):
                     if response.status in (401, 403):
                         self.disallow_all = True
                         check = False
+                        raw= ""
                     elif response.status >= 400 and response.status < 500:
                         self.allow_all = True
                         check =  True
+                        raw= ""
                     else:
                         try:
                             raw = await response.text()
@@ -56,17 +58,19 @@ class Robots(robotparser.RobotFileParser):
                             check =True
                         self.parse(raw)
                     if data is None:
-                        await robots.insert_one({"url":self.url,"disallow_all":self.disallow_all,"allow_all":self.allow_all,"datetime": time.time(),"text":raw})
+                        if len(raw) <= 512000:
+                            await robots.insert_one({"url":self.url,"disallow_all":self.disallow_all,"allow_all":self.allow_all,"datetime": time.time(),"text":raw})
                     else:
-                        await robots.update_one(
-                            ccc,
-                            {
-                                "url":self.url,
-                                "disallow_all":self.disallow_all,
-                                "allow_all":self.allow_all,
-                                "datetime": time.time(),
-                                "text":raw
-                            })
+                        if len(raw) <= 512000:
+                            await robots.update_one(
+                                ccc,
+                                {
+                                    "url":self.url,
+                                    "disallow_all":self.disallow_all,
+                                    "allow_all":self.allow_all,
+                                    "datetime": time.time(),
+                                    "text":raw
+                                })
                     return check
             except aiohttp.ClientConnectorError as e:
                 self.disallow_all = True

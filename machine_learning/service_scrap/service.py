@@ -16,7 +16,7 @@ scrape_wheres = {
 }
 scrape_types = {
     "feed": [feed],
-    "website": [website],
+    "website": [],
     "unknown": [website],
     "blog": [website],
 }
@@ -126,15 +126,15 @@ async def Getdata():
         except:
             continue
         for i_doc in places:
-            if bool(random.getrandbits(1)):
-                resource = random.choice(i_doc['points'])
+            resource = random.choice(i_doc['points'])
+            if bool(random.getrandbits(1)) and resource["type"] != "website":
                 if "path" in resource.keys():
                     url = urljoin(i_doc["to_url"], resource["path"])
                 else:
                     url = None
                 a2 = await do_someting2(resource, url)
                 # 
-                data, mime, lang, data_, url2 = a2
+                data, mime, lang, data_, url2 =  a2
                 if data is None:
                     continue
                 data_ = await get_class_data(i_doc, resource["path"], data_=data_)

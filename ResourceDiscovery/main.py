@@ -4,6 +4,7 @@ from numpy import append
 from ResourceDiscovery.alt_savices.allsides import get_all_sides
 from ResourceDiscovery.alt_savices.common_crawl import get_some_CC
 from ResourceDiscovery.alt_savices.url import news_urls, news_left_right
+from ResourceDiscovery.uitls.AsyncResolver import AsyncResolver_DB
 # from srcap.scrape_service.wikidata import Wikidata_qurry_property3
 from srcap.uitls.prgoress import get_the_manager
 from ResourceDiscovery.uitls.wikidata_qarry import SPARQL_all_website, SPARQL_all_feeds, SPARQL_offical_blog, SPARQL_all_ddd, SPARQL_all_fff, SPARQL_all_cccc
@@ -58,19 +59,24 @@ headers = {
 
 
 async def check_resource(url, type_, where,db=None):
-    wikidataDb = await  db.get_ResourceDiscovery()
-    a = urlparse(url)
-    query3 = {
-        "to_url":  a.scheme+"://"+a.netloc,
-        "points": {"$elemMatch": {
-            "where": where,
-            "path": a.path,
-            "type": type_,
-            "datetime": {"$lte":  time.time() + 2592000}
+    try:
+        wikidataDb = await  db.get_ResourceDiscovery()
+        a = urlparse(url)
+        query3 = {
+            "to_url":  a.scheme+"://"+a.netloc,
+            "points": {"$elemMatch": {
+                "where": where,
+                "path": a.path,
+                "type": type_,
+                "datetime": {"$lte":  time.time() + 2592000}
+            }
+            }
         }
-        }
-    }
-    return (await wikidataDb.count_documents(query3)) != 0
+        a = await wikidataDb.count_documents(query3)
+        return a != 0
+    except BaseException as e:
+        print("error:",e)
+        return False
 
 
 async def resource_add(url, db=None,data=None, item=None, value=None, prop=None, type_="unknown", where="wikidata"):
@@ -156,39 +162,30 @@ async def resource_add(url, db=None,data=None, item=None, value=None, prop=None,
 sprql_endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 
 
-async def get_ting(url,lock,db=None, prop=None, item=None, sem=None, data=[], type_="unknown", where="wikidata", value=None, session=None):
-
+async def get_ting(url,lock,db=None, prop=None, item=None, sem=None, data=[], type_="unknown", where="wikidata", value=None, session=None,db_check=True):
     try:
         async with sem:
-            
-            if await check_resource(url, type_, where,db=db):
-                gc.collect()
-                return True
-            
+            if not await check_resource(url, type_, where,db=db):
+                    gc.collect()
+                    return True
             
             rb = Robots(urljoin(url, '/robots.txt'))
             await rb.read(session,db=db)
             
             if rb.disallow_all:
                 gc.collect()
-                
                 return False
             
-            
             a = await test_page(url, session, rb)
-            
             check_website, check_webpage, html, status, mime = a
-            
             if not check_website or not check_webpage:
                 gc.collect()
                 return False
-            
             if type_ != "feed":
                 isGood_HTML, feeds = await scanHTML(html, url)
                 if not isGood_HTML:
                     gc.collect()
                     return False
-            
             
             if type(item) == list:
                 for i in item:
@@ -199,45 +196,33 @@ async def get_ting(url,lock,db=None, prop=None, item=None, sem=None, data=[], ty
                 data = (await wikidata_linked(Q,lock,db=db, session=session))+data
             else:
                 Q = None
-            
             if type_ != "feed":
                 if isGood_HTML:
                     await resource_add(url, data=data,db=db, item=Q, type_=type_, prop=prop, value=value, where=where)
-                    
+                       
                 for feed in feeds:
-                        try:
-                            check_website, check_webpage, html, status, mime = await test_page(feed, session, rb)
-                            if not check_webpage:
-                                continue
-                            # if ("xhtml" not in mime) and ("xml" not in mime) and ("json" not in mime) and (mime != ""):
-                            #     continue
-                            # if html is None:
-                            #     continue
-                            # if "{" not in html and "<" not in html:
-                            #     continue
-                            # if status != 200:
-                            #     continue
-                            check, urls = feedCheck(html)
-                            if check:
-                                await resource_add(feed,db=db, type_="feed")
-                                
-                        except:
-                            exc_type, exc_obj, exc_tb = sys.exc_info()
-                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    try:
+                        check_website, check_webpage, text, status, mime = await test_page(feed, session, rb)
+                        if not check_webpage:
+                            continue
+                        check, urls = feedCheck(text)
+                        if check:
+                            await resource_add(feed,db=db, type_="feed")
                             
-                            
+                    except:
+                        exc_type, exc_obj, exc_tb = sys.exc_info()
+                        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                        print(exc_type, exc_obj, exc_tb,fname)
             else:
                 try:
-                    
                     check_website, check_webpage, html, status, mime = await test_page(feed, session, rb)
                     await resource_add(feed, type_="feed")
-                    
                 except:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    
-                    
+                    print(exc_type, exc_obj, exc_tb,fname)
     except BaseException as e:
+        print(e)
         gc.collect()
         return False
     gc.collect()
@@ -246,6 +231,8 @@ async def get_ting(url,lock,db=None, prop=None, item=None, sem=None, data=[], ty
 
 async def do_thing(datas, bar_done,lock,db=None, name="", name_item_id=None, name_prop_url=None, where="wikidata", prop="", sem=None, type_=None, value_name=None):
     timeout = aiohttp.ClientTimeout(10)
+    loop = asyncio.get_event_loop()
+    # resolver = AsyncResolver_DB(db,loop=loop)
     connector = aiohttp.TCPConnector(family=socket.AF_INET, verify_ssl=False)
     async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
         pending2 = []
@@ -270,8 +257,10 @@ async def do_thing(datas, bar_done,lock,db=None, name="", name_item_id=None, nam
                         value = data[value_name]["value"]
                     else:
                         value = None
-                    pending2.append(asyncio.create_task(get_ting(
-                        url,lock, prop=prop,db=db, item=item, type_=type_, sem=sem, value=value, session=session, where=where)))
+                    # pending2.append(asyncio.create_task(get_ting(
+                        # url,lock, prop=prop,db=db, item=item, type_=type_, sem=sem, value=value, session=session, where=where)))
+                    await get_ting(
+                        url,lock, prop=prop,db=db, item=item, type_=type_, sem=sem, value=value, session=session, where=where)
                 except:
                     pass
                 bar_done.update()
@@ -288,20 +277,30 @@ async def do_thing(datas, bar_done,lock,db=None, name="", name_item_id=None, nam
 
 
 async def get_wikidata(name, prop, quarry, lock_SPRQL, db=None, type_="unknown", value_name=None, dodgy=True):
-    sem = asyncio.Semaphore(50)
+    sem = asyncio.Semaphore(5)
     things = []
     count = 0
     pending = []
     manager = get_the_manager()
-    bar_done = manager.counter(total=1, desc='bar_done: '+name, unit='ticks')
-    bar_start = manager.counter(total=1, desc='bar_start: '+name, unit='ticks')
+    bar_done = manager.counter(total=0, desc='bar_done: '+name, unit='ticks')
+    bar_start = manager.counter(total=0, desc='bar_start: '+name, unit='ticks')
     lock = asyncio.Lock()
     while True:
         try:
             async for data_i, size in SPRQL_GEN(quarry,name+".json",db=db, dodgy=dodgy):
+                
+                # Get URL
                 bar_done.total = size
                 bar_start.total = size
                 count = size
+                if value_name is not None:
+                    url = data_i[value_name]["value"]
+                else:
+                    url = data_i[name]["value"]
+                # if not await check_resource(url, type_, where="wikidata",db=db):
+                #     bar_done.update()
+                #     bar_start.update()
+                #     continue
                 things.append(data_i)
                 bar_start.update()
                 if len(things) > 100:
@@ -550,11 +549,3 @@ async def main_ResourceDiscovery(name):
         await UK_news_source(lock_SPRQL,db)
         await main_inyourarea(lock_SPRQL,db)
         await main_ResourceDiscovery_Q_gen(lock_SPRQL,db)
-# await offical_blog(lock_SPRQL)
-# await feeds(lock_SPRQL)
-"https://candidates.democracyclub.org.uk/api/v0.9/persons/"
-"https://candidates.democracyclub.org.uk/api/v0.9/organizations/"
-"https://candidates.democracyclub.org.uk/api/v0.9/posts/"
-"https://candidates.democracyclub.org.uk/api/v0.9/party_sets/"
-"https://candidates.democracyclub.org.uk/api/v0.9/post_elections/"
-"TheyWorkForYou"

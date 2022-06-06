@@ -1,13 +1,15 @@
+import os
 import socket
 from urllib.parse import urljoin
 from urllib.request import urlopen
 import aiohttp
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup ,Comment ,NavigableString
 import urllib
 import markdown
-from regex import B
+from regex import B, P
 from urllib3 import request
-
+import sys
+import re
 from ResourceDiscovery.uitls.robot import Robots
 headers = {
     "User-Agent": ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) FeedScaner"),
@@ -24,136 +26,175 @@ headers = {
     "TE": ("trailers"),
     "content-length": ("0")
 }
+rel_skip = [
+"alternate",
+"author",
+"bookmark",
+"canonical",
+"dns-prefetch",
+"external",
+"help",
+"icon",
+"license",
+"manifest",
+"me",
+"modulepreload",
+"next",
+"nofollow",
+"noopener",
+"noreferrer",
+"opener",
+"pingback",
+"preconnect",
+"prefetch",
+"preload",
+"prerender",
+"prev",
+"search",
+"stylesheet",
+"tag",
+"shortlink",
+"wlwmanifest",
+"home",
+"apple-touch-icon",
+"shortlink",
+"category",
+"mask-icon",
+"profile",
+"EditURI",
+"Shortcut",
+"Icon",
+"https://api.w.org/"
+]
 
 
-# async def website1(url, id=None):
-#     exter_cat = {}
-#     for i in range(20):
-#         try:
-#             req = request.Request(url, headers=headers)
-#             with urlopen(req) as response:
-#                 if response.status == 200:
-#                     htext = response.read()
-#                     return str(htext), "html", "unknown", exter_cat, [url]
-#         except BaseException as e:
-#             
-#             pass
-#     return None, None, None, exter_cat, [url]
 
-def recursiveChildren(x):
-    a = {}
-    for child in x.childGenerator():
-        has_property =child.has_attr("property")
-        has_rel =child.has_attr("rel")
-        has_rev =child.has_attr("rev")
-        has_resource =child.has_attr("resource")
-        has_href =child.has_attr("href")
-        has_content =child.has_attr("content")
-        has_datatype =child.has_attr("datatype")
-        has_about =child.has_attr("about")
-        has_typeof =child.has_attr("typeof")
-        has_class =child.has_attr("class")
-        has_src =child.has_attr("src")
-        has_type =child.has_attr("type")
-        has_typeof =child.has_attr("typeof")
-        has_vocab =child.has_attr("vocab")
-        has_src =child.has_attr("src")
-        # RDFa
-        if has_property and has_content and has_typeof:
-            data =recursiveChildren(child)
+def semantic_website_passer(x,url = "" ,i=0):
+    context = {}
+    graph = {}
+    ix = 0
+    for child in x.children:
+        try:
+            ix = ix +1
+            name = child.name
+            if isinstance(child, Comment):
+                continue
+            if isinstance(child, NavigableString):
+                continue
+            if isinstance(name, type(None)):
+                print(type(child))
+                data = {**data,** semantic_website_passer(child,i+1)}
+                continue
+            is_base = name == "base"
+            has_vocab = child.has_attr("vocab")  and (child.get("vocab") != "")
+            has_rel = child.has_attr("rel")  and (child.get("rel") != "")
+            has_rev = child.has_attr("rev")  and (child.get("rev") != "")
+            has_src = child.has_attr("src")  and (child.get("src") != "")
+            has_href = child.has_attr("href")  and (child.get("href") != "")
+            has_resource = child.has_attr("resource") and (child.get("resource") != "")
+            has_property = child.has_attr("property") and (child.get("property") != "")
+            has_content = child.has_attr("content") and (child.get("content") != "")
+            has_datatype = child.has_attr("datatype") and (child.get("datatype") != "")
+            has_prefix = child.has_attr("prefix") and (child.get("prefix") != "")
+            has_typeof = child.has_attr("typeof") and (child.get("typeof") != "")
+            has_about = child.has_attr("about")  and (child.get("about") != "")
+            has_class = child.has_attr("class") and (child.get("class") != "")
             
+            if has_rel and has_href and has_typeof:
+                child.get("rel")
+                child.get("href")
+                child.get("typeof")
+            elif has_rev and has_href  and has_typeof:
+                print("rev and href and typeof")
+            elif has_rev and has_src  and has_typeof:
+                print("rev and src and typeof")
+            elif has_rel and has_src and has_typeof:
+                print("rel and src and typeof")
+            elif has_rev and has_resource and has_typeof:
+                print("rev and resource and typeof")
+            elif has_rel and has_resource and has_typeof:
+                print("rel and resource and typeof")
+            elif has_rel and has_href:
+                rel =(child.get("rel"))
+                href =(child.get("href"))
+                S = False
+                for i_rel in rel:
+                    if i_rel in rel_skip:
+                        S = True
+                        break
+                if S:
+                    continue
+                context2 ,graph2 = semantic_website_passer(child,i+1)
+                graph = {**graph,** graph2}
+                context = {**context,** context2}
+            elif has_rev and has_href:
+                print("rev and href")
+            elif has_rev and has_src:
+                print("rev and src")
+            elif has_rel and has_src:
+                print("rel and src")
+            elif has_rev and has_resource:
+                print("rev and resource")
+            elif has_rel and has_resource:
+                print("rel and resource")
+            elif has_rev and has_property:
+                print("rev and property")
+            elif has_rel and has_property:
+                print("rel and property")
+            elif has_property and has_about:
+                print("property and about")
+            elif has_property and has_datatype:
+                print("property and datatype")
+            elif has_property and has_content:
+                graph[child.get("property")]=child.get("content")
+            elif has_property and has_typeof:
+                print("property and typeof")
+            elif has_vocab and has_typeof:
+                context[child.get("typeof")] = urljoin(child.get("vocab"),child.get("typeof"))
+                context2 ,graph2 = semantic_website_passer(child,i+1)
+                graph = {**graph,** graph2}
+                context = {**context,** context2}
+            # elif is_base and has_href:
+            #     print("base and href")
+            
+            elif has_property and has_href:
+                graph[child.get("property")]=child.get("href")
+            elif has_about:
+                print("property")
+            elif has_prefix:
+                prefix = child.get("prefix")
+                for m in re.finditer(r"([A-z]*): (https?:\/\/[\/a-zA-Z0-9@:%&._\+~?#=&]*)", prefix):
+                    context[m.group(1)] = m.group(2)
+            elif has_vocab:
+                print("vocab:",child.get("vocab"))
+                context2 ,graph2 = semantic_website_passer(child,i+1)
+                graph = {**graph,** graph2}
+                context = {**context,** context2}
+                pass
+            elif has_class:
+                context2 ,graph2 = semantic_website_passer(child,i+1)
+                graph = {**graph,** graph2}
+                context = {**context,** context2}
+                pass
+                # print("class")
+            else:
+                context2 ,graph2 = semantic_website_passer(child,i+1)
+                graph = {**graph,** graph2}
+                context = {**context,** context2}
+        except BaseException as e :
+            print(e)
             pass
-        elif has_typeof and has_vocab:
-            recursiveChildren(child)
-            pass
-        elif has_property and has_content:
-            data =recursiveChildren(child)
-            pass
-        elif has_property and has_rel and has_datatype:
-            data =recursiveChildren(child)
-            pass
-        elif has_property and has_rev and has_datatype:
-            data =recursiveChildren(child)
-            pass
-        elif has_property and has_href and has_datatype:
-            data =recursiveChildren(child)
-            property =child.get('property')
-            print(property)
-            href =child.get('href')
-            datatype =child.get('datatype')
-            pass
-        elif has_property and has_resource and has_datatype:
-            property =child.get('property')
-            print(property)
-            resource =child.get('resource')
-            datatype =child.get('datatype')
-            data =recursiveChildren(child)
-            pass
-        elif has_property and has_src and has_datatype:
-            property =child.get('property')
-            src =child.get('src')
-            datatype =child.get('datatype')
-            data =recursiveChildren(child)
-            pass
-        elif has_property and has_rel:
-            data =recursiveChildren(child)
-            rel =child.get('rel')
-            property =child.get('property')
-            pass
-        elif has_property and has_rev:
-            data =recursiveChildren(child)
-            rev =child.get('rev')
-            property =child.get('property')
-            print(property)
-            pass
-        elif has_property and has_href:
-            data =recursiveChildren(child)
-            href =child.get('href')
-            property =child.get('property')
-            print(property)
-            pass
-        elif has_property and has_resource:
-            data =recursiveChildren(child)
-            resource =child.get('resource')
-            property =child.get('property')
-            print(property)
-            pass
-        elif has_property and has_src:
-            data =recursiveChildren(child)
-            resource =child.get('resource')
-            property =child.get('property')
-            print(property)
-            src =child.get('src')
-            pass
-        elif has_property and has_datatype:
-            data =recursiveChildren(child)
-            pass
-        elif has_vocab and has_datatype:
-            data =recursiveChildren(child)
-            pass
-        elif has_property:
-            property =child.get('property')
-            print(property)
-            data =recursiveChildren(child)
-            pass
-        elif has_about:
-            data =recursiveChildren(child)
-            pass
-        elif has_typeof:
-            data =recursiveChildren(child)
-            pass
-        elif has_vocab:
-            data =recursiveChildren(child)
-            pass
-        #  
-        elif has_class and has_content:
-            pass
-        elif has_class:
-            pass
-        if has_type and has_src:
-            pass
-    # json-dl
-    return a
+        except:
+            print("e")
+    # if i == 0:
+    #     pass
+    #     if len(graph.keys()) != 0 or len(context.keys()) != 0:
+    #         print("url:",url)
+    #     if len(graph.keys()) != 0:
+    #         print("graph:",graph)
+    #     if len(context.keys()) != 0:
+    #         print("context:",context)
+    return context ,graph
 
 
 
@@ -178,15 +219,16 @@ async def website(url, id=None, count=10, rb=None):
                         if len(soup) < 1000:
                             break
                         try:
-                            soup = BeautifulSoup(soup, 'html.parser')
+                            soup = BeautifulSoup(soup, 'html5lib')
+                            semantic_website_passer(soup,url=response.url)
                             result = soup.find(
                                 "meta", attrs={"http-equiv": "Refresh"})
                             if result:
                                 wait, text = result["content"].split(";")
                                 if text.strip().lower().startswith("url="):
-                                    url = text[4:]
+                                    url_new = text[4:]
                                     if count != 0:
-                                        return website(url, id=id, count=count-1)
+                                        return website(url_new, id=id, count=count-1)
                             result = soup.find("frameset")
                             if result:
                                 # skip on frameset
@@ -195,7 +237,6 @@ async def website(url, id=None, count=10, rb=None):
                             if result:
                                 # skip on frame
                                 break
-                            recursiveChildren(soup)
                             for s in soup.select('frameset'):
                                 s.extract()
                             for s in soup.select('script'):
