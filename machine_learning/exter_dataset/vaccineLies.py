@@ -1,11 +1,10 @@
-import os
-from git import Repo
 url = "https://github.com/Supermaxman/vaccine-lies"
+import os
+from machine_learning.exter_dataset.uitls.download import git_download
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'vaccineLies')
+git_download(dir_fs, 'vaccineLies',url)
 
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

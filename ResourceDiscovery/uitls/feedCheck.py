@@ -1,13 +1,14 @@
 import json
 import os
+import re
 import sys
 
 
-def feedCheck_RSS(contex):
+def feedCheck_RSS(text,encoding):
     feed = []
     try:
         from bs4 import BeautifulSoup
-        soup = BeautifulSoup(contex, 'xml')
+        soup = BeautifulSoup(text, 'xml')
         rss = soup.find('rss')
         if rss is not None:
             for item in soup.findAll('item'):
@@ -19,12 +20,12 @@ def feedCheck_RSS(contex):
     return False, feed
 
 
-def feedCheck_ATOM(contex):
+def feedCheck_ATOM(text,encoding):
     feed = []
     c = False
     try:
         from bs4 import BeautifulSoup
-        soup = BeautifulSoup(contex, 'xml')
+        soup = BeautifulSoup(text, 'xml')
         feed_ = soup.find('feed')
         if feed_ is not None:
             for link in soup.findAll('link'):
@@ -66,14 +67,64 @@ def feedCheck_JSON_Feed(contex):
     return False, feed
 
 
-def feedCheck(contex):
-    check, urls = feedCheck_JSON_Feed(contex)
-    if check:
-        return check, urls
-    check, urls = feedCheck_ATOM(contex)
-    if check:
-        return check, urls
-    check, urls = feedCheck_RSS(contex)
-    if check:
-        return check, urls
+size_max = 0
+def feedCheck(text,mime,encoding):
+    print("mine:",mime)
+    global size_max
+    if "html" in mime:
+        return False, []
+    if "image" in mime:
+        return False, []
+    if "gzip" in mime:
+        return False, []
+    if "audio" in mime:
+        return False, []
+    if "font" in mime:
+        return False, []
+    if "video" in mime:
+        return False, []
+    if  mime is not None and mime != "":
+        print("feed Mime:",mime)
+    if mime is  None:
+        mime =""
+    try:
+        if "atom" in mime:
+            check, urls = feedCheck_ATOM(text,encoding)
+            if check and len(urls) != 0:
+                
+                return check, urls
+        if "rss" in mime:
+            check, urls = feedCheck_RSS(text,encoding)
+            if check and len(urls) != 0:
+                
+                return check, urls
+        elif "atom" in mime or "xml" in mime:
+            check, urls = feedCheck_RSS(text,encoding)
+            if check and len(urls) != 0:
+                
+                return check, urls
+            check, urls = feedCheck_ATOM(text,encoding)
+            if check and len(urls) != 0:
+                
+                return check, urls
+            return False, []
+        # elif (re.match(r'^([\{\[](\n|.)*[\]\}])$', data)) or "json" in mime:
+        #   del text
+        #   del data
+        #   check, urls = feedCheck_JSON_Feed(contex)
+        #   if check and len(urls) != 0:
+            # return check, urls
+        else:
+            check, urls = feedCheck_RSS(text,encoding)
+            if check and len(urls) != 0:
+                size_max = max(len(text),size_max)
+                return check, urls
+            check, urls = feedCheck_ATOM(text,encoding)
+            if check and len(urls) != 0:
+                size_max = max(len(text),size_max)
+                return check, urls
+    except:    
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("G",exc_type, exc_obj, exc_tb,fname,exc_tb.tb_lineno)
     return False, []

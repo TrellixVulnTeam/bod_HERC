@@ -1,10 +1,9 @@
-from git import Repo
 import os
+from machine_learning.exter_dataset.uitls.download import git_download
 url = "https://github.com/t-davidson/hate-speech-and-offensive-language"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'hate_Speech_and_Offensive_Language')
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+git_download(dir_fs, 'hate_Speech_and_Offensive_Language',url)
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

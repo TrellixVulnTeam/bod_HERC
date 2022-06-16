@@ -22,7 +22,12 @@ async def SPRQL_GEN(sparql, file_name, db=None,online=True, dodgy=False):
                                     data = await r.read()
                                     if r.ok:
                                         await f.write(data)
+                                        try:
+                                            data_json = await r.json()
+                                        except:
+                                            pass
                                         break
+                                    
                                     elif r.status == 503:
                                         await asyncio.sleep(10*60)
                                         continue
@@ -40,17 +45,12 @@ async def SPRQL_GEN(sparql, file_name, db=None,online=True, dodgy=False):
             size = 0
             if not dodgy or i <= 4:
                 try:
-                    async with aiofiles.open(file_name, mode='rb') as fs:
-                        a = ijson.items(fs, 'results.bindings.item')
-                        async for o in a:
-                            size = size + 1
-                    async with aiofiles.open(file_name, mode='rb') as fs:
-                        a = ijson.items(fs, 'results.bindings.item')
-                        async for o in a:
-                            yield o, size
-                        break
+                    size = len(data_json["results"]['bindings'])
+                    for i in data_json["results"]['bindings']:
+                        yield i, size
                 except:
-                    continue
+                    pass
+                        
             else:
                 try:
                     async with aiofiles.open(file_name, mode='rb') as fs:

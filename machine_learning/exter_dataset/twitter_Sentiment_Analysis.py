@@ -1,10 +1,9 @@
-from git import Repo
 import os
+from machine_learning.exter_dataset.uitls.download import git_download
 url = "https://github.com/dD2405/Twitter_Sentiment_Analysis"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'Twitter_Sentiment_Analysis')
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+git_download(dir_fs, 'Twitter_Sentiment_Analysis',url)
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

@@ -1,5 +1,7 @@
 import json
+import os
 import random
+import sys
 import requests
 from machine_learning.service_scrap.scrap.website import website_bs, website_markdown
 from machine_learning.service_scrap.scrap.website import website
@@ -37,6 +39,9 @@ def feedCheck_ATOM(contex):
                 c = True
         return c, feed
     except:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("G",exc_type, exc_obj, exc_tb,fname,exc_tb.tb_lineno)
         return False, feed
     return False, feed
 
@@ -65,9 +70,11 @@ def feedCheck_JSON_Feed(contex):
         else:
             return False, feed
     except:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("G",exc_type, exc_obj, exc_tb,fname,exc_tb.tb_lineno)
         return False, feed
     return False, feed
-
 
 async def feed(url, id):
     exter_cat = {}

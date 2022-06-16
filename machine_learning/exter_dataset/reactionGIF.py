@@ -1,10 +1,12 @@
-from git import Repo
+from machine_learning.exter_dataset.uitls.download import git_download
+
 import os
 url = "https://github.com/bshmueli/ReactionGIF"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'ReactionGIF')
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+git_download(dir_fs, 'ReactionGIF',url)
+
+
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

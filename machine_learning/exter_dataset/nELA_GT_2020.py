@@ -1,10 +1,10 @@
-from git import Repo
 import os
+from machine_learning.exter_dataset.uitls.download import git_download
 url = "https://github.com/MELALab/nela-gt"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'nELA_GT_2020')
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+git_download(dir_fs, 'nELA_GT_2020',url)
+
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

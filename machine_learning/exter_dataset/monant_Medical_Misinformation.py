@@ -1,10 +1,9 @@
 import os
-from git import Repo
+from machine_learning.exter_dataset.uitls.download import git_download
 url = "https://github.com/kinit-sk/medical-misinformation-dataset"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-dir_fs = os.path.join(dir_fs, "repo", 'monant_Medical_Misinformation')
-try:
-    Repo.clone_from(url,  dir_fs)
-except:
+git_download(dir_fs, 'mphasis',url)
+
+
+def get_data():
     pass
-repo = Repo(dir_fs)

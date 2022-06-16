@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun  5 17:18:32 2022
+# Make data base, printed on Thu Jun  9 11:54:23 2022
 
 # Variables
 
@@ -30,8 +30,6 @@ VSCODE_LOG_NATIVE = false
 GTK3_MODULES = xapp-gtk3-module
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
-# environment
-GRADLE_HOME = /home/william/.sdkman/candidates/gradle/current
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -47,13 +45,13 @@ SHELL = /bin/sh
 # environment
 GDM_LANG = en_GB
 # environment
-VTE_VERSION = 6003
-# environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/bin/code
+_ = /usr/share/code/code
 # environment
 QT_AUTO_SCREEN_SCALE_FACTOR = 0
+# environment
+JOURNAL_STREAM = 9:38695
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-mate:/etc/xdg
 # environment
@@ -62,6 +60,8 @@ GTK_OVERLAY_SCROLLING = 0
 MAKEFILE_LIST := 
 # automatic
 @F = $(notdir $@)
+# environment
+GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # 'override' directive
 GNUMAKEFLAGS := 
 # environment
@@ -71,7 +71,7 @@ MANDATORY_PATH = /usr/share/gconf/mate.mandatory.path
 # environment
 XDG_DATA_DIRS = /usr/share/mate:/home/william/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=27ac46878411aec7ebd4bb6962a0ded3
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
@@ -79,11 +79,11 @@ QT_SCALE_FACTOR = 1
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-N64_INST = /home/william/Projects/n64/mips64-toolchain
+MANAGERPID = 1925
 # environment
 CLUTTER_IM_MODULE = ibus
 # environment
-LESSOPEN = | /usr/bin/lesspipe %s
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f254c15b-420a-4c63-bc0d-088133aac3ec.sock
 # environment
 VSCODE_CWD = /home/william
 # environment
@@ -91,35 +91,31 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/william/.sdkman/candidates/gradle/current/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/william/.cargo/bin:/home/william/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/william/emsdk:/home/william/emsdk/upstream/emscripten:/home/william/emsdk/node/14.18.2_64bit/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/william/.cargo/bin:/home/william/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/william-pc:@/tmp/.ICE-unix/69909,unix/william-pc:/tmp/.ICE-unix/69909
+SESSION_MANAGER = local/william-pc:@/tmp/.ICE-unix/1940,unix/william-pc:/tmp/.ICE-unix/1940
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-SDKMAN_DIR = /home/william/.sdkman
-# environment
-WINDOWID = 52428806
-# environment
-SDKMAN_CANDIDATES_API = https://api.sdkman.io/2
-# environment
-SDKMAN_PLATFORM = linuxx64
+EMSDK_NODE = /home/william/emsdk/node/14.18.2_64bit/bin/node
 # environment
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = 52ad99cc038f4e75aace03006c1de9d7
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
 XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/william
 # environment
-LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
-# environment
 XDG_SESSION_DESKTOP = mate
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 297948
 # automatic
 %F = $(notdir $%)
 # environment
@@ -137,7 +133,7 @@ QT_QPA_PLATFORMTHEME = qt5ct
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 70005
+SSH_AGENT_PID = 2040
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = MATE
 # environment
@@ -149,23 +145,13 @@ VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /home/william
 # environment
-POWERLINE_COMMAND = oh-my-posh
-# environment
 HOMEBREW_CELLAR = /home/linuxbrew/.linuxbrew/Cellar
-# environment
-VSCODE_CLI = 1
 # environment
 VSCODE_CODE_CACHE_PATH = /home/william/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
 LOGNAME = william
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
-# environment
-CONDA_PROMPT_MODIFIER = false
-# environment
-ELECTRON_NO_ATTACH_CONSOLE = 1
-# environment
-LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -178,10 +164,6 @@ XDG_VTNR = 7
 CLUTTER_BACKEND = x11
 # environment
 KICAD_PATH = /usr/share/kicad
-# environment
-SDKMAN_VERSION = 5.13.1
-# environment
-COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -189,15 +171,13 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SHLVL = 1
+SHLVL = 0
 # environment
-POSH_THEME = /home/william/.poshthemes/aliens.omp.json
-# environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3116f78e-03a2-4211-aa3a-c58c5f87a0a6.sock
+IM_CONFIG_PHASE = 1
 # environment
 COMPIZ_CONFIG_PROFILE = mint
 # environment
-XDG_SESSION_ID = c4
+XDG_SESSION_ID = c2
 # environment
 USER = william
 # makefile
@@ -240,12 +220,14 @@ QT_ACCESSIBILITY = 1
 DEFAULTS_PATH = /usr/share/gconf/mate.default.path
 # default
 MAKEFILES := 
+# environment
+EM_CONFIG = /home/william/emsdk/.emscripten
 # automatic
 <F = $(notdir $<)
 # environment
-SDKMAN_CANDIDATES_DIR = /home/william/.sdkman/candidates
-# environment
 LC_ALL = C
+# environment
+DBUS_STARTER_BUS_TYPE = session
 # environment
 QT4_IM_MODULE = ibus
 # automatic
@@ -265,11 +247,13 @@ MATE_DESKTOP_SESSION_ID = this-is-deprecated
 # environment
 LANG = C
 # environment
-TERM = xterm-256color
+EMSDK = /home/william/emsdk
 # environment
-VSCODE_PID = 73978
+VSCODE_PID = 297948
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=27ac46878411aec7ebd4bb6962a0ded3
 # variable set hash-table stats:
-# Load=128/1024=12%, Rehash=0, Collisions=15/150=10%
+# Load=120/1024=12%, Rehash=0, Collisions=12/142=8%
 
 # Pattern-specific Variable Values
 
@@ -277,10 +261,9 @@ VSCODE_PID = 73978
 
 # Directories
 
-# . (device 2050, inode 153034899): 24 files, no impossibilities.
- 
+# . (device 2050, inode 153034899): 27 files, no impossibilities.
 
-# 24 files, no impossibilities in 1 directories.
+# 27 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -297,6 +280,7 @@ all:
 
 # Not a target:
 Makefile:
+ 
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
@@ -330,12 +314,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 32 / storage = 400 B / avg = 12 B
-# current buf: size = 8162 B / used = 400 B / count = 32 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 35 / storage = 501 B / avg = 14 B
+# current buf: size = 8162 B / used = 501 B / count = 35 / avg = 14 B
 
-# strcache performance: lookups = 35 / hit rate = 8%
+# strcache performance: lookups = 38 / hit rate = 7%
 # hash-table stats:
-# Load=32/8192=0%, Rehash=0, Collisions=1/35=3%
-# Finished Make data base on Sun Jun  5 17:18:32 2022
+# Load=35/8192=0%, Rehash=0, Collisions=1/38=3%
+# Finished Make data base on Thu Jun  9 11:54:23 2022
 
  

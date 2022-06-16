@@ -2,6 +2,9 @@ import asyncio
 import threading
 from ResourceDiscovery.main import main_ResourceDiscovery
 from utils import asynchronous_thread_task
+import os
+pid = os.getpid()
+print("PID:",pid) 
 
 new_loop = asyncio.new_event_loop()
 a = threading.Thread(target=asynchronous_thread_task,
