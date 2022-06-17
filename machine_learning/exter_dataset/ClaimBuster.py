@@ -16,9 +16,13 @@ with urllib.request.urlopen(crowdsourced) as f:
     text = f.read()
     with open(crowdsource_path,mode="wb") as file :
         file.write(text)
-all_sentence_path = os.path.join(dir_fs,  'all_sentences.csv')
+all_sentence_path = os.path.join(dir_fs, 'all_sentences.csv')
 with urllib.request.urlopen(all_sentences) as f:
     text = f.read()
     with open(all_sentence_path,mode="wb") as file :
         file.write(text)
     
+
+
+def get_data():
+    pass

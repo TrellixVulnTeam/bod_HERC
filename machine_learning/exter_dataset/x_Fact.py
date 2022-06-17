@@ -18,6 +18,12 @@ git_download(dir_fs, 'x-fact',url)
 
 def get_data():
     paths = []
+    paths.append("data/x-fact/dev.all.tsv")
+    paths.append("data/x-fact/ood.tsv")
+    paths.append("data/x-fact/test.all.tsv")
+    paths.append("data/x-fact/train.all.tsv")
+    paths.append("data/x-fact/zeroshot.tsv")
+    
     paths.append("data/x-fact-including-en/dev.all.tsv")
     paths.append("data/x-fact-including-en/ood.tsv")
     paths.append("data/x-fact-including-en/test.all.tsv")
