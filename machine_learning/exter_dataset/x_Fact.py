@@ -10,7 +10,7 @@ import csv
 
 import random
 
-from machine_learning.exter_dataset.uitls.modle import mideline, or_diff
+from machine_learning.exter_dataset.uitls.modle import midline, or_diff
 from machine_learning.exter_dataset.uitls.output import output_bool
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -41,7 +41,7 @@ def get_data():
     evidence.append(or_diff(*[input_url(x['link_4']),input_text(x['evidence_4'],x['language'])]))
     evidence.append(or_diff(*[input_url(x['link_5']),input_text(x['evidence_5'],x['language'])]))
     output = [output_bool(x['label'],"fackcheck")]
-    data = mideline(in_=input_,out_=output,middle=evidence)
+    data = midline(in_=input_,out_=output,middle=evidence)
     # 
     
     print(data)

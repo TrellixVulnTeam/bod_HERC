@@ -4,6 +4,13 @@ def input_text(text,language):
         "language":language,
         "text":text  
     }
+def input_factCheck_evidence(value,relevancy):
+    return {
+        "type":"fact_check",
+        "value":value,
+        "relevancy":relevancy
+    }
+
 def input_url(url):
     return {
         "type":"url",
@@ -22,3 +29,17 @@ def input_reddit_post(id,language):
         "id":id  
     }
 
+
+def output_classifier(data,name):
+    return {
+    "type":"classifier",
+    "data":data,
+    "name":name,
+    }
+
+def output_float(data,name):
+    return {
+    "type":"float",
+    "data":data,
+    "name":name,
+    }

@@ -1,9 +1,14 @@
-def mideline(in_=None,out_=None,middle=None):
-    return {
-        "in":in_,
-        "out_":out_,
-        "middle":middle,
-    }
+def midline(in_=None,out_=None,middle=None):
+    d = {}
+    if in_ is not None:
+        d["in"] = in_
+    if out_ is not None:
+        d["out"] = out_
+    if middle is not None:
+        d["middle"] = middle
+    return d 
+
+
 
 
 def or_same(*args):

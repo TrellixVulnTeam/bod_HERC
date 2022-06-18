@@ -11,18 +11,17 @@ from os.path import isfile, join
 
 
 def load_jsonl(path):
+    f= []
     with open(path, 'r') as json_file:
-        json_list = list(json_file)
+        a = json_file.read()
+        json_list = list(a.split("\n"))
     for json_str in json_list:
-        yield json.loads(json_str)
+        try:
+            f.append(json.loads(json_str))
+        except:
+            pass
+    return f
 
-def TSV (path, delimiter="\t"):
-    with open(path) as file:
-        return tsv_helper(file,delimiter)
-
-def load_gzip_TSV (path,delimiter="\t"):
-    with gzip.open(path, 'rb') as file:
-        return tsv_helper(file,delimiter)
 
 def load_pickle (path):
     with open(path, 'rb') as f:
@@ -30,13 +29,13 @@ def load_pickle (path):
     return data
 
 def load_json (path):
-    with open(path, 'rb') as f:
-        data = json.load(f)
+    with open(path, 'r') as f:
+        data = json.loads(f.read())
     return data
 
 def load_gzip_pickle (path):
     with gzip.open(path, 'rb') as f:
-        data = pickle.load(f)
+        data = pickle.load(f.read())
     return data
 
 
@@ -45,7 +44,7 @@ def load_json_pickle (path):
         data = json.loads(f)
     return data
 
-def tsv_helper (file,delimiter):
+def tsv_helper_dict (file,delimiter):
     list =[]
     tsv_file = csv.reader(file, delimiter=delimiter)
     row_index = 0
@@ -68,6 +67,18 @@ def tsv_helper (file,delimiter):
 
 
 
+def tsv_helper_triple (file,delimiter):
+    list =[]
+    tsv_file = csv.reader(file, delimiter=delimiter)
+    for line in tsv_file:
+            data = []
+            for cell in line:
+                try:
+                    data.append(cell)
+                except:
+                    pass
+            list.append(data)
+    return list
 
 
 
@@ -103,3 +114,20 @@ def list_file(mypath):
         if isfile(file):
             files.append(file)
     return files
+
+
+def CSV (path, delimiter=",",call =tsv_helper_dict):
+    with open(path) as file:
+        return call(file,delimiter)
+
+def load_gzip_CSV (path,delimiter=",",call =tsv_helper_dict):
+    with gzip.open(path, 'rb') as file:
+        return call(file,delimiter)
+
+def TSV (path, delimiter="\t",call =tsv_helper_dict):
+    with open(path) as file:
+        return call(file,delimiter)
+
+def load_gzip_TSV (path,delimiter="\t",call =tsv_helper_dict):
+    with gzip.open(path, 'rb') as file:
+        return call(file,delimiter)
