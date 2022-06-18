@@ -42,6 +42,4 @@ def get_data():
     evidence.append(or_diff(*[input_url(x['link_5']),input_text(x['evidence_5'],x['language'])]))
     output = [output_bool(x['label'],"fackcheck")]
     data = midline(in_=input_,out_=output,middle=evidence)
-    # 
-    
-    print(data)
+    return data

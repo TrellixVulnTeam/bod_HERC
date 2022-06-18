@@ -82,10 +82,10 @@ def tsv_helper_triple (file,delimiter):
 
 
 
-def de_zip(base_path,dataset_name,url,name=None):
+def de_zip(base_path,dataset_name,name,where= ""):
     print("de_zip")
-    zip_path = os.path.join(base_path,"repo",dataset_name,zip_path)
-    output_path = os.path.join(base_path,"repo",dataset_name,output_path)
+    zip_path = os.path.join(base_path,"repo",dataset_name,name)
+    output_path = os.path.join(base_path,"repo",dataset_name,where)
     with zipfile.ZipFile(zip_path,"r") as zip_ref:
         zip_ref.extractall(output_path)
 

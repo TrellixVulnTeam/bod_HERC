@@ -3,6 +3,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import TSV, list_file
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.exter_dataset.uitls.input import output_classifier
 url = "https://github.com/sociocom/covid19_dataset"
 try:
     dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -18,8 +19,12 @@ def get_data():
     files = list_file(covid19_dataset_en) 
     path = random.choice(files)
     a = TSV (path, delimiter="\t")
+    a_list = []
     for i in a:
-        print(path)
+        for topic in i["keywords"].split(","):
+           a_list.append(output_classifier(topic,"topic"))
+        print(a_list)
         print(i.keys())
         print(i["id"])
+        print(i["keywords"].split(","))
     

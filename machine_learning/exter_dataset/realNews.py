@@ -1,4 +1,5 @@
 import os
+from machine_learning.exter_dataset.uitls.decode_data import load_json
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 
@@ -10,4 +11,6 @@ git_download(dir_fs, 'grover',url)
 
 
 def get_data():
-    pass
+    path = get_path(dir_fs, 'grover',"realnews/domain_to_allowed_subdomains.json")
+    d = load_json(path)
+    print(d.keys())
