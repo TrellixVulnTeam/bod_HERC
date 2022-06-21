@@ -7,4 +7,4 @@ git_download(dir_fs, 'climate-fever',url)
 
 
 def get_data():
-    pass
+    climate_fever = get_path(dir_fs, 'climate-fever', "dataset/climate-fever.jsonl")

@@ -9,4 +9,5 @@ git_download(dir_fs, 'SPIRS',url)
 
 
 def get_data():
-    pass
+    non_sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-non-sarcastic-ids.csv")
+    sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-sarcastic-ids.csv")

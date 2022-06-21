@@ -1,5 +1,6 @@
 import os
 from machine_learning.exter_dataset.uitls.download import git_download
+from machine_learning.exter_dataset.uitls.get_path import get_path
 
 url = "https://github.com/surge-ai/toxicity"
 
@@ -10,4 +11,4 @@ git_download(dir_fs, 'toxicity',url)
 
 
 def get_data():
-    pass
+    toxicity = get_path(dir_fs, 'toxicity',"toxicity_en.csv")

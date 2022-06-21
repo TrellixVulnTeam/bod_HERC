@@ -8,4 +8,4 @@ git_download(dir_fs, 'factedit',url)
 
 
 def get_data():
-    pass
+    path2 = get_path(dir_fs, 'factedit',"Dataset/RoCStories/100KStories.csv")

@@ -9,4 +9,4 @@ git_download(dir_fs, 'stereoSet',url)
 
 
 def get_data():
-    path = get_path(dir_fs, 'stereoset',"data/dev.json")
+    path = get_path(dir_fs, 'stereoSet',"data/dev.json")
