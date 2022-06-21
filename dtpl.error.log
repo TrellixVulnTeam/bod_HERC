@@ -1,37 +1,10 @@
-Error: EACCES: permission denied, open '/home/william/Code/Python/bod/machine_learning/exter_dataset/repo/SPIRS/repo/SPIRS/.git/config.lock'
-    at Object.openSync (node:fs:585:3)
-    at Object.func [as openSync] (node:electron/js2c/asar_bundle:5:1812)
-    at Object.readFileSync (node:fs:453:35)
-    at Object.e.readFileSync (node:electron/js2c/asar_bundle:5:9160)
-    at VscodeEditor.getFileContent (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/out/adapter/VscodeEditor.js:187:19)
-    at isFileEmpty (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/commands/Command.js:65:113)
-    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/commands/Command.js:72:80
-    at Array.filter (<anonymous>)
-    at CreateTemplateFilesCommand.Command.filter (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/commands/Command.js:70:14)
-    at new CreateTemplateFilesCommand (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/commands/CreateTemplateFilesCommand.js:31:29)
-    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Commander.js:160:80
-    at Commander.<anonymous> (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Commander.js:129:46)
-    at step (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:133:27)
-    at Object.next (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:114:57)
-    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:107:75
-    at new Promise (<anonymous>)
-    at Object.__awaiter (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:103:16)
-    at Commander.wrap (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Commander.js:123:24)
-    at Commander.<anonymous> (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Commander.js:160:44)
-    at step (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:133:27)
-    at Object.next (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:114:57)
-    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:107:75
-    at new Promise (<anonymous>)
-    at Object.__awaiter (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:103:16)
-    at Commander.addCreateTemplateFilesCommand (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Commander.js:157:24)
-    at Application.<anonymous> (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Application.js:49:61)
-    at step (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:133:27)
-    at Object.next (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:114:57)
-    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:107:75
-    at new Promise (<anonymous>)
-    at Object.__awaiter (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:103:16)
-    at Application.createTemplateFiles (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Application.js:47:28)
-    at Application.<anonymous> (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Application.js:109:51)
+Error: ENOENT: no such file or directory, stat '/home/william/Code/Python/bod/machine_learning/exter_dataset/__pycache__/COVID_19_Fake_News_Dataset.cpython-39.pyc.140554236752624'
+    at statSync (node:fs:1536:3)
+    at Object.e.statSync (node:electron/js2c/asar_bundle:5:4539)
+    at Object.statSync (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/graceful-fs/polyfills.js:308:16)
+    at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Application.js:94:48
+    at Array.forEach (<anonymous>)
+    at Application.<anonymous> (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/out/core/Application.js:91:34)
     at step (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:133:27)
     at Object.next (/home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:114:57)
     at /home/william/.vscode/extensions/qiu8310.dot-template-vscode-0.3.0/node_modules/dot-template-core/node_modules/tslib/tslib.js:107:75

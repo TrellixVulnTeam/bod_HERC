@@ -31,7 +31,7 @@ def load_pickle (path):
 def load_json (path):
     with open(path, 'r') as f:
         data = json.loads(f.read())
-    return data
+        return data
 
 def load_gzip_pickle (path):
     with gzip.open(path, 'rb') as f:

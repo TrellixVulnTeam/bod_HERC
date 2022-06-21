@@ -1,4 +1,5 @@
 import os
+import random
 from machine_learning.exter_dataset.uitls.decode_data import de_zip
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
@@ -13,6 +14,11 @@ except:
 de_zip(dir_fs,'mLMA_Hate_Speech',"hate_speech_mlma.zip")
 
 def get_data():
-    path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/ar_dataset.csv")
-    path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/en_dataset.csv")
-    path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/fr_dataset.csv")
+    ar_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/ar_dataset.csv")
+    en_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/en_dataset.csv")
+    fr_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/fr_dataset.csv")
+    path = random.choice([
+        ar_dataset_path,
+        en_dataset_path,
+        fr_dataset_path
+    ])

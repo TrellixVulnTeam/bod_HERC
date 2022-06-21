@@ -7,4 +7,4 @@ git_download(dir_fs, 'LJP-MSJudge',url)
 path = get_path(dir_fs, 'LJP-MSJudge',"microblog_ids/en")
 
 def get_data():
-    path = get_path(dir_fs, 'LJP-MSJudge',"microblog_ids/en")
+    microblog_ids_path = get_path(dir_fs, 'LJP-MSJudge',"microblog_ids/en")

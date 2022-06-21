@@ -15,7 +15,6 @@ except:
 
 try:
     from mumin import MuminDataset
-    dataset = MuminDataset(bearer_token, size='small')
 except:
     api =None
 
@@ -36,8 +35,11 @@ def zip_download(base_path,dataset_name,url,name=None):
         text = f.read()
         with open(zip_name,"wb") as file :
             file.write(text)
-    with zipfile.ZipFile(zip_name,"r") as zip_ref:
-        zip_ref.extractall(dir_name)
+    try:
+        with zipfile.ZipFile(zip_name,"r") as zip_ref:
+            zip_ref.extractall(dir_name)
+    except:
+        print("zip_download cant unzip:",dataset_name)
 
 
 
@@ -70,20 +72,25 @@ def git_download(base_path,dataset_name,url):
     try:
         Repo.clone_from(url, dir_name)
     except:
-        pass
+        print("fail git_download:",dataset_name)
 
 
 def kaggle_download(base_path,dataset_name,name):
     print("kaggle_download:",dataset_name)
     path = os.path.join(base_path,"repo",dataset_name, name)
-    api.dataset_download_files(name,path=path, unzip=True)
-    print("kaggle_done")
+    try:
+        api.dataset_download_files(name,path=path, unzip=True)
+    except:
+        print("fail kaggle_download:",dataset_name)
 
 def huggingface_download(base_path,dataset_name,name,subname):
     print("huggingface_download:",dataset_name)
     dir_fs = os.path.join(base_path,"repo", dataset_name)
     os.mkdir(dir_fs)
-    dataset = load_dataset(name, subname,data_dir=dir_fs)
+    try:
+        dataset = load_dataset(name, subname,data_dir=dir_fs)
+    except:
+        print("fail huggingface_download:",dataset_name)
     return dataset
 
 def zenodo_download(base_path,dataset_name,id_zenodo):
@@ -94,8 +101,11 @@ def zenodo_download(base_path,dataset_name,id_zenodo):
         os.mkdir(dir_fs)
     except:
         pass
-    zenodo = Zenodo()
-    dataset = zenodo.download_latest(id_zenodo, path=dir_fs)
+    try:
+        zenodo = Zenodo()
+        dataset = zenodo.download_latest(id_zenodo, path=dir_fs)
+    except:
+        print("fail zenodo_download:",dataset_name)
     return dataset
 
 def drive_google_download(base_path,dataset_name,id_google_dive):
@@ -105,8 +115,10 @@ def onedrive_download(base_path,dataset_name,id_zenodo):
     pass
 def dataverse_download(base_path,dataset_name,id_zenodo):
     pass
-def mumin_download(base_path,dataset_name,id_zenodo):
-    pass
+def mumin_download(base_path,dataset_name,size):
+    bearer_token = ""
+    dataset = MuminDataset(bearer_token, size='small')
+
 def file_download(base_path,dataset_name,url,name=None,ext=None):
     print("file_download:",dataset_name)
     dir_name = os.path.join(base_path,"repo",dataset_name)
