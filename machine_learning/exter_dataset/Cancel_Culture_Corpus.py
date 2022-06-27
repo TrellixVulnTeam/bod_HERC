@@ -1,5 +1,7 @@
 url = "https://github.com/Justus-Jonas/Cancel-Culture-Corpus"
 import os
+import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 
@@ -32,3 +34,5 @@ def get_data():
     shane_gillis = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/shane gillis.csv")
     starbucks = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/starbucks.csv")
     UnburntWitch = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/UnburntWitch.csv")
+    paths = [alisoneroman,armiehammer,bobbaffert,carson_king,dojacat,gabcake,ginacarano,goya,jamescharles,jimmyfallon,jk_rowling,lana,Lin_Manuel,morgan_wallen,pepe_le_pew,pepsi,projared,sebastian_stan,seuss,shane_gillis,starbucks,UnburntWitch]
+    data = random.choice(CSV(random.choice(paths)))

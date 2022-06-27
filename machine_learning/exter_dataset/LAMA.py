@@ -1,4 +1,6 @@
 import os
+import random
+from machine_learning.exter_dataset.uitls.decode_data import TSV
 from machine_learning.exter_dataset.uitls.download import zip_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://dl.fbaipublicfiles.com/LAMA/data.zip"
@@ -9,3 +11,4 @@ zip_download(dir_fs, 'LAMA',url)
 
 def get_data():
     test_dataset = get_path(dir_fs, 'LAMA',"test.tsv")
+    data = random.choice(TSV(test_dataset))

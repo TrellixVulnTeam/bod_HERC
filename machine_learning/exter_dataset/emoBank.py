@@ -1,3 +1,4 @@
+import random
 from git import Repo
 import os
 from machine_learning.exter_dataset.uitls.decode_data import CSV
@@ -11,4 +12,4 @@ git_download(dir_fs, 'emoBank',url)
 
 def get_data():
     emoBank = get_path(dir_fs, 'emoBank',"corpus/emobank.csv")
-    data = CSV(emoBank)
+    data = random.choice(CSV(emoBank))

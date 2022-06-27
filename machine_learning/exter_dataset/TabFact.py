@@ -7,4 +7,4 @@ git_download(dir_fs, 'Table-Fact-Checking',url)
 
 
 def get_data():
-    path = get_path(dir_fs, 'Table-Fact-Checking',"data")
+    path = get_path(dir_fs, 'Table-Fact-Checking',"data/")

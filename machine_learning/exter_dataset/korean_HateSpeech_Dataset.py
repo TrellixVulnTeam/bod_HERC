@@ -13,5 +13,5 @@ def get_data():
     test_dataset = get_path(dir_fs, 'korean_HateSpeech_Dataset',"labeled/test.tsv")
     dev_dataset  = get_path(dir_fs, 'korean_HateSpeech_Dataset',"labeled/dev.tsv")
     path = random.choice([test_dataset,dev_dataset])
-    data =TSV(path)
+    data = random.choice(TSV(path))
     print(data)

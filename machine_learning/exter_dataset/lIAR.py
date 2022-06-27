@@ -14,4 +14,4 @@ def get_data():
     train_dataset = get_path(dir_fs, 'liar_dataset',"train.tsv")
     valid_dataset = get_path(dir_fs, 'liar_dataset',"valid.tsv")
     path = random.choice([test_dataset,train_dataset,valid_dataset])
-    data = TSV(path)
+    data = random.choice(TSV(path))

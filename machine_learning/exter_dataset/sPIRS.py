@@ -1,4 +1,6 @@
 import os
+import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://github.com/bshmueli/SPIRS"
@@ -11,3 +13,5 @@ git_download(dir_fs, 'SPIRS',url)
 def get_data():
     non_sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-non-sarcastic-ids.csv")
     sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-sarcastic-ids.csv")
+    
+    data = random.choice(CSV(random.choice([non_sarcastic_path,sarcastic_path])))

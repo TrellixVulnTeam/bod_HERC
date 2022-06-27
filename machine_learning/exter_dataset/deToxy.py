@@ -2,6 +2,7 @@ from sysconfig import get_path
 from git import Repo
 import os
 import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 url = "https://github.com/sreyan88/toxicity-detection-in-spoken-utterances"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -15,3 +16,4 @@ def get_data():
     trigger_test = get_path(dir_fs, 'deToxy',"trigger_test.csv")
     valid_split = get_path(dir_fs, 'deToxy',"trigger_test.csv")
     path = random.choice([valid_split,test_split,train_split,trigger_test])
+    data = random.choice(CSV(path))

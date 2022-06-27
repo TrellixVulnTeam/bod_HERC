@@ -1,0 +1,12 @@
+https://www.publicwhip.org.uk/data/popolo/policies.json
+# gov uk api
+https://bills-api.parliament.uk/index.html
+https://statutoryinstruments-api.parliament.uk/index.html
+https://members-api.parliament.uk/index.html
+https://commonsvotes-api.parliament.uk/swagger/ui/index#
+https://lordsvotes-api.parliament.uk/index.html
+https://oralquestionsandmotions-api.parliament.uk/swagger/ui/index
+https://bills-api.parliament.uk/index.html
+# US gov api
+
+# Local Gov api
