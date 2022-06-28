@@ -21,5 +21,5 @@ def get_data():
     if data["label2a"] == "1":
         # is toix
         pass
-    else:
+    elif data["label2a"] == "0":
         pass

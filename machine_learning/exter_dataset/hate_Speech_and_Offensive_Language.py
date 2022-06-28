@@ -11,3 +11,10 @@ git_download(dir_fs, 'hate_Speech_and_Offensive_Language',url)
 def get_data():
     test_dataset_path = get_path(dir_fs, 'hate_Speech_and_Offensive_Language',"labeled_data.csv")
     data = random.choice(CSV(test_dataset_path))
+    if data["hate_speech"] == "0":
+        pass
+    if data["offensive_language"] == "0":
+        pass
+    if data["neither"] == "0":
+        pass
+    data["tweet"]

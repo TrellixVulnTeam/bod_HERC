@@ -18,3 +18,20 @@ def get_data():
     print("sarcasm_label:",data["sarcasm_label"])
     print("sarcasm_type:",data["sarcasm_type"])
     print("tweet_id:",data["tweet_id"])
+    if data["sarcasm_label"] == "not_sarcastic":
+        pass
+    elif data["sarcasm_label"] == "sarcastic":
+        pass
+
+    if data["sarcasm_type"] == "sarcasm":
+        pass
+    elif data["sarcasm_type"] == "satire":
+        pass
+    elif data["sarcasm_type"] == "irony":
+        pass
+    elif data["sarcasm_type"] == "overstatement":
+        pass
+    elif data["sarcasm_type"] == "understatement":
+        pass
+    elif data["sarcasm_type"] == "rhetorical question":
+        pass

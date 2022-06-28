@@ -9,9 +9,9 @@ git_download(dir_fs, 'hover',url)
 
 
 def get_data():
-    hover_dev_release_v1 = get_path(dir_fs, 'hover',"hover_dev_release_v1.1.json")
-    hover_test_release_v1 = get_path(dir_fs, 'hover',"hover_test_release_v1.1.json")
-    hover_train_release_v1 = get_path(dir_fs, 'hover',"hover_train_release_v1.1.json")
+    hover_dev_release_v1 = get_path(dir_fs, 'hover',"data/hover/hover_dev_release_v1.1.json")
+    hover_test_release_v1 = get_path(dir_fs, 'hover',"data/hover/hover_test_release_v1.1.json")
+    hover_train_release_v1 = get_path(dir_fs, 'hover',"data/hover/hover_train_release_v1.1.json")
     hover_dev_release_v1 = load_json(hover_dev_release_v1)
     hover_test_release_v1 = load_json(hover_test_release_v1)
     hover_train_release_v1 = load_json(hover_train_release_v1)

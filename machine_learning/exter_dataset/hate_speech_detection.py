@@ -14,3 +14,9 @@ git_download(dir_fs, 'hate_speech_detection',url)
 def get_data():
     hate_speech_detection = get_path(dir_fs, 'hate_speech_detection',"vid.csv")
     data = random.choice(CSV(hate_speech_detection))
+    data["Youtube_ID"]
+    data["Speech"]
+    if data["Label"] == "1":
+        pass
+    elif data["Label"] == "0":
+        pass
