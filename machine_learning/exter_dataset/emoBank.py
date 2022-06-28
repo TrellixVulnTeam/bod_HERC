@@ -13,3 +13,7 @@ git_download(dir_fs, 'emoBank',url)
 def get_data():
     emoBank = get_path(dir_fs, 'emoBank',"corpus/emobank.csv")
     data = random.choice(CSV(emoBank))
+    valence = data["V"]
+    arousal = data["A"]
+    dominance = data["D"]
+    text =  data["text"]

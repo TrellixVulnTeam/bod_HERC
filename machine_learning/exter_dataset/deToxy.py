@@ -15,5 +15,11 @@ def get_data():
     valid_split = get_path(dir_fs, 'deToxy',"valid.csv")
     trigger_test = get_path(dir_fs, 'deToxy',"trigger_test.csv")
     valid_split = get_path(dir_fs, 'deToxy',"trigger_test.csv")
-    path = random.choice([valid_split,test_split,train_split,trigger_test])
+    path = random.choice([train_split,test_split,valid_split])
     data = random.choice(CSV(path))
+    data["text"]
+    if data["label2a"] == "1":
+        # is toix
+        pass
+    else:
+        pass

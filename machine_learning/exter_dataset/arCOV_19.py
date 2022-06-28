@@ -32,20 +32,28 @@ def get_data():
     else:
         data = random.choice(TSV(path_tweet_verification))
         if data["ClaimLabel"]== "False":
+            # False
             pass
         elif data["ClaimLabel"]== "True":
+            # True
             pass
         if data["Category"]== "Entertainment":
+            # Entertainment
             pass
         elif data["Category"]== "Social":
+            # Social
             pass
         elif data["Category"]== "Health":
+            # Health
             pass
         elif data["Category"]== "Politics":
+            # Politics
             pass
         elif data["Category"]== "Sports":
+            # Sports
             pass
         elif data["Category"]== "Religious":
+            # Religious
             pass
         data["Claim"]
         

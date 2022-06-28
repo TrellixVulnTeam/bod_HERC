@@ -9,7 +9,7 @@ git_download(dir_fs, 'covid-rumor-stance',url)
 
 
 def get_data():
-    covmis_stance = get_path(dir_fs, 'COVID-Q',"data/covmis_stance.csv")
-    misinformation = get_path(dir_fs, 'COVID-Q',"data/misinformation.csv")
+    covmis_stance = get_path(dir_fs, 'covid-rumor-stance',"data/covmis_stance.csv")
+    misinformation = get_path(dir_fs, 'covid-rumor-stance',"data/misinformation.csv")
     path = random.choice([covmis_stance,misinformation])
     data = random.choice(CSV(path))

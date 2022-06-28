@@ -17,7 +17,6 @@ def get_data():
     claims_train = get_path(dir_fs, 'SciFact',"data/claims_train.jsonl")
     path2 = get_path(dir_fs, 'SciFact',"data/corpus.jsonl")
     data = random.choice(load_jsonl(random.choice([claims_dev,claims_test,claims_train])))
-    ccc = load_jsonl() + load_jsonl()
     data["claim"]
     crops =[]
     for id in data["evidence"].keys():
