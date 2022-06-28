@@ -29,4 +29,4 @@ def get_data():
     fr_valid_normal = get_path(dir_fs, 'mphasis',"fr.valid.normal.csv")
     paths = [covmis_stance,de_test,de_test_normal,de_train_fringe,de_valid,de_valid_normal,fr_test_fringe,fr_train,fr_train_normal,fr_valid_fringe,de_test_fringe,de_train,de_train_normal,de_valid_fringe,fr_test,fr_test_normal,fr_train_fringe,fr_valid,fr_valid_normal]
     path = random.choice(paths)
-    data = CSV(path)
+    data = random.choice(CSV(path))

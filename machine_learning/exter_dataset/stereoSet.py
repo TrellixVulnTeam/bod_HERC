@@ -13,3 +13,8 @@ def get_data():
     path = get_path(dir_fs, 'stereoSet',"data/dev.json")
     data = load_json(path)
     data = random.choice(data["data"]["intersentence"])
+    data["target"]
+    data["bias_type"]
+    data["context"]
+    for sentence in data["sentences"]:
+        pass

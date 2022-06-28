@@ -12,6 +12,23 @@ except:
     pass
 
 def get_data():
-    path = get_path(dir_fs, 'SciFact',"data/claims_dev.jsonl")
+    claims_dev = get_path(dir_fs, 'SciFact',"data/claims_dev.jsonl")
+    claims_test = get_path(dir_fs, 'SciFact',"data/claims_test.jsonl")
+    claims_train = get_path(dir_fs, 'SciFact',"data/claims_train.jsonl")
     path2 = get_path(dir_fs, 'SciFact',"data/corpus.jsonl")
-    data = random.choice(load_jsonl(random.choice([path,path2])))
+    data = random.choice(load_jsonl(random.choice([claims_dev,claims_test,claims_train])))
+    ccc = load_jsonl() + load_jsonl()
+    data["claim"]
+    crops =[]
+    for id in data["evidence"].keys():
+        for i_data in load_jsonl(path2):
+                if i_data["id"] == id:
+                    crops.append({
+                        "title":i_data["title"],
+                        "abstract":i_data["abstract"],
+                        "structured":i_data["structured"]
+                    })
+        data["evidence"][id]["label"]
+        data["evidence"][id]
+        pass
+    data["cited_doc_ids"]

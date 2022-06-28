@@ -9,5 +9,4 @@ gz_tar_download(dir_fs,"talkdown",url,name=None)
 
 
 def get_data():
-    path = get_path(dir_fs, 'talkdown',"ToLD-BR.csv")
-    data = random.choice(CSV(path))
+    pass

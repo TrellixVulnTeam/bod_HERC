@@ -13,3 +13,22 @@ def get_data():
     fake_news = get_path(dir_fs, 'CHECKED', "dataset/fake_news")
     data = list_file(random.choice([real_news,fake_news]))
     data = load_json(random.choice(data))
+    for url in data["video_url"]:
+        pass
+    url = data["pic_url"]
+    data["comment_num"]
+    data["repost_num"]
+    data["like_num"]
+    data["text"]
+    
+    data["id"]
+    
+    if data["label"] == "real":
+        pass
+    else:
+        pass
+        
+    # reposts->text
+    # reposts->pic_url
+    
+    

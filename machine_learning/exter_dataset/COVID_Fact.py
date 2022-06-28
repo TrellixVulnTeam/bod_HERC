@@ -9,5 +9,12 @@ git_download(dir_fs, 'COVID_Fact',url)
 
 
 def get_data():
-    COVIDFACT_dataset = get_path(dir_fs, 'HASOC-2019',"COVIDFACT_dataset.jsonl")
+    COVIDFACT_dataset = get_path(dir_fs, 'COVID_Fact',"COVIDFACT_dataset.jsonl")
     data = random.choice(load_jsonl(COVIDFACT_dataset))
+    claim = data["claim"]
+    evidence = data["evidence"]
+    if data["label"] == "REFUTED":
+        pass
+    else:
+        pass
+    gold_source = data["gold_source"]

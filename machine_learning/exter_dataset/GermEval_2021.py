@@ -13,17 +13,17 @@ def get_data():
     GermEval21_TrainData = get_path(dir_fs, 'SharedTask',"Data Sets/GermEval21_TrainData.csv")
     paths = [GermEval21_TestData,GermEval21_TrainData]
     data = random.choice(CSV(random.choice(paths)))
-    if data["Sub3_FactClaiming"] == 1:
+    if data["Sub3_FactClaiming"] == "1":
         pass
     else:
         pass
-    if data["Sub2_Engaging"] == 1:
+    if data["Sub2_Engaging"] == "1":
         pass
     else:
         pass
-    if data["Sub1_Toxic"] == 1:
+    if data["Sub1_Toxic"] == "1":
         pass
     else:
         pass
-    ["comment_text"]
+    data["comment_text"]
 

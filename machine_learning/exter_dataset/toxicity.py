@@ -15,3 +15,8 @@ git_download(dir_fs, 'toxicity',url)
 def get_data():
     toxicity = get_path(dir_fs, 'toxicity',"toxicity_en.csv")
     data = random.choice(CSV(toxicity))
+    if data["is_toxic"]== "Toxic":
+        pass
+    elif data["is_toxic"]== "Not Toxic":
+        pass
+    data["text"]

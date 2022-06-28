@@ -1,4 +1,33 @@
 import enum
+## Cancel-Culture
+
+class CancelCultureType:
+    alisoneroman = 0
+    armiehammer  = 1
+    bobbaffert  = 2
+    carson_king  = 3
+    dojacat = 4
+    gabcake = 5
+    ginacarano = 6
+    goya = 7
+    jamescharles = 8
+    jimmyfallon  = 9
+    jk_rowling  = 10
+    lana  = 11
+    Lin_Manuel  = 12
+    morgan_wallen  = 13
+    pepe_le_pew  = 14
+    pepsi  = 15
+    projared  = 16
+    sebastian_stan  = 17
+    seuss  = 18
+    shane_gillis  = 19
+    starbucks  = 20
+    UnburntWitch  = 21
+
+class CancelCulture:
+    CancelCulture = 1
+    not_CancelCulture = 0
 
 ### sentiment
 class sentiment:
@@ -66,6 +95,9 @@ class Hope(enum.Enum):
 
 ### HATE and ABUSIVE
 
+class Hate(enum.Enum):
+    NoHate = 0
+    Hate = 1
 class Hate(enum.Enum):
     NoHate = 0
     Hate = 1

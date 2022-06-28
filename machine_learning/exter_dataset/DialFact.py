@@ -14,4 +14,11 @@ def get_data():
     test_split = get_path(dir_fs, 'DialFact',"test_split.jsonl")
     path = random.choice([valid_split,test_split])
     data = random.choice(load_jsonl(path))
+    data["data_type"]
+    data["context"]
+    data["response"]
+    data["evidence_list"]
+    data["response_label"]
+    data["type_label"]
+    data["response_label"]
     

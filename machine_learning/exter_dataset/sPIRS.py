@@ -12,6 +12,5 @@ git_download(dir_fs, 'SPIRS',url)
 
 def get_data():
     non_sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-non-sarcastic-ids.csv")
-    sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-sarcastic-ids.csv")
-    
+    sarcastic_path = get_path(dir_fs, 'SPIRS',"SPIRS-sarcastic-ids.csv") 
     data = random.choice(CSV(random.choice([non_sarcastic_path,sarcastic_path])))

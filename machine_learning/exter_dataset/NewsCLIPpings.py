@@ -9,4 +9,6 @@ git_download(dir_fs, 'news_clippings',url)
 
 
 def get_data():
+    alisoneroman = get_path(dir_fs, 'news_clippings',"data/alisoneroman.csv")
+
     pass

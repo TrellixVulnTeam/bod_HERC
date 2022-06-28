@@ -11,3 +11,19 @@ git_download(dir_fs, 'climate-fever',url)
 def get_data():
     climate_fever = get_path(dir_fs, 'climate-fever', "dataset/climate-fever.jsonl")
     data = random.choice(load_jsonl(climate_fever))
+    data["claim"]
+    if "REFUTES" ==  data["claim_label"]:
+        pass
+    elif "NOT_ENOUGH_INFO" == data["claim_label"]:
+        pass
+    elif "SUPPORTS" == data["claim_label"]:
+        pass
+    for evidence in data["evidences"]:
+        if "REFUTES" ==  data["evidence_label"]:
+            pass
+        elif "NOT_ENOUGH_INFO" == data["evidence_label"]:
+            pass
+        elif "SUPPORTS" == data["evidence_label"]:
+            pass
+        evidence["article"]
+        evidence["evidence"]

@@ -1,5 +1,6 @@
 import os
 import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV, load_json
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://github.com/marshallwhiteorg/emnlp19-media-bias"
@@ -8,15 +9,20 @@ git_download(dir_fs, 'emnlp19-media-bias',url)
 
 
 def get_data():
-    path_articles_2010 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2010")
-    path_articles_2011 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2011")
-    path_articles_2012 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2012")
-    path_articles_2013 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2013")
-    path_articles_2014 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2014")
-    path_articles_2015 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2015")
-    path_articles_2016 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2016")
-    path_articles_2017 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2017")
-    path_articles_2018 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2018")
-    path_articles_2019 = get_path(dir_fs, 'Table-Fact-Checking',"annotations/articles/2019")
-    paths = [path_articles_2010,path_articles_2011,path_articles_2012,path_articles_2013,path_articles_2014,path_articles_2015,path_articles_2016,path_articles_2017,path_articles_2018,path_articles_2019]
-    path = random.choice(paths)
+    r1_training_all = get_path(dir_fs, 'Table-Fact-Checking',"collected_data/r1_training_all.json")
+    r2_training_all = get_path(dir_fs, 'Table-Fact-Checking',"collected_data/r2_training_all.json")
+    path = random.choice([r1_training_all,r2_training_all])
+    data = load_json(path)
+    key = random.choice(data.keys())
+    path = get_path(dir_fs, 'Table-Fact-Checking',"data/all_csv/"+key)
+    data_csv = CSV(path,delimiter="#")
+    size = len(data[key][0])
+    index = random.randint(0,size)
+    data[key][0][index]
+    if data[key][1][index] == 0:
+        # False
+        pass
+    elif data[key][1][index] == 1:
+        # True
+        pass
+    data[key][2]

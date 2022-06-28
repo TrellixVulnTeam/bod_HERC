@@ -35,4 +35,59 @@ def get_data():
     starbucks = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/starbucks.csv")
     UnburntWitch = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/UnburntWitch.csv")
     paths = [alisoneroman,armiehammer,bobbaffert,carson_king,dojacat,gabcake,ginacarano,goya,jamescharles,jimmyfallon,jk_rowling,lana,Lin_Manuel,morgan_wallen,pepe_le_pew,pepsi,projared,sebastian_stan,seuss,shane_gillis,starbucks,UnburntWitch]
-    data = random.choice(CSV(random.choice(paths)))
+    path = random.choice(paths)
+    data = random.choice(CSV(path))
+    data["id"]
+    data["Datetime"]
+    if data["canceled"] == "False":
+        pass
+    elif data["canceled"] == "True":
+        pass    
+    if bool(data["canceled"]):
+        pass
+    else:
+        pass
+    if "alisoneroman" in path:
+        pass
+    if "armiehammer" in path:
+        pass
+    if "bobbaffert" in path:
+        pass
+    if "carson king" in path:
+        pass
+    if "dojacat " in path:
+        pass
+    if "gabcake" in path:
+        pass
+    if "ginacarano" in path:
+        pass
+    if "goya" in path:
+        pass
+    if "jamescharles" in path:
+        pass
+    if "jimmyfallon " in path:
+        pass
+    if "jk_rowling " in path:
+        pass
+    if "lana" in path:
+        pass
+    if "Lin_Manuel" in path:
+        pass
+    if "morgan wallen" in path:
+        pass
+    if "pepe le pew" in path:
+        pass
+    if "pepsi" in path:
+        pass
+    if "projared" in path:
+        pass
+    if "sebastian stan" in path:
+        pass
+    if "seuss" in path:
+        pass
+    if "shane gillis" in path:
+        pass
+    if "starbucks" in path:
+        pass
+    if "UnburntWitch" in path:
+        pass

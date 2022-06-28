@@ -1,6 +1,6 @@
 import os
 import random
-from machine_learning.exter_dataset.uitls.decode_data import de_zip
+from machine_learning.exter_dataset.uitls.decode_data import CSV, de_zip
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 
@@ -22,3 +22,4 @@ def get_data():
         en_dataset_path,
         fr_dataset_path
     ])
+    data = random.choice(CSV(path))

@@ -1,8 +1,10 @@
 url = "https://github.com/datascisteven/Automated-Hate-Tweet-Detection"
 import os
 import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV, TSV, tsv_helper_triple
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+import pandas as pd
 
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -11,12 +13,96 @@ git_download(dir_fs, 'Automated-Hate-Tweet-Detection',url)
 
 
 def get_data():
-    df_hateful = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/df_hateful.csv")
-    df_ras_sex_hate = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/df_ras_sex_hate.csv")
-    hate = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hate.csv")
-    hatespeechtwitter = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hatespeechtwitter.csv")
-    hostile_sexist = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hostile_sexist.tsv")
-    labeled_data = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/labeled_data.csv")
-    naacl_srw_2016 = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/NAACL_SRW_2016.csv")
-    path = random.choice([df_hateful,df_ras_sex_hate,hate,hatespeechtwitter,hostile_sexist,labeled_data,naacl_srw_2016])
-    
+    pick = 0
+    if pick == 0:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")
+        data = TSV(path)
+        data = random.choice(data)  
+        if data["task_1"] == "HOF":
+            pass
+        else:
+            pass
+        if data["task_2"] == "PRFN":
+            pass
+        elif data["task_2"] == "HATE":
+            pass
+        elif data["task_2"] == "OFFN":
+            pass
+    elif pick == 1:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2020_en_train_new.xlsx")
+        data = pd.read_excel(path, index_col=0)  
+        if data["task_1"] == "HOF":
+            pass
+        else:
+            pass
+        if data["task_2"] == "PRFN":
+            pass
+        elif data["task_2"] == "HATE":
+            pass
+        elif data["task_2"] == "OFFN":
+            pass
+        if data["task_2"] == "TIN":
+            pass
+        elif data["task_2"] == "UNT":
+            pass
+    elif pick == 2:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/NAACL_SRW_2016.csv")
+        data = CSV(path,call =tsv_helper_triple)
+        data = random.choice(data)
+        if data[1] == "racism":
+            pass
+        if data[1] == "sexism":
+            pass
+        else:
+            pass
+        data[0]
+    elif pick == 3:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hate.csv")
+        data = random.choice(CSV(path))
+        if data["maj_label"] == "abusive":
+            pass
+        elif data["maj_label"] == "hateful":
+            pass
+        elif data["maj_label"] == "normal":
+            pass
+        elif data["maj_label"] == "spam":
+            pass
+    elif pick == 4:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hatespeechtwitter.csv")
+        data = CSV(path)
+        data = random.choice(data)
+        if data["maj_label"] == "abusive":
+            pass
+        elif data["maj_label"] == "hateful":
+            pass
+        elif data["maj_label"] == "normal":
+            pass
+        data["tweet_id"]
+    elif pick == 5:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/labeled_data.csv")
+        data = random.choice(CSV(path))
+        if int(data["hate_speech"]) > 0:
+            pass
+        if int(data["offensive_language"]) > 0:
+            pass
+        if int(data["neither"]) > 0:
+            pass
+        if int(data["class"]) > 0:
+            pass
+    elif pick == 6:
+        path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")
+        data = TSV(path)
+        if data["task_1"] == "HOF":
+            pass
+        else:
+            pass
+        if data["task_2"] == "PRFN":
+            pass
+        elif data["task_2"] == "HATE":
+            pass
+        elif data["task_2"] == "OFFN":
+            pass
+        if data["task_3"] == "TIN":
+            pass
+        elif data["task_3"] == "UNT":
+            pass
