@@ -12,6 +12,9 @@ git_download(dir_fs, 'News-Headlines-Dataset-For-Sarcasm-Detection',url)
 def get_data():
     Sarcasm_Headlines_Dataset = get_path(dir_fs, 'News-Headlines-Dataset-For-Sarcasm-Detection',"Sarcasm_Headlines_Dataset.json")
     data = random.choices(load_jsonl(Sarcasm_Headlines_Dataset))
-    data["is_sarcastic"]
+    if data["is_sarcastic"] == "1":
+        pass
+    else:
+        pass
     data["headline"]
     data["article_link"]

@@ -17,4 +17,19 @@ def get_data():
     HatemojiCheck_test = get_path(dir_fs, 'Hatemoji',"HatemojiCheck/test.csv")
     path = random.choices([HatemojiBuild_test,HatemojiBuild_train,HatemojiBuild_validation,HatemojiCheck_test])
     data = random.choices(CSV(path))
+    # HatemojiCheck
+    if data["target"] == "":
+        pass
+    if data["functionality"] == "":
+        pass
+    if data["set"] == "":
+        pass
+    if data["label_gold"] == "":
+        pass
+    if data["unrealistic_flags"] == "":
+        pass
+    if data["included_in_test_suite"] == "":
+        pass
+    # HatemojiBuild
+
     

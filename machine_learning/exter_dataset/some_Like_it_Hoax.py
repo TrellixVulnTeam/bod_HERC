@@ -10,7 +10,7 @@ git_download(dir_fs, 'some_Like_it_Hoax',url)
 
 
 def get_data():
-    path = get_path(dir_fs, 'some_Like_it_Hoax',"dataset/hoaxpagedict.json")
+    path = get_path(dir_fs, 'some_Like_it_Hoax',"EDA/hoaxpagedict.json")
     data = load_json(path)
     key = random.choice(data.keys())
     if data[key] == "true":

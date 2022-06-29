@@ -17,3 +17,8 @@ def get_data():
     path_join_testset_levelbEthos_Dataset_Binary  = get_path(dir_fs, 'Ethos',"ethos/ethos_data/Ethos_Dataset_Binary.csv")
     path = random.choice([path_join_testset_levelbhate_speech_and_offensive_language,path_join_testset_levelbEthos_Dataset_Multi_Label,path_join_testset_levelbEthos_Dataset_Binary])
     data = random.choice(CSV(path,delimiter=";"))
+    if data["isHate"] == "1":
+        pass
+    else:
+        pass
+    data["comment"] 

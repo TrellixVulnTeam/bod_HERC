@@ -12,5 +12,27 @@ git_download(dir_fs, 'HASOC-2019',url)
 
 
 def get_data():
-    HASOC_2019 = get_path(dir_fs, 'HASOC-2019',"labeled_data.csv")
+    HASOC_2019 = get_path(dir_fs, 'HASOC-2019',"data/labeled_data.csv")
     data = random.choice(CSV(HASOC_2019))
+    if data["task_3"] == "UNT":
+        pass
+    if data["task_3"] == "TIN":
+        pass
+    if data["task_3"] == "NONE":
+        pass
+    
+    if data["task_2"] == "PRFN":
+        pass
+    if data["task_2"] == "HATE":
+        pass
+    if data["task_2"] == "OFFN":
+        pass
+    if data["task_2"] == "NONE":
+        pass
+    
+    if data["task_1"] == "HOF":
+        pass
+    if data["task_1"] == "NOT":
+        pass
+    data["text"] 
+
