@@ -101,10 +101,6 @@ def get_data():
     if  data["target"] == "policeman":
         pass
 
-
-
-
-
     if data["bias_type"] == "race":
         pass
     if data["bias_type"] == "profession":

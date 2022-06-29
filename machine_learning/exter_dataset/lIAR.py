@@ -1,4 +1,4 @@
-from machine_learning.exter_dataset.uitls.decode_data import TSV
+from machine_learning.exter_dataset.uitls.decode_data import TSV, tsv_helper_triple
 from machine_learning.exter_dataset.uitls.download import  zip_download
 import os
 import random
@@ -14,4 +14,9 @@ def get_data():
     train_dataset = get_path(dir_fs, 'liar_dataset',"train.tsv")
     valid_dataset = get_path(dir_fs, 'liar_dataset',"valid.tsv")
     path = random.choice([test_dataset,train_dataset,valid_dataset])
-    data = random.choice(TSV(path))
+    data = random.choice(TSV(path,call=tsv_helper_triple))
+    if data[1] == "1":
+        pass
+    else:
+        pass
+    data[2]

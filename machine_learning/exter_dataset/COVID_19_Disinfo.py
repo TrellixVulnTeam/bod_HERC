@@ -114,19 +114,23 @@ def get_data():
         # yes_asks_question
         # not_sure
         # no_not_interesting
-        if data["q7_label"] == "":
+        if data["q7_label"] == "yes_other":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_discusses_cure":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_discusses_action_taken":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_contains_advice":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_classified_as_in_question_6":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_calls_for_action":
             pass
-        elif data["q7_label"] == "":
+        elif data["q7_label"] == "yes_blame_authorities":
             pass
-
- 
+        elif data["q7_label"] == "yes_asks_question":
+            pass
+        elif data["q7_label"] == "not_sure":
+            pass
+        elif data["q7_label"] == "no_not_interesting":
+            pass

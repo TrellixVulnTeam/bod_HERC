@@ -14,7 +14,9 @@ git_download(dir_fs, 'ReactionGIF',url)
 
 def get_data():
     reactionGIF = get_path(dir_fs, 'ReactionGIF',"ReactionGIF.ids.json")
-    f = random.choice(load_jsonl(reactionGIF))
-    out = [output_classifier(f["label"],"reaction")]
-    in_ = [input_twitter_post(f["original_id"],None)]
-    return midline(in_=in_,middle=out)
+    data = random.choice(load_jsonl(reactionGIF))
+    # sill need to do
+    if data["label"] == "no":
+        pass
+    data["original_id"]
+    data["reply_id"]

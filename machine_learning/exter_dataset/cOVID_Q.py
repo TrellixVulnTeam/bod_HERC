@@ -12,3 +12,5 @@ def get_data():
     final_master_dataset = get_path(dir_fs, 'COVID-Q',"data/final_master_dataset.csv")
     data = CSV(final_master_dataset)
     data= random.choice(data)
+    Question = data["Question"]
+    Answers = data["Answers"]

@@ -14,4 +14,15 @@ def get_data():
     dev_dataset  = get_path(dir_fs, 'korean_HateSpeech_Dataset',"labeled/dev.tsv")
     path = random.choice([test_dataset,dev_dataset])
     data = random.choice(TSV(path))
-    print(data)
+    if data["hate"] =="none":
+        pass
+    elif data["hate"] =="offensive":
+        pass
+    elif data["hate"] =="hate":
+        pass
+    if data["bias"] =="none":
+        pass
+    elif data["bias"] =="others":
+        pass
+    elif data["bias"] =="gender":
+        pass

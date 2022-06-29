@@ -13,11 +13,10 @@ git_download(dir_fs, 'hate-speech-detection-survey',url)
 
 def get_data():
     offenseval_val = get_path(dir_fs, 'hate_speech_detection',"offenseval_val.csv")
-    path = random.choice([offenseval_val])
-    data = random.choice(CSV(path))
+    data = random.choice(CSV(offenseval_val))
     if data["Label"]== "1":
         pass
-    else data["Label"]== "0":
+    elif data["Label"]== "0":
         pass
     data["Youtube_ID"]
     data["Speech"]

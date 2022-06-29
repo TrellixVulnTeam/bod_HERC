@@ -13,4 +13,4 @@ def get_data():
     dev_dataset = get_path(dir_fs, 'LAMA',"korean-hate-speech-detection/dataset/dev.hate.csv")
     test_dataset = get_path(dir_fs, 'LAMA',"korean-hate-speech-detection/dataset/train.hate.csv")
     cvs_dev_dataset = random.choice(CSV(random.choice([dev_dataset,test_dataset])))
-    print(cvs_dev_dataset)
+    

@@ -11,6 +11,9 @@ rotoedit = get_path(dir_fs, 'factedit',"data/rotoedit.tar.bz2")
 webedit = get_path(dir_fs, 'factedit',"data/webedit.tar.bz2")
 de_gz_tar(dir_fs,'factedit',"data/rotoedit.tar.bz2","rotoedit")
 de_gz_tar(dir_fs,'factedit',"data/webedit.tar.bz2","webedit")
+
+
+
 def get_data():
     path2 = get_path(dir_fs, 'factedit',"data/RoCStories/100KStories.csv")
     data = random.choice(CSV(path2))

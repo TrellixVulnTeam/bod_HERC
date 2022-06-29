@@ -8,4 +8,4 @@ git_download(dir_fs, 'nELA_GT_2020',url)
 
 
 def get_data():
-    path_conservative = get_path(dir_fs, 'nELA_GT_2020',"conservative.txt")
+    pass

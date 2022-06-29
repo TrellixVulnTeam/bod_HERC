@@ -13,8 +13,24 @@ def get_data():
     data = random.choice(load_jsonl(COVIDFACT_dataset))
     claim = data["claim"]
     evidence = data["evidence"]
+    
     if data["label"] == "REFUTED":
         pass
-    else:
+    elif data["label"] == "SUPPORTED":
+        pass
+    
+    if data["flair"] == "Vaccine Research":
+        pass
+    elif data["flair"] == "Press Release":
+        pass
+    elif data["flair"] == "Preprint":
+        pass
+    elif data["flair"] == "Academic Report":
+        pass
+    elif data["flair"] == "Antivirals":
+        pass
+    elif data["flair"] == "Diagnostics":
+        pass
+    elif data["flair"] == "Epidemiology":
         pass
     gold_source = data["gold_source"]

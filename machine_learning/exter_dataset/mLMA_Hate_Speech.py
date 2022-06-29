@@ -17,9 +17,5 @@ def get_data():
     ar_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/ar_dataset.csv")
     en_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/en_dataset.csv")
     fr_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/fr_dataset.csv")
-    path = random.choice([
-        ar_dataset_path,
-        en_dataset_path,
-        fr_dataset_path
-    ])
+    path = random.choice([ar_dataset_path,en_dataset_path,fr_dataset_path])
     data = random.choice(CSV(path))

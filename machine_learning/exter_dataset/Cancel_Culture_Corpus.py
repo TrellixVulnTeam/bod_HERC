@@ -47,6 +47,7 @@ def get_data():
         pass
     else:
         pass
+    
     if "alisoneroman" in path:
         pass
     if "armiehammer" in path:

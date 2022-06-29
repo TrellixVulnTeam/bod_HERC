@@ -18,19 +18,23 @@ def get_data():
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")
         data = TSV(path)
         data = random.choice(data)  
+        
         if data["task_1"] == "HOF":
             pass
         else:
             pass
+        
         if data["task_2"] == "PRFN":
             pass
         elif data["task_2"] == "HATE":
             pass
         elif data["task_2"] == "OFFN":
             pass
+        
     elif pick == 1:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2020_en_train_new.xlsx")
         data = pd.read_excel(path, index_col=0)  
+        
         if data["task_1"] == "HOF":
             pass
         else:
@@ -45,20 +49,24 @@ def get_data():
             pass
         elif data["task_2"] == "UNT":
             pass
+        
     elif pick == 2:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/NAACL_SRW_2016.csv")
         data = CSV(path,call =tsv_helper_triple)
         data = random.choice(data)
+        
         if data[1] == "racism":
             pass
         if data[1] == "sexism":
             pass
         else:
             pass
+        
         data[0]
     elif pick == 3:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hate.csv")
         data = random.choice(CSV(path))
+        
         if data["maj_label"] == "abusive":
             pass
         elif data["maj_label"] == "hateful":
@@ -67,10 +75,12 @@ def get_data():
             pass
         elif data["maj_label"] == "spam":
             pass
+        
     elif pick == 4:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hatespeechtwitter.csv")
         data = CSV(path)
         data = random.choice(data)
+        
         if data["maj_label"] == "abusive":
             pass
         elif data["maj_label"] == "hateful":
@@ -81,6 +91,7 @@ def get_data():
     elif pick == 5:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/labeled_data.csv")
         data = random.choice(CSV(path))
+        
         if int(data["hate_speech"]) > 0:
             pass
         if int(data["offensive_language"]) > 0:
@@ -92,10 +103,12 @@ def get_data():
     elif pick == 6:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")
         data = TSV(path)
+        
         if data["task_1"] == "HOF":
             pass
         else:
             pass
+        
         if data["task_2"] == "PRFN":
             pass
         elif data["task_2"] == "HATE":

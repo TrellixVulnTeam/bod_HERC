@@ -13,6 +13,4 @@ de_zip(dir_fs,'hatespeech-detection-dl',"chatbots_dataset_final.csv.zip")
 
 
 def get_data():
-    hatespeech_detection_dl = get_path(dir_fs, 'hatespeech-detection-dl',"chatbots_dataset_final.csv")
-    data = CSV(hatespeech_detection_dl)
-    print(random.choices(data))
+    pass

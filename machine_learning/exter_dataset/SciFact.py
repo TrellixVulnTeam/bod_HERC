@@ -1,5 +1,6 @@
 url = "https://scifact.s3-us-west-2.amazonaws.com/release/latest/data.tar.gz"
 from cmath import e
+import json
 import random
 from machine_learning.exter_dataset.uitls.decode_data import load_jsonl
 from machine_learning.exter_dataset.uitls.download import file_download, gz_tar_download, zip_download
@@ -19,15 +20,28 @@ def get_data():
     data = random.choice(load_jsonl(random.choice([claims_dev,claims_test,claims_train])))
     data["claim"]
     crops =[]
-    for id in data["evidence"].keys():
+    evidence = data["evidence"]
+    for id in evidence.keys():
+        title = None
+        abstract = None
+        structured = None
         for i_data in load_jsonl(path2):
                 if i_data["id"] == id:
-                    crops.append({
-                        "title":i_data["title"],
-                        "abstract":i_data["abstract"],
-                        "structured":i_data["structured"]
-                    })
-        data["evidence"][id]["label"]
-        data["evidence"][id]
+                    title = i_data["title"]
+                    abstract = i_data["abstract"]
+                    structured = i_data["structured"]              
+        if evidence[id]["label"] == "SUPPORT":
+            crops.append({
+                "title":title,
+                "abstract":abstract,
+                "structured":structured
+            })
+        elif evidence[id]["label"] == "CONTRADICT":
+            crops.append({
+                "title":title,
+                "abstract":abstract,
+                "structured":structured
+            })
+            pass
+        evidence[id]
         pass
-    data["cited_doc_ids"]

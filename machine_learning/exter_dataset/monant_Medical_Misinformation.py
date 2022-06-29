@@ -14,4 +14,3 @@ def get_data():
     mphasis = get_path(dir_fs, 'medical-misinformation-dataset',"mphasis/sample_data")
     paths = list_file(mphasis)
     path = random.choice(paths)
-    print(path)

@@ -30,16 +30,38 @@ def get_data():
     paths.append("data/x-fact-including-en/train.all.tsv")
     paths.append("data/x-fact-including-en/zeroshot.tsv")
     path = get_path(dir_fs, 'x-fact',random.choice(paths))
-    x = random.choice(TSV (path))
-    # text input
-    input_ = input_text(x['claim'],x['language'])
+    data = random.choice(TSV (path))
+    if data["label"] == "partly true/misleading":
+        pass
+    elif data["label"] == "mostly true":
+        pass
+    elif data["label"] == "mostly false":
+        pass
+    elif data["label"] == "true":
+        pass
+    elif data["label"] == "false":
+        pass
+    	
+    data['language']
+    data['site']
+    data['claim']
     # evidence
-    evidence =[]
-    evidence.append(or_diff(*[input_url(x['link_1']),input_text(x['evidence_1'],x['language'])]))
-    evidence.append(or_diff(*[input_url(x['link_2']),input_text(x['evidence_2'],x['language'])]))
-    evidence.append(or_diff(*[input_url(x['link_3']),input_text(x['evidence_3'],x['language'])]))
-    evidence.append(or_diff(*[input_url(x['link_4']),input_text(x['evidence_4'],x['language'])]))
-    evidence.append(or_diff(*[input_url(x['link_5']),input_text(x['evidence_5'],x['language'])]))
-    output = [output_bool(x['label'],"fackcheck")]
-    data = midline(in_=input_,out_=output,middle=evidence)
-    return data
+    data['link_1']
+    data['evidence_1']
+    data['language']
+
+    data['link_2']
+    data['evidence_2']
+    data['language']
+
+    data['link_3']
+    data['evidence_3']
+    data['language']
+
+    data['link_4']
+    data['evidence_4']
+    data['language']
+
+    data['link_5']
+    data['evidence_5']
+    data['language']

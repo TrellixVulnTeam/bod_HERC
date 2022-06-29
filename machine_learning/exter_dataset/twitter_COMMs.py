@@ -16,8 +16,13 @@ def get_data():
     path ="data/tweets/twitter_comms_dataset.csv"
     path = get_path(dir_fs, 'Twitter-COMMs',path)
     a = random.choice(CSV(path))
-    tw = input_twitter_post(a["tweet_id"],"eng")
-    classifier = output_classifier(a["topic"],"topic")
-    possibly_sensitive = output_classifier(a["possibly_sensitive"],"possibly_sensitive")
-    nsfw_prob = output_float(a['nsfw_prob'],'nsfw_prob')
-    return midline(in_=[tw],middle=[classifier,possibly_sensitive,nsfw_prob])
+    tw = a["tweet_id"]
+    nsfw_prob = a['nsfw_prob']
+    if      a["topic"] == "climate":
+        pass
+    elif    a["topic"] == "covid":
+        pass
+    if      a["possibly_sensitive"] == "False":
+        pass
+    elif    a["possibly_sensitive"] == "True":
+        pass

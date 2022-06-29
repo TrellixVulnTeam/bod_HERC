@@ -53,20 +53,25 @@ def get_data():
         Authentic = get_path(dir_fs, 'banFakeNews',"Authentic-48K.csv")
         data = random.choice(CSV(Authentic))
         if data["category"] == "International":
+            # International
             pass
         elif data["category"] == "Miscellaneous":
+            # Miscellaneous
             pass
         elif data["category"] == "Sports":
+            # Sports
             pass
         elif data["category"] == "Lifestyle":
+            # Lifestyle
             pass
         elif data["category"] == "Politics":
+            # Politics
             pass
         elif data["category"] == "Technology":
+            # Technology
             pass
         elif data["category"] == "National":
-            pass
-        elif data["category"] == "Politics":
+            # National
             pass
         
         if data["category"] == "Entertainment":
