@@ -1,5 +1,6 @@
 import os
 import random
+from machine_learning.exter_dataset.uitls.decode_data import TSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://github.com/firojalam/COVID-19-disinformation"
@@ -13,15 +14,36 @@ def get_data():
         covid19_disinfo_english_binary_test = get_path(dir_fs, 'COVID_19_Disinfo',"covid19_disinfo_english_binary_test.tsv")
         covid19_disinfo_english_binary_train = get_path(dir_fs, 'COVID_19_Disinfo',"covid19_disinfo_english_binary_train.tsv")
         path = random.choice([covid19_disinfo_english_binary_dev,covid19_disinfo_english_binary_test,covid19_disinfo_english_binary_train])
-        data = None
+        data = TSV(path)
         data["tweet_id"]
-        data["q1_label"]
-        data["q2_label"]
-        data["q3_label"]
-        data["q4_label"]
-        data["q5_label"]
-        data["q6_label"]
-        data["q7_label"]
+        if data["q1_label"] == "yes":
+            pass
+        elif data["q1_label"] =="no":
+            pass
+        if data["q2_label"] == "yes":
+            pass
+        elif data["q2_label"] =="no":
+            pass
+        if data["q3_label"] == "yes":
+            pass
+        elif data["q3_label"] =="no":
+            pass
+        if data["q4_label"] == "yes":
+            pass
+        elif data["q4_label"] =="no":
+            pass
+        if data["q5_label"] == "yes":
+            pass
+        elif data["q5_label"] =="no":
+            pass
+        if data["q6_label"] == "yes":
+            pass
+        elif data["q6_label"] =="no":
+            pass
+        if data["q7_label"] == "yes":
+            pass
+        elif data["q7_label"] =="no":
+            pass
 
     else:
         covid19_disinfo_english_multiclass_dev = get_path(dir_fs, 'COVID_19_Disinfo',"covid19_disinfo_english_multiclass_dev.tsv")

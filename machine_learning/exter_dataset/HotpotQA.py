@@ -21,6 +21,6 @@ def get_data():
     hotpot_test_fullwiki = get_path(dir_fs, 'hotpot',"hotpot_test_fullwiki_v1.json")
     hotpot_train = get_path(dir_fs, 'hotpot',"hotpot_train_v1.1.json")
     json_hotpot_dev_distractor =load_json(random.choice([hotpot_test_fullwiki,hotpot_dev_fullwiki,hotpot_dev_distractor,hotpot_train]))
-    print(json_hotpot_dev_distractor)
+    
 
     pass

@@ -20,6 +20,7 @@ def get_data():
         pass
     elif data["hate"] =="hate":
         pass
+    
     if data["bias"] =="none":
         pass
     elif data["bias"] =="others":

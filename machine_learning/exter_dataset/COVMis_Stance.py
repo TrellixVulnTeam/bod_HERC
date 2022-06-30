@@ -12,3 +12,7 @@ def get_data():
     misinformation = get_path(dir_fs, 'covid-rumor-stance',"data/misinformation.csv")
     path = random.choice(misinformation)
     data = random.choice(CSV(path))
+    data["news_urls"]
+    data["fact_check_urls"]
+    data["mis"]
+    data["titles"]

@@ -18,5 +18,7 @@ def get_data():
     # sill need to do
     if data["label"] == "no":
         pass
+    else:
+        pass
     data["original_id"]
     data["reply_id"]

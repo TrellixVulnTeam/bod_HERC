@@ -532,7 +532,8 @@ async def main_ResourceDiscovery(name):
     db = motor_c()
     # await candidates_democracyclub()
     # await candidates_democracyclub_organizations()
-    while True:
+    if True:
+    # while True:
         try:
             while not await get_wikidata(name="official_website", db=db, type_="website", prop="P856", lock_SPRQL=lock_SPRQL, quarry=SPARQL_all_website):
                 pass

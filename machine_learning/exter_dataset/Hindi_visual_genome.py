@@ -1,0 +1,1 @@
+# curl --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3267{/README.txt,/hindi-visual-genome-train.txt.gz,/hindi-visual-genome-dev.txt.gz,/hindi-visual-genome-test.txt.gz,/hindi-visual-genome-challenge-test-set.txt.gz,/hindi-visual-genome-11.zip}
