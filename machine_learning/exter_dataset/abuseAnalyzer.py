@@ -3,6 +3,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import TSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.exter_dataset.uitls.lalble_key import Hate, HateTargetLabels, HateTargetType
 
 url = "https://github.com/mohit3011/AbuseAnalyzer"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -15,30 +16,35 @@ def get_data():
     data = random.choice(data)
     if data["Hate/Non-Hate"] == "1":
         # Hate
-        pass
+        Hate.Hate
     else:
-        # Non-Hate
-        pass
+        Hate.NoHate
     
     if data["Target of Hate"] == "1-2":
+        HateTargetLabels.IndividualSecondPerson
         # Individual Second Person
         pass
     elif data["Target of Hate"] == "1-3":
+        HateTargetLabels.IndividualThirdPerson
         # Individual Third Person
         pass
     elif data["Target of Hate"] == "2":
+        HateTargetLabels.Group
         # Group
         pass
     else:
         pass
     
     if data["Class of Hate"] == "1":
+        HateTargetType.BiasedAttitude
         # Biased Attitude
         pass
     elif data["Class of Hate"] == "2":
+        HateTargetType.ActOfBiasAndDiscrimination
         # Act of Bias and Discrimination
         pass
     elif data["Class of Hate"] == "3":
+        HateTargetType.ViolenceAndGenocide
         # Violence and Genocide
         pass
     else:

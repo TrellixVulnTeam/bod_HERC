@@ -8,3 +8,10 @@ url = "http://tamaraberg.com/visualmadlibs/download/madlibs_train_v2.zip"
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 zip_download(dir_fs, 'madlibs',url)
+
+
+
+
+
+def get_data():
+    pass

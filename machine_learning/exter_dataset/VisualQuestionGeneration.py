@@ -8,3 +8,6 @@ url = "https://download.microsoft.com/download/5/F/3/5F3BC941-E2AD-457F-9372-2EE
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 zip_download(dir_fs, 'Visual_Question_Generation',url)
+
+def get_data():
+    pass

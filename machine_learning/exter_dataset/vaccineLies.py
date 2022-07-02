@@ -46,3 +46,10 @@ def get_data():
             evidence = input_factCheck_evidence(text,f['misinfo'][ccs])
             evidences.append(evidence)
     return midline(in_=[tw],middle=evidences)
+
+
+
+
+
+def get_data():
+    pass

@@ -10,3 +10,12 @@ dir_fs = os.path.dirname(os.path.realpath(__file__))
 zip_download(dir_fs, 'VizWiz_final',train_url)
 zip_download(dir_fs, 'VizWiz_final',annotations_url)
 
+
+
+
+
+
+
+
+def get_data():
+    pass

@@ -12,6 +12,11 @@ try:
 except:
     pass
 
+
+
+
+
+
 def get_data():
     test_gold = get_path(dir_fs, 'retweet',"test_gold.txt")
     train_final_label = get_path(dir_fs, 'retweet',"train_final_label.txt")

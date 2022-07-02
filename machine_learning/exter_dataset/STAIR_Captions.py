@@ -7,3 +7,10 @@ from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://github.com/STAIR-Lab-CIT/STAIR-captions"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'clevr-dialog',url)
+
+
+
+
+
+def get_data():
+    pass

@@ -7,3 +7,11 @@ train_url = "https://vision.cs.hacettepe.edu.tr/files/recipeqa/train.json"
 images_url = "https://vision.cs.hacettepe.edu.tr/files/recipeqa/images.zip"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 zip_download(dir_fs, 'Spoken-SQuAD',images_url)
+
+
+
+
+
+
+def get_data():
+    pass

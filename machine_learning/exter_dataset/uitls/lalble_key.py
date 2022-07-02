@@ -1,49 +1,60 @@
 import enum
 ## Cancel-Culture
 
+
+class ClassificationLabel:
+    def  __init__(self,value,type,wikidata_id=None):
+        self.value = value
+        self.type = type
+        self.wikidata_id = wikidata_id
+        
+        
+
 class CancelCultureType:
-    alisoneroman = 0
-    armiehammer  = 1
-    bobbaffert  = 2
-    carson_king  = 3
-    dojacat = 4
-    gabcake = 5
-    ginacarano = 6
-    goya = 7
-    jamescharles = 8
-    jimmyfallon  = 9
-    jk_rowling  = 10
-    lana  = 11
-    Lin_Manuel  = 12
-    morgan_wallen  = 13
-    pepe_le_pew  = 14
-    pepsi  = 15
-    projared  = 16
-    sebastian_stan  = 17
-    seuss  = 18
-    shane_gillis  = 19
-    starbucks  = 20
-    UnburntWitch  = 21
+    alisoneroman = ClassificationLabel(0,"CancelCultureType")
+    armiehammer  = ClassificationLabel(1,"CancelCultureType")
+    bobbaffert  = ClassificationLabel(2,"CancelCultureType")
+    carson_king  = ClassificationLabel(3,"CancelCultureType")
+    dojacat = ClassificationLabel(4,"CancelCultureType")
+    gabcake = ClassificationLabel(5,"CancelCultureType")
+    ginacarano = ClassificationLabel(6,"CancelCultureType")
+    goya = ClassificationLabel(7,"CancelCultureType")
+    jamescharles = ClassificationLabel(8,"CancelCultureType")
+    jimmyfallon  = ClassificationLabel(9,"CancelCultureType")
+    jk_rowling  =  ClassificationLabel(10,"CancelCultureType")
+    lana  =  ClassificationLabel(11,"CancelCultureType")
+    Lin_Manuel  =  ClassificationLabel(12,"CancelCultureType")
+    morgan_wallen  =  ClassificationLabel(13,"CancelCultureType")
+    pepe_le_pew  =  ClassificationLabel(14,"CancelCultureType")
+    pepsi  =  ClassificationLabel(15,"CancelCultureType")
+    projared  =  ClassificationLabel(16,"CancelCultureType")
+    sebastian_stan  =  ClassificationLabel(17,"CancelCultureType")
+    seuss  =  ClassificationLabel(18,"CancelCultureType")
+    shane_gillis  =  ClassificationLabel(19,"CancelCultureType")
+    starbucks  =  ClassificationLabel(20,"CancelCultureType")
+    UnburntWitch  =  ClassificationLabel(21,"CancelCultureType")
 
 class CancelCulture:
-    CancelCulture = 1
-    not_CancelCulture = 0
+    CancelCulture = ClassificationLabel(1,"CancelCulture")
+    not_CancelCulture = ClassificationLabel(0,"CancelCulture")
 
 ### sentiment
 class sentiment:
-     negative=0
-     neutral=0
-     positive=0
+     negative = ClassificationLabel(0,"sentiment")
+     neutral = ClassificationLabel(1,"sentiment")
+     positive = ClassificationLabel(2,"sentiment")
+
 class sarcasm:
-    sarcastic = 1
-    not_sarcastic = 0
+    sarcastic = ClassificationLabel(1,"sarcasm")
+    not_sarcastic = ClassificationLabel(0,"sarcasm")
+
 class sarcasm_type:
-    sarcastic_understatement = 0
-    sarcastic_rhetorical_question = 1
-    sarcastic_overstatement = 2
-    sarcastic_satire = 3
-    sarcastic_sarcasm = 4
-    not_sarcastic = 5
+    sarcastic_understatement = ClassificationLabel(0,"sarcasm_type")
+    sarcastic_rhetorical_question = ClassificationLabel(1,"sarcasm_type")
+    sarcastic_overstatement = ClassificationLabel(2,"sarcasm_type")
+    sarcastic_satire = ClassificationLabel(3,"sarcasm_type")
+    sarcastic_sarcasm = ClassificationLabel(4,"sarcasm_type")
+    not_sarcastic = ClassificationLabel(5,"sarcasm_type")
 
 class Emoji:
     pass
@@ -53,68 +64,70 @@ class Emoji:
 ### EMOTIONAL
 
 class Emotion(enum.Enum):
-    Neutral = 0
-    Sadness = 1
-    Non_neutral = 3
-    Anger = 4
-    Joy = 5
-    Fear = 6
-    Surprise = 7
-    Disgust = 8
-    Admiration  = 9
-    Amusement = 10
-    Annoyance = 11
-    Approval = 12
-    Caring = 13
-    Confusion = 14
-    Curiosity = 16
-    Desire = 17
-    Disappointment = 18
-    Disapproval = 19
-    Embarrassment = 20
-    Excitement = 21
-    Gratitude = 22
-    Grief = 23
-    Love = 24
-    Nervousness = 25
-    Optimism = 26
-    Pride = 27
-    Realization = 28
-    Relief = 29
-    Remorse = 30
-    Hatred = 31
-    Annoyed = 32
-    Furious = 33
-    Contempt = 34
+    Neutral =   ClassificationLabel(0,"Emotion")
+    Sadness =   ClassificationLabel(1,"Emotion")
+    Non_neutral =   ClassificationLabel(3,"Emotion")
+    Anger =   ClassificationLabel(4,"Emotion")
+    Joy =   ClassificationLabel(5,"Emotion")
+    Fear =   ClassificationLabel(6,"Emotion")
+    Surprise =   ClassificationLabel(7,"Emotion")
+    Disgust =   ClassificationLabel(8,"Emotion")
+    Admiration  =    ClassificationLabel(9,"Emotion")
+    Amusement = ClassificationLabel(10,"Emotion")
+    Annoyance = ClassificationLabel(11,"Emotion")
+    Approval = ClassificationLabel(12,"Emotion")
+    Caring = ClassificationLabel(13,"Emotion")
+    Confusion = ClassificationLabel(14,"Emotion")
+    Curiosity = ClassificationLabel(16,"Emotion")
+    Desire = ClassificationLabel(17,"Emotion")
+    Disappointment = ClassificationLabel(18,"Emotion")
+    Disapproval = ClassificationLabel(19,"Emotion")
+    Embarrassment = ClassificationLabel(20,"Emotion")
+    Excitement = ClassificationLabel(21,"Emotion")
+    Gratitude = ClassificationLabel(22,"Emotion")
+    Grief = ClassificationLabel(23,"Emotion")
+    Love = ClassificationLabel(24,"Emotion")
+    Nervousness = ClassificationLabel(25,"Emotion")
+    Optimism = ClassificationLabel(26,"Emotion")
+    Pride = ClassificationLabel(27,"Emotion")
+    Realization = ClassificationLabel(28,"Emotion")
+    Relief = ClassificationLabel(29,"Emotion")
+    Remorse = ClassificationLabel(30,"Emotion")
+    Hatred = ClassificationLabel(31,"Emotion")
+    Annoyed = ClassificationLabel(32,"Emotion")
+    Furious = ClassificationLabel(33,"Emotion")
+    Contempt = ClassificationLabel(34,"Emotion")
 
 ### HOPE
 
 class Hope(enum.Enum):
-    NoHope = 0
-    Hope = 1
+    NoHope = ClassificationLabel(0,"Hope")
+    Hope = ClassificationLabel(1,"Hope")
 
 ### HATE and ABUSIVE
 
 class Hate(enum.Enum):
-    NoHate = 0
-    Hate = 1
-class Hate(enum.Enum):
-    NoHate = 0
-    Hate = 1
+    NoHate = ClassificationLabel(0,"Hate")
+    Hate = ClassificationLabel(1,"Hate")
+
+class HateOrOffensive(enum.Enum):
+    NULL = ClassificationLabel(0,"HateOrOffensive")
+    Hate = ClassificationLabel(1,"HateOrOffensive")
+    Offensive =ClassificationLabel(3,"HateOrOffensive")
     
 class HateGroup(enum.Enum):
-    Disaabley = 0
-    Gender  = 1
-    Origin = 2
-    Other = 3
-    Religion = 4
+    Disaabley = ClassificationLabel(0,"HateGroup")
+    Gender  = ClassificationLabel(1,"HateGroup")
+    Origin = ClassificationLabel(2,"HateGroup")
+    Other = ClassificationLabel(3,"HateGroup")
+    Religion = ClassificationLabel(4,"HateGroup")
 
 class HateAnnotator_Sentiment(enum.Enum):
-    Hateful = 0
-    Normal = 1
-    Disrespectful = 2
-    Abusive = 3
-    Offensive = 4
+    Hateful = ClassificationLabel(0,"Hateful")   
+    Normal = ClassificationLabel(1,"Normal")  
+    Disrespectful = ClassificationLabel(2,"Disrespectful")  
+    Abusive = ClassificationLabel(3,"Abusive") 
+    Offensive = ClassificationLabel(4,"Offensive") 
     
 class HateAnnotator_Sentiment_annotator(enum.Enum):
     pass
@@ -179,6 +192,7 @@ class Accuracy(enum.Enum):
     Error_spelling = 1
     Error_grammar = 2
     Error_typographical = 3
+
 class PurposeMain(enum.Enum):
     Informing = 0
     Teaching = 1
@@ -186,6 +200,7 @@ class PurposeMain(enum.Enum):
     Entertaining = 3
     Research = 4
     SelfGainingPurposes = 5
+
 class PurposeSub(enum.Enum):
     Fact = 0
     Opinion = 1
@@ -264,7 +279,24 @@ class stance_covid(enum.Enum):
     against = 0
     favor = 0
 
+class DocFactCheck(enum.Enum):
+    REFUTES = 0
+    NOT_ENOUGH_INFO = 1
+    SUPPORTS = 2
 
+class FactCheck(enum.Enum):
+    Fact  = 0
+    NoFact = 1
+
+
+class FactCheck(enum.Enum):
+    Fact  = 0
+    MostlyFalse = 1  
+    HalfTrue = 1  
+    MostlyTrue = 1  
+    No_Fact = 1 
+    
+    
 class topic(enum.Enum):
     pass
 

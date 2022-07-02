@@ -6,6 +6,8 @@ from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 import pandas as pd
 
+from machine_learning.exter_dataset.uitls.lalble_key import Hate, HateOrOffensive
+
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'Automated-Hate-Tweet-Detection',url)
@@ -105,9 +107,9 @@ def get_data():
         data = TSV(path)
         
         if data["task_1"] == "HOF":
-            pass
+            Hate.Hate
         else:
-            pass
+            Hate.NoHate
         
         if data["task_2"] == "PRFN":
             pass
@@ -115,6 +117,7 @@ def get_data():
             pass
         elif data["task_2"] == "OFFN":
             pass
+        
         if data["task_3"] == "TIN":
             pass
         elif data["task_3"] == "UNT":

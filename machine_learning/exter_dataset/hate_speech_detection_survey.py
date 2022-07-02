@@ -4,6 +4,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.exter_dataset.uitls.lalble_key import Hate
 
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -15,8 +16,8 @@ def get_data():
     offenseval_val = get_path(dir_fs, 'hate_speech_detection',"offenseval_val.csv")
     data = random.choice(CSV(offenseval_val))
     if data["Label"]== "1":
-        pass
+        Hate.Hate
     elif data["Label"]== "0":
-        pass
+        Hate.NoHate
     data["Youtube_ID"]
     data["Speech"]

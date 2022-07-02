@@ -3,6 +3,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import TSV, list_file
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.exter_dataset.uitls.lalble_key import BinaryFacts
 url = "https://gitlab.com/bigirqu/ArCOV-19"
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -22,8 +23,10 @@ def get_data():
     if random.choice([True,False]):
         data = random.choice(TSV(path_tweet_verification))
         if data["label"]== "False":
+            BinaryFacts.NO
             pass
         elif data["label"]== "True":
+            BinaryFacts.YES
             pass
         elif data["label"]== "Other":
             pass
@@ -32,11 +35,10 @@ def get_data():
     else:
         data = random.choice(TSV(path_tweet_verification))
         if data["ClaimLabel"]== "False":
-            # False
-            pass
+            BinaryFacts.NO
         elif data["ClaimLabel"]== "True":
-            # True
-            pass
+            BinaryFacts.YES
+        
         if data["Category"]== "Entertainment":
             # Entertainment
             pass

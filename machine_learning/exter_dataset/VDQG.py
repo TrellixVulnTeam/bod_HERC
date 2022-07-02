@@ -8,3 +8,10 @@ url = "http://mmlab.ie.cuhk.edu.hk/projects/vdqg/VDQG_files/vdqg.zip"
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 zip_download(dir_fs, 'Visual_Question_Generation',url)
+
+
+
+
+
+def get_data():
+    pass
