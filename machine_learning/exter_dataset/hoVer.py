@@ -19,6 +19,8 @@ def get_data():
         pass
     elif data["label"] == "NOT_SUPPORTED":
         pass
-    data["claim"]
+    
+    # tokens, mask, c = tokenizer(data["claim"], "Text", "unknown", None)
+    
     
 

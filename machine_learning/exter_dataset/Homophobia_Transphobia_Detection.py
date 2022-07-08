@@ -30,5 +30,7 @@ def get_data():
         Hate.Hate
     elif eng_3_dev_tsv["category"] == "Non-anti-LGBT+ content":
         Hate.NoHate
-    eng_3_dev_tsv["text"]
+    
+    # tokens, mask, c = tokenizer(eng_3_dev_tsv["text"], "Text", "unknown", None)
+    
 
