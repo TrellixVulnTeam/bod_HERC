@@ -31,6 +31,7 @@ def get_data():
         elif data["label"]== "Other":
             pass
         data["tweetText"]
+        # tokens, mask, c = tokenizer(data["tweetText"] , "Text", "unknown", None)
         data["tweetID"]
     else:
         data = random.choice(TSV(path_tweet_verification))
@@ -57,7 +58,7 @@ def get_data():
         elif data["Category"]== "Religious":
             # Religious
             pass
-        data["Claim"]
+        # tokens, mask, c = tokenizer(data["Claim"] , "Text", "unknown", None)
         
     
     

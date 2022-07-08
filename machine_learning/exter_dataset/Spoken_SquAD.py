@@ -13,4 +13,7 @@ git_download(dir_fs, 'Spoken-SQuAD',url)
 
 
 def get_data():
-    pass
+    ["chinese"]
+    ["book"]
+    ["google"]
+    ["deepl"]

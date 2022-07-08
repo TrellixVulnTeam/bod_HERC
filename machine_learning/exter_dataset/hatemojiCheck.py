@@ -30,6 +30,8 @@ def get_data():
         pass
     if data["included_in_test_suite"] == "":
         pass
+    data["text"]
     # HatemojiBuild
+    data["matched_text"]
 
     

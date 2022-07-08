@@ -14,7 +14,7 @@ git_download(dir_fs, 'Harmful-LGBTQIA',url)
 def get_data():
     reddit_comments_orientation_lgbtq_processed = get_path(dir_fs, 'Harmful-LGBTQIA',"reddit_comments_orientation_lgbtq_processed.csv")
     binary_labeled_comments = get_path(dir_fs, 'Harmful-LGBTQIA',"binary_labeled_comments.csv")
-    path =random.choices([reddit_comments_orientation_lgbtq_processed,binary_labeled_comments])0
+    path =random.choices([reddit_comments_orientation_lgbtq_processed,binary_labeled_comments])
     data = CSV(path)
     data = random.choice(data)
     if data["toxicity"] == "1":
@@ -41,3 +41,4 @@ def get_data():
         pass
     else:
         pass
+    # tokens, mask, c = tokenizer(data["comments"] , "Text", "unknown", None)

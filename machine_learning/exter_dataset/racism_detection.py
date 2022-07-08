@@ -10,10 +10,8 @@ git_download(dir_fs, 'racism-detection',url)
 def get_data():
     path = get_path(dir_fs, 'racism-detection',"dataset_racism.csv")
     data =  random.choice(CSV(path))
-    data["tweets"]
     if data["label"] == "Non_R":
         pass
     else:
         pass
-    
     # tokens, mask, c = tokenizer(data["tweets"] "Text", "unknown", None)

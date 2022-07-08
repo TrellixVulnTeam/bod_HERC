@@ -129,6 +129,4 @@ def get_data():
             pass
         elif data["task_3"] == "UNT":
             pass
-        data["text"]
-        
         # tokens, mask, c = tokenizer(data["text"] , "Text", "unknown", None)

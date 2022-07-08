@@ -18,7 +18,8 @@ def get_data():
             pass
         elif data["label"] == "0":
             pass
-        data["tweet"]
+        # tokens, mask, c = tokenizer(data["tweet"], "Text", data['language'], None)
+        
     else:
         main_train_path = get_path(dir_fs, 'Twitter_Sentiment_Analysis',"train.csv")
         data = CSV(main_train_path)

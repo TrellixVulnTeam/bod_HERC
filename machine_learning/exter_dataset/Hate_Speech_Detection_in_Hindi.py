@@ -20,5 +20,4 @@ def get_data():
     labels = []
     for label in test_dataset_csv["Labels Set"].split(","):
         labels.append(label)
-    print(labels)
-    print(test_dataset_csv)
+    # tokens, mask, c = tokenizer(test_dataset_csv["Post"] , "Text", "unknown", None)

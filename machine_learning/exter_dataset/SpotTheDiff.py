@@ -13,4 +13,5 @@ git_download(dir_fs, 'spot-the-diff',url)
 
 
 def get_data():
-    pass
+    ["img_id"]
+    ["sentences"]

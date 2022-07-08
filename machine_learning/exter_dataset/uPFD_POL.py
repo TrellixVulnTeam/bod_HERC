@@ -14,3 +14,7 @@ def get_data():
     path_train = get_path(dir_fs, 'TORQUE-dataset',"data/train.json")
     p = random.choice([path_dev,path_test,path_train])
     data = load_json(p)
+    key = random.choice(data.keys())
+    data[key]["passage"]
+    data[key]["question_answer_pairs"]
+    data[key]["passage"]

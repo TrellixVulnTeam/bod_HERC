@@ -7,9 +7,9 @@ from machine_learning.exter_dataset.uitls.get_path import get_path
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 url = "http://people.csail.mit.edu/bce/mistaken/data/scenes.json"
-file_download(dir_fs, 'mistaken',url)
+file_download(dir_fs, 'mistaken',url,name="scenes.json")
 url = "http://people.csail.mit.edu/bce/mistaken/data/annotations.json"
-file_download(dir_fs, 'mistaken',url)
+file_download(dir_fs, 'mistaken',url,name="annotations.json")
 url = "http://people.csail.mit.edu/bce/mistaken/data/images.zip"
 zip_download(dir_fs, 'mistaken',url)
 

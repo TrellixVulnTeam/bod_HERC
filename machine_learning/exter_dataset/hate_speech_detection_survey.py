@@ -21,3 +21,4 @@ def get_data():
         Hate.NoHate
     data["Youtube_ID"]
     data["Speech"]
+    # tokens, mask, c = tokenizer(test_dataset_csv["Speech"] , "Text", "unknown", None)

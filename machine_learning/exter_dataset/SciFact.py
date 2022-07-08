@@ -24,8 +24,7 @@ def get_data():
     data = random.choice(load_jsonl(random.choice([claims_dev,claims_test,claims_train])))
     data["claim"]
     crops =[]
-    evidence = data["evidence"]
-    for id in evidence.keys():
+    for id in data["evidence"].keys():
         title = None
         abstract = None
         structured = None
@@ -34,18 +33,18 @@ def get_data():
                     title = i_data["title"]
                     abstract = i_data["abstract"]
                     structured = i_data["structured"]              
-        if evidence[id]["label"] == "SUPPORT":
+        if data["evidence"][id]["label"] == "SUPPORT":
             crops.append({
                 "title":title,
                 "abstract":abstract,
                 "structured":structured
             })
-        elif evidence[id]["label"] == "CONTRADICT":
+        elif data["evidence"][id]["label"] == "CONTRADICT":
             crops.append({
                 "title":title,
                 "abstract":abstract,
                 "structured":structured
             })
             pass
-        evidence[id]
+        data["evidence"][id]
         pass

@@ -6,4 +6,4 @@ git_download(dir_fs, 'GNN-FakeNews',url)
 
 
 def get_data():
-    pass
+    path_train = get_path(dir_fs, 'GNN-FakeNews',"")

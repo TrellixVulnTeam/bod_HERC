@@ -12,5 +12,7 @@ git_download(dir_fs, 'Bengali-Hate-Speech-Dataset',url)
 
 
 def get_data():
-    bengali_hate = get_path(dir_fs, 'Bengali-Hate-Speech-Dataset',"data/")
+    bengali_hate1 = get_path(dir_fs, 'Bengali-Hate-Speech-Dataset',"bengali_hate_v1.0.csv")
+    bengali_hate2 = get_path(dir_fs, 'Bengali-Hate-Speech-Dataset',"bengali_hate_v2.0.csv")
+    path = random.choice([bengali_hate1,bengali_hate2])
     pass

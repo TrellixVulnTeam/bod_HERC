@@ -21,3 +21,4 @@ def get_data():
         Hate.Hate
     elif data["Label"]== "0":
         Hate.NoHate
+    # tokens, mask, c = tokenizer(test_dataset_csv["Speech"] , "Text", "unknown", None)

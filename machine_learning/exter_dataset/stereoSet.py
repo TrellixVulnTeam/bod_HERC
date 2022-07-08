@@ -11,6 +11,7 @@ git_download(dir_fs, 'stereoSet',url)
 
 def get_data():
     # mask == BLANK
+    # sill need to do
     path = get_path(dir_fs, 'stereoSet',"data/dev.json")
     data = load_json(path)
     data = random.choice(data["data"]["intersentence"])
@@ -107,6 +108,8 @@ def get_data():
         pass
     if data["bias_type"] == "gender":
         pass
-    data["context"]
+    
+    # tokens, mask, c = tokenizer(data["context"], "Text", data['language'], None)
+
     for sentence in data["sentences"]:
         pass
