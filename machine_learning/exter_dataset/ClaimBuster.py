@@ -100,5 +100,5 @@ def get_data():
         pass
     elif data["Speaker_party"] =="Senator":
         pass
-    data["Text"]
+    # tokens, mask, c = tokenizer(data["Text"], "Text", "unknown", None)
     pass

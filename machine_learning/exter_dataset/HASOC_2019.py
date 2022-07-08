@@ -34,5 +34,7 @@ def get_data():
         pass
     if data["task_1"] == "NOT":
         pass
+    
+    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     data["text"] 
 

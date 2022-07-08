@@ -25,5 +25,7 @@ def get_data():
         pass
     else:
         pass
+    
+    # tokens, mask, c = tokenizer(data["comment_text"], "Text", "unknown", None)
     data["comment_text"]
 

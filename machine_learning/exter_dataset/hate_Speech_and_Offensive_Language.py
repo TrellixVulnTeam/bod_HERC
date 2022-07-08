@@ -24,4 +24,5 @@ def get_data():
         pass
     else:
         pass
-    data["tweet"]
+    
+    # tokens, mask, c = tokenizer(data["tweet"], "Text", "unknown", None)

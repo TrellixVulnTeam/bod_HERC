@@ -170,6 +170,7 @@ class SelfAttention(nn.Module):
     def __init__(self, dim, seq_len, mem_len, cmem_len, cmem_ratio = 4, heads = 8, attn_dropout = 0., dropout = 0., reconstruction_attn_dropout = 0.):
         super().__init__()
         assert (dim % heads) == 0, 'dimension must be divisible by the number of heads'
+
         self.heads = heads
         self.dim_head = dim // heads
         self.seq_len = seq_len
@@ -288,13 +289,13 @@ class SelfAttention(nn.Module):
 # transformer
 
 class CompressiveTransformer(nn.Module):
-    def __init__(self,num_tokens,dim,seq_len,depth,emb_dim = None,memory_layers = None,enhanced_recurrence = True,mem_len = None,cmem_len = None,cmem_ratio = 4,heads = 8,gru_gated_residual = True,mogrify_gru = False,attn_dropout = 0.,ff_glu = False,ff_dropout = 0.,attn_layer_dropout = 0.,reconstruction_attn_dropout = 0.,reconstruction_loss_weight = 1.):
-        super().__init__()
+    def __init__(self,dim,seq_len,depth,emb_dim = None,memory_layers = None,enhanced_recurrence = True,mem_len = None,cmem_len = None,cmem_ratio = 4,heads = 8,gru_gated_residual = True,mogrify_gru = False,attn_dropout = 0.,ff_glu = False,ff_dropout = 0.,attn_layer_dropout = 0.,reconstruction_attn_dropout = 0.,reconstruction_loss_weight = 1.):
+        super().__init__() 
         emb_dim = default(emb_dim, dim)
         mem_len = default(mem_len, seq_len)
         cmem_len = default(cmem_len, mem_len // cmem_ratio)
         memory_layers = default(memory_layers, list(range(1, depth + 1)))
-        
+
         assert mem_len >= seq_len, 'length of memory should be at least the sequence length'
         assert cmem_len >= (mem_len // cmem_ratio), f'length of compressed memory should be at least the memory length divided by the compression ratio {int(mem_len // cmem_ratio)}'
         assert all([layer > 0 and layer <= depth for layer in memory_layers]), 'one of the indicated memory layers is invalid'
@@ -305,17 +306,11 @@ class CompressiveTransformer(nn.Module):
         self.memory_layers = list(memory_layers)
         self.enhanced_recurrence = enhanced_recurrence
 
-        self.token_emb = nn.Embedding(num_tokens, emb_dim)
-        self.to_model_dim = nn.Identity() if emb_dim == dim else nn.Linear(emb_dim, dim)
+        self.to_model_dim = nn.Linear(dim, dim)
 
         seq_and_mem_len = seq_len + mem_len + cmem_len
         self.pos_emb = nn.Parameter(torch.zeros(heads, seq_and_mem_len, dim // heads))
-        
-        self.to_logits = nn.Sequential(
-            nn.Identity() if emb_dim == dim else nn.Linear(dim, emb_dim),
-            nn.Linear(emb_dim, num_tokens)
-        )
-
+        self.to_logits = nn.Sequential( nn.Identity(),nn.Linear(dim, emb_dim))
         wrapper = partial(GRUGating, dim, mogrify = mogrify_gru) if gru_gated_residual else Residual
 
         self.attn_layers = nn.ModuleList([wrapper(PreNorm(dim, SelfAttention(dim, seq_len, mem_len, cmem_len, cmem_ratio, heads, dropout = attn_layer_dropout, attn_dropout = attn_dropout, reconstruction_attn_dropout = reconstruction_attn_dropout))) for _ in range(depth)])
@@ -324,12 +319,9 @@ class CompressiveTransformer(nn.Module):
         self.reconstruction_loss_weight = reconstruction_loss_weight
 
     def forward(self, x, memories = None, mask = None):
-        x = self.token_emb(x)
         x = self.to_model_dim(x)
         b, t, d = x.shape
-
-        assert t <= self.seq_len, f'input contains a sequence length {t} that is greater than the designated maximum sequence length {self.seq_len}'
-
+        
         memories = default(memories, (None, None))
         mem, cmem = memories
 
@@ -337,10 +329,9 @@ class CompressiveTransformer(nn.Module):
         init_empty_mem = lambda: torch.empty(num_memory_layers, b, 0, d, **to(x))
         mem = default(mem, init_empty_mem)
         cmem = default(cmem, init_empty_mem)
-
+        
         total_len = mem.shape[2] + cmem.shape[2] + self.seq_len
-        pos_emb = self.pos_emb[:, (self.seq_len - t):total_len]
-
+        
         next_mem = []
         next_cmem = []
         aux_loss = torch.tensor(0., requires_grad = True, **to(x))
@@ -357,7 +348,7 @@ class CompressiveTransformer(nn.Module):
             use_memory = layer_num in self.memory_layers
             memories = (next(mem_iter), next(cmem_iter)) if use_memory else None
 
-            x, (mem_out, cmem_out), layer_aux_loss = attn(x, memories = memories, calc_memory = use_memory, input_mask = mask, pos_emb = pos_emb)
+            x, (mem_out, cmem_out), layer_aux_loss = attn(x, memories = memories, calc_memory = use_memory, input_mask = mask)#, pos_emb = pos_emb
             x,  = ff(x)
 
             aux_loss = aux_loss + layer_aux_loss

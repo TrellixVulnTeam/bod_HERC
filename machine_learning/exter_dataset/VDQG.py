@@ -14,4 +14,7 @@ zip_download(dir_fs, 'Visual_Question_Generation',url)
 
 
 def get_data():
-    pass
+    data =None
+    data["image_url"]
+    data["questions"]
+    data["questions"]

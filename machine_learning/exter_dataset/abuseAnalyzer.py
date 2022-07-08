@@ -50,3 +50,5 @@ def get_data():
     else:
         pass
     data["Target of Hate"]
+    data["Post Text"]
+    # tokens, mask, c = tokenizer(data["Post Text"], "Text", "unknown", None)

@@ -46,8 +46,8 @@ def get_data():
             pass
         if data["category"] == "Education":
             pass
-        data["headline"]
-        data["content"]
+        # tokens, mask, c = tokenizer(data["content"] , "Text", "unknown", None)
+        # tokens, mask, c = tokenizer(data["headline"] , "Text", "unknown", None)
         data["domain"]
     elif c == 1:
         Authentic = get_path(dir_fs, 'banFakeNews',"Authentic-48K.csv")
@@ -91,8 +91,8 @@ def get_data():
             pass
         data["domain"] 
         data["source"]
-        data["headline"]
-        data["content"]
+        # tokens, mask, c = tokenizer(data["content"] , "Text", "unknown", None)
+        # tokens, mask, c = tokenizer(data["headline"] , "Text", "unknown", None)
     elif c == 2:
         LabeledFake = get_path(dir_fs, 'banFakeNews',"LabeledFake-1K.csv")
         data = random.choice(CSV(LabeledFake))
@@ -136,7 +136,9 @@ def get_data():
         elif data["F-type"] == "Fake":
             pass
         data["headline"]
-        data["content"]
+        
+        # tokens, mask, c = tokenizer(data["content"] , "Text", "unknown", None)
+        # tokens, mask, c = tokenizer(data["headline"] , "Text", "unknown", None)
         data["domain"]
     elif c == 3:
         LabeledAuthentic = get_path(dir_fs, 'banFakeNews',"LabeledAuthentic-7K.csv")
@@ -168,8 +170,8 @@ def get_data():
             pass
         if data["category"] == "Education":
             pass
-        data["headline"]
-        data["content"]
+        # tokens, mask, c = tokenizer(data["content"] , "Text", "unknown", None)
+        # tokens, mask, c = tokenizer(data["headline"] , "Text", "unknown", None)
         data["domain"]
     elif c== 4:
         Fake = get_path(dir_fs, 'banFakeNews',"Fake-1K.csv")
@@ -190,6 +192,6 @@ def get_data():
             pass
         elif data["category"] == "Politics":
             pass
-        data["headline"]
-        data["content"]
+        # tokens, mask, c = tokenizer(data["content"] , "Text", "unknown", None)
+        # tokens, mask, c = tokenizer(data["headline"] , "Text", "unknown", None)
         data["domain"]

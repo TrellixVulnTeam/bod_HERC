@@ -20,3 +20,5 @@ def get_data():
     elif data["is_toxic"]== "Not Toxic":
         pass
     data["text"]
+    
+    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)

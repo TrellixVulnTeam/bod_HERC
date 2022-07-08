@@ -18,6 +18,7 @@ def get_data():
     path = random.choice([train_split,test_split,valid_split])
     data = random.choice(CSV(path))
     data["text"]
+    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     if data["label2a"] == "1":
         # is toix
         pass

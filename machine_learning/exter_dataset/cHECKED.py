@@ -19,7 +19,9 @@ def get_data():
     data["comment_num"]
     data["repost_num"]
     data["like_num"]
+    
     data["text"]
+    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     
     data["id"]
     

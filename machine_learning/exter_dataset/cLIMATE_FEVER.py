@@ -13,6 +13,8 @@ def get_data():
     climate_fever = get_path(dir_fs, 'climate-fever', "dataset/climate-fever.jsonl")
     data = random.choice(load_jsonl(climate_fever))
     data["claim"]
+    
+    # tokens, mask, c = tokenizer(data["claim"], "Text", "unknown", None)
     if "REFUTES" ==  data["claim_label"]:
         DocFactCheck.REFUTES
     elif "NOT_ENOUGH_INFO" == data["claim_label"]:

@@ -19,4 +19,5 @@ def get_data():
         pass
     elif "conservative.txt" in path:
         pass
-    data[1]
+    
+    # tokens, mask, c = tokenizer(data[1] "Text", "unknown", None)

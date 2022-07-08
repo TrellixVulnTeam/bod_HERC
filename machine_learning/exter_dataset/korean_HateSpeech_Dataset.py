@@ -3,7 +3,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import TSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
-from machine_learning.exter_dataset.uitls.lalble_key import Hate
+from machine_learning.exter_dataset.uitls.lalble_key import Hate, HateGroup, HateOrOffensive
 url = "https://github.com/kocohub/korean-hate-speech"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'korean_HateSpeech_Dataset',url)
@@ -16,15 +16,16 @@ def get_data():
     path = random.choice([test_dataset,dev_dataset])
     data = random.choice(TSV(path))
     if data["hate"] =="none":
-        pass
+        HateOrOffensive.NULL
     elif data["hate"] =="offensive":
+        HateOrOffensive.Offensive
         pass
     elif data["hate"] =="hate":
-        Hate.Hate
+        HateOrOffensive.Hate
     
     if data["bias"] =="none":
-        pass
+        HateGroup.none
     elif data["bias"] =="others":
-        pass
+        HateGroup.Other
     elif data["bias"] =="gender":
-        pass
+        HateGroup.Gender

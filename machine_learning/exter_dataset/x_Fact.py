@@ -45,23 +45,29 @@ def get_data():
     data['language']
     data['site']
     data['claim']
+    # tokens, mask, c = tokenizer(data['claim'], "Text", data['language'], None)
     # evidence
     data['link_1']
     data['evidence_1']
+    # tokens, mask, c = tokenizer(data['evidence_1'], "Text", data['language'], None)
     data['language']
 
     data['link_2']
     data['evidence_2']
+    # tokens, mask, c = tokenizer(data['evidence_2'], "Text", data['language'], None)
     data['language']
 
     data['link_3']
     data['evidence_3']
+    # tokens, mask, c = tokenizer(data['evidence_3'], "Text", data['language'], None)
     data['language']
 
     data['link_4']
     data['evidence_4']
+    # tokens, mask, c = tokenizer(data['evidence_4'], "Text", data['language'], None)
     data['language']
 
     data['link_5']
     data['evidence_5']
+    # tokens, mask, c = tokenizer(data['evidence_5'], "Text", data['language'], None)
     data['language']

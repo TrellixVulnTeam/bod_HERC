@@ -61,12 +61,14 @@ class DepthwiseConv1d(nn.Module):
 
 # main class
 
-class GBST(nn.Module):
-    def __init__(self,num_tokens,dim,max_block_size = None,blocks = None,downsample_factor = 4,score_consensus_attn = True):
-        super().__init__()
+class GBST_Extended(nn.Module):
+    def __init__(self,num_tokens,num_type,num_lang,dim,max_block_size = None,blocks = None,downsample_factor = 4,score_consensus_attn = True):
+        
+        super().__init__() 
         assert exists(max_block_size) ^ exists(blocks), 'either max_block_size or blocks are given on initialization'
         self.token_emb = nn.Embedding(num_tokens, dim)
-
+        self.type_emb = nn.Embedding(num_type, dim)
+        self.lang_emb = nn.Embedding(num_lang, dim)
         if exists(blocks):
             assert isinstance(blocks, tuple), 'blocks must be a tuple of block sizes'
             self.blocks = tuple(map(lambda el: el if isinstance(el, tuple) else (el, 0), blocks))
@@ -95,27 +97,14 @@ class GBST(nn.Module):
         self.block_pad_multiple = lcm(*[block_size for block_size, _ in self.blocks])
         self.downsample_factor = downsample_factor
 
-    def forward(self, x, mask = None):
+    def forward(self, x, x_type,x_lang, mask = None):
         b, n, block_mult, ds_factor, device = *x.shape, self.block_pad_multiple, self.downsample_factor, x.device
         m = next_divisible_length(n, ds_factor)
-
-        # get character token embeddings
-
-        x = self.token_emb(x)
-
-        # do a conv to generate the positions for the tokens
-
+        x = self.token_emb(x) + self.type_emb(x_type) + self.lang_emb(x_lang)
         x = self.pos_conv(x)
-
-        # pad both sequence and mask to length visibile by all block sizes from 0 to max block size
-
         x = pad_to_multiple(x, block_mult, seq_dim = 1, dim = -2)
-
         if exists(mask):
             mask = pad_to_multiple(mask, block_mult, seq_dim = 1, dim = -1, value = False)
-
-        # compute representations for all blocks by mean pooling
-
         block_masks = []
         block_reprs = []
 

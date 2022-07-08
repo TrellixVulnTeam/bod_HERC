@@ -15,3 +15,5 @@ def get_data():
         pass
     else:
         pass
+    
+    # tokens, mask, c = tokenizer(data["tweets"] "Text", "unknown", None)

@@ -24,4 +24,6 @@ def get_data():
         pass
     else:
         pass
-    data1["text"]
+    
+    # tokens, mask, c = tokenizer(data1["text"], "Text", "unknown", None)
+    

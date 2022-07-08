@@ -11,7 +11,8 @@ git_download(dir_fs, 'COVID_Fact',url)
 def get_data():
     COVIDFACT_dataset = get_path(dir_fs, 'COVID_Fact',"COVIDFACT_dataset.jsonl")
     data = random.choice(load_jsonl(COVIDFACT_dataset))
-    claim = data["claim"]
+    # tokens, mask, c = tokenizer(data["claim"] , "Text", "unknown", None)
+    # tokens, mask, c = tokenizer(data["evidence"] , "Text", "unknown", None)
     evidence = data["evidence"]
     
     if data["label"] == "REFUTED":

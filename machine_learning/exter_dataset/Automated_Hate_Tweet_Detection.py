@@ -33,6 +33,7 @@ def get_data():
         elif data["task_2"] == "OFFN":
             pass
         
+        # tokens, mask, c = tokenizer(data["text"] , "Text", "unknown", None)
     elif pick == 1:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2020_en_train_new.xlsx")
         data = pd.read_excel(path, index_col=0)  
@@ -51,6 +52,7 @@ def get_data():
             pass
         elif data["task_2"] == "UNT":
             pass
+        # tokens, mask, c = tokenizer(data["text"] , "Text", "unknown", None)
         
     elif pick == 2:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/NAACL_SRW_2016.csv")
@@ -77,6 +79,8 @@ def get_data():
             pass
         elif data["maj_label"] == "spam":
             pass
+        data["Tweet ID"] 
+        data["User ID"] 
         
     elif pick == 4:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hatespeechtwitter.csv")
@@ -102,6 +106,9 @@ def get_data():
             pass
         if int(data["class"]) > 0:
             pass
+        data["tweet"] 
+        
+        # tokens, mask, c = tokenizer(data["tweet"] , "Text", "unknown", None)
     elif pick == 6:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")
         data = TSV(path)
@@ -122,3 +129,6 @@ def get_data():
             pass
         elif data["task_3"] == "UNT":
             pass
+        data["text"]
+        
+        # tokens, mask, c = tokenizer(data["text"] , "Text", "unknown", None)

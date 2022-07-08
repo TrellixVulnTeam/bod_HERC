@@ -121,6 +121,7 @@ class HateGroup(enum.Enum):
     Origin = ClassificationLabel(2,"HateGroup")
     Other = ClassificationLabel(3,"HateGroup")
     Religion = ClassificationLabel(4,"HateGroup")
+    none = ClassificationLabel(5,"HateGroup")
 
 class HateAnnotator_Sentiment(enum.Enum):
     Hateful = ClassificationLabel(0,"Hateful")   
