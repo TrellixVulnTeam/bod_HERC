@@ -11,4 +11,3 @@ git_download(dir_fs, 'HateXplain',url)
 def get_data():
     test_dataset = get_path(dir_fs, 'HateXplain',"dataset.json")
     data = random.choice(load_json(test_dataset))
-    print(data)

@@ -11,7 +11,7 @@ try:
     git_download(dir_fs, 'mLMA_Hate_Speech',url)
 except:
     pass
-de_zip(dir_fs,'mLMA_Hate_Speech',"hate_speech_mlma.zip")
+de_zip(dir_fs,'mLMA_Hate_Speech',url)
 
 def get_data():
     ar_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/ar_dataset.csv")
@@ -19,3 +19,9 @@ def get_data():
     fr_dataset_path = get_path(dir_fs, 'mLMA_Hate_Speech',"hate_speech_mlma/fr_dataset.csv")
     path = random.choice([ar_dataset_path,en_dataset_path,fr_dataset_path])
     data = random.choice(CSV(path))
+    data["tweet"]
+    data["sentiment"]
+    data["directness"]
+    data["annotator_sentiment"]
+    data["target"]
+    data["group"]

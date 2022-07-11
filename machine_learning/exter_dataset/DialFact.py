@@ -15,21 +15,17 @@ def get_data():
     test_split = get_path(dir_fs, 'DialFact',"data/test_split.jsonl")
     path = random.choice([valid_split,test_split])
     data = random.choice(load_jsonl(path))
-    context = random.choice(json.loads(data["context"]))
+    for context in data["context"]:
+        pass
     data["response"]
-    json.loads(data["evidence_list"])
-    if data["type_label"] == "factual":
-        pass
-    elif data["type_label"] == "personal":
-        pass
-    if data["data_type"] == "generated":
-        pass
-    elif data["data_type"] == "written":
-        pass
-    if data["response_label"] == "NOT ENOUGH INFO":
-        pass
-    elif data["response_label"] == "SUPPORTS":
-        pass
-    elif data["response_label"] == "REFUTES":
-        pass
+    data["data_type"]
+    for evidence in data["evidence_list"]:
+        # name
+        evidence[0]
+        #URL
+        evidence[1]
+        evidence[2]
+        evidence[3]
     
+    data["response_label"]
+    data["type_label"]

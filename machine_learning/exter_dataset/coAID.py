@@ -1,5 +1,6 @@
 import os
 import random
+from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 url = "https://github.com/cuilimeng/CoAID"
@@ -14,7 +15,7 @@ def get_data():
         get_path(dir_fs, 'CoAID',"05-01-2020/ClaimFakeCOVID-19_tweets.csv"),
         get_path(dir_fs, 'CoAID',"05-01-2020/ClaimRealCOVID-19_tweets.csv")
         ]
-        path = random.choice(paths)
+        path = random.choice(CSV(paths))
         if "Fake" in path:
             pass
         if "Real" in path:
@@ -24,7 +25,7 @@ def get_data():
         get_path(dir_fs, 'CoAID',"05-01-2020/NewsFakeCOVID-19_tweets.csv"),
         get_path(dir_fs, 'CoAID', "05-01-2020/NewsRealCOVID-19_tweets.csv")
         ]
-        path = random.choice(paths)
+        path = random.choice(CSV(paths))
         if "Fake" in path:
             pass
         if "Real" in path:
@@ -34,7 +35,7 @@ def get_data():
         get_path(dir_fs, 'CoAID',"07-01-2020/ClaimFakeCOVID-19_tweets_replies.csv"),
         get_path(dir_fs, 'CoAID',"05-01-2020/ClaimFakeCOVID-19_tweets_replies.csv")
         ]
-        path = random.choice(paths)
+        path = random.choice(CSV(paths))
         if "Fake" in path:
             pass
         if "Real" in path:
@@ -50,7 +51,7 @@ def get_data():
         get_path(dir_fs, 'CoAID', "11-01-2020/NewsFakeCOVID-19.csv"),
         get_path(dir_fs, 'CoAID', "11-01-2020/NewsRealCOVID-19.csv")
         ]
-        path = random.choice(paths)
+        path = random.choice(CSV(paths))
         if "Fake" in path:
             pass
         if "Real" in path:
@@ -65,7 +66,7 @@ def get_data():
         get_path(dir_fs, 'CoAID',"11-01-2020/ClaimFakeCOVID-19.csv"),
         get_path(dir_fs, 'CoAID',"11-01-2020/ClaimRealCOVID-19.csv")
         ]
-        path = random.choice(paths)
+        path = random.choice(CSV(paths))
         if "Fake" in path:
             pass
         if "Real" in path:

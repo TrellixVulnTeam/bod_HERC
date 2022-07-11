@@ -7,8 +7,8 @@ from machine_learning.exter_dataset.uitls.download import zip_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
-zip_download(dir_fs, 'VizWiz_final',train_url)
-zip_download(dir_fs, 'VizWiz_final',annotations_url)
+zip_download(dir_fs, 'VizWiz_final',train_url,name="VizWiz_final_train.zip")
+zip_download(dir_fs, 'VizWiz_final',annotations_url,name="VizWiz_final_annotations.zip")
 
 
 

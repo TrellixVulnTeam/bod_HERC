@@ -3,8 +3,10 @@ import importlib
 from pathlib import Path
 import sys
 import os
+from tqdm import tqdm
+
 modules = glob.glob('/home/william/Code/Python/bod/machine_learning/exter_dataset/*.py')
-for module in modules:
+for module in tqdm(modules):
     stem = Path(module).stem
     try:
         importlib.import_module("."+stem,"machine_learning.exter_dataset")

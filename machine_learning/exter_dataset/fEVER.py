@@ -1,5 +1,8 @@
 import os
+import random
+from machine_learning.exter_dataset.uitls.decode_data import load_jsonl
 from machine_learning.exter_dataset.uitls.download import file_download, zip_download
+from machine_learning.exter_dataset.uitls.get_path import get_path
 
 url1 = "https://fever.ai/download/fever/train.jsonl"
 url2 = "https://fever.ai/download/fever/shared_task_dev.jsonl"
@@ -14,4 +17,13 @@ zip_download (base_path,"fever",url4,name="wiki-pages.zip")
 
 
 def get_data():
-    pass
+    train  = get_path(base_path, 'EntailmentBank',"train.jsonl")
+    shared_task_dev  = get_path(base_path, 'EntailmentBank',"shared_task_dev.jsonl")
+    shared_task_test  = get_path(base_path, 'EntailmentBank',"shared_task_test.jsonl")
+    path = random.choice([train,shared_task_dev,shared_task_test])
+    data = random.choice(load_jsonl(path))
+    data["id"]
+    data["verifiable"]
+    data["label"]
+    data["claim"]
+    data["evidence"]

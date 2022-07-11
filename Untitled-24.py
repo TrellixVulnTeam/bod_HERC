@@ -1,13 +1,64 @@
+import glob
+import importlib
+from pathlib import Path
+from sqlite3 import paramstyle
+import sys
+import os
+import time
+import urllib
+from urllib.error import HTTPError
+from alive_progress import alive_bar
+no_errors = []
+errors = []
+modules = glob.glob('/home/william/Code/Python/bod/machine_learning/exter_dataset/*.py')
+count = len(modules)
+with alive_bar(count) as bar:
+    for module in modules:
+        start_start = time.time_ns()
+        stem = Path(module).stem
+        try:
+            a = importlib.import_module("."+stem,"machine_learning.exter_dataset")
+            for i in range(20):
+                start_start2= time.time_ns()
+                try:
+                    start_end2= time.time_ns()
+                    a.get_data()
+                    no_errors.append(("get_data",module,start_end2-start_start2,i))
+                except:
+                    start_start2= time.time_ns()
+                    errors.append(("get_data_error",module,start_end2-start_start2,i))
+            start_end = time.time_ns()
+            no_errors.append(("loader",module,start_end-start_start))
+            print(module)
+        except HTTPError as e:
+            
+            start_end = time.time_ns()
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            errors.append(("get_data",module,exc_type, fname, exc_tb.tb_lineno,start_end-start_start,str(e)))
+            pass
+        except:
+            
+            start_end = time.time_ns()
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            errors.append(("error loader",module,exc_type, fname, exc_tb.tb_lineno,start_end-start_start))
+        bar()
 
-import torch
-from machine_learning.exter_dataset.uitls.v import NN_Plain_Text, NN_PlainTextConfig
+def Errors_time(e):
+      return e[5]
 
-config = NN_PlainTextConfig()
-tokenizer = NN_Plain_Text(config)
+  
+os.system('clear')
+print("ERROR")
+errors.sort(key=Errors_time)
+for error in errors:
+    print(error)
 
-tensor_text = "hello"
-mask = torch.ones(1, len(tensor_text)).bool()
-# (1, 256, 512), (1, 256)
-tokens, mask, c = tokenizer(tensor_text, "Text", "en", mask)
-print(tokens)
-print(c)
+
+def noErrors_time(e):
+      return e[2]
+no_errors.sort(key=noErrors_time)
+print("NO ERROR")
+for no_error in no_errors:
+    print(no_error)

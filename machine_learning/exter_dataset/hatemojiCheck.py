@@ -11,27 +11,30 @@ de_zip(dir_fs,'Hatemoji',"data/rotoedit.tar.bz2")
 de_zip(dir_fs,'Hatemoji',"data/webedit.tar.bz2")
 
 def get_data():
-    HatemojiBuild_test = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/test.csv")
-    HatemojiBuild_train = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/train.csv")
-    HatemojiBuild_validation = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/validation.csv")
-    HatemojiCheck_test = get_path(dir_fs, 'Hatemoji',"HatemojiCheck/test.csv")
-    path = random.choices([HatemojiBuild_test,HatemojiBuild_train,HatemojiBuild_validation,HatemojiCheck_test])
-    data = random.choices(CSV(path))
-    # HatemojiCheck
-    if data["target"] == "":
-        pass
-    if data["functionality"] == "":
-        pass
-    if data["set"] == "":
-        pass
-    if data["label_gold"] == "":
-        pass
-    if data["unrealistic_flags"] == "":
-        pass
-    if data["included_in_test_suite"] == "":
-        pass
-    data["text"]
-    # HatemojiBuild
-    data["matched_text"]
+    if random.choice([True,False]):
+        # HatemojiCheck
+        HatemojiBuild_test = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/test.csv")
+        HatemojiBuild_train = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/train.csv")
+        HatemojiBuild_validation = get_path(dir_fs, 'Hatemoji',"HatemojiBuild/validation.csv")
+        path = random.choices([HatemojiBuild_test,HatemojiBuild_train,HatemojiBuild_validation])
+        data = random.choices(CSV(path))
+        if data["target"] == "":
+            pass
+        if data["functionality"] == "":
+            pass
+        if data["set"] == "":
+            pass
+        if data["label_gold"] == "":
+            pass
+        if data["unrealistic_flags"] == "":
+            pass
+        if data["included_in_test_suite"] == "":
+            pass
+        data["text"]
+    else:
+        # HatemojiBuild
+        HatemojiCheck_test = get_path(dir_fs, 'Hatemoji',"HatemojiCheck/test.csv")
+        data = random.choices(CSV(HatemojiCheck_test))
+        data["matched_text"]
 
     

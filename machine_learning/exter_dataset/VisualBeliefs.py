@@ -11,7 +11,7 @@ file_download(dir_fs, 'mistaken',url,name="scenes.json")
 url = "http://people.csail.mit.edu/bce/mistaken/data/annotations.json"
 file_download(dir_fs, 'mistaken',url,name="annotations.json")
 url = "http://people.csail.mit.edu/bce/mistaken/data/images.zip"
-zip_download(dir_fs, 'mistaken',url)
+zip_download(dir_fs, 'mistaken',url,name="images")
 
 
 

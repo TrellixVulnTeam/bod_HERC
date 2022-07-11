@@ -9,86 +9,26 @@ git_download(dir_fs, 'ToLD-Br',url)
 
 
 def get_data():
-    path = get_path(dir_fs, 'ToLD-Br',"ToLD-BR_alpha.csv")
-    data = random.choice(CSV(path))
-    # tokens, mask, c = tokenizer(data["text"], "Text", data['language'], None)
-    if data["homophobia_1"] == "1":
-        pass
-    else:
-        pass
-    if data["homophobia_2"] == "1":
-        pass
-    else:
-        pass
-    if data["homophobia_3"] == "1":
-        pass
-    else:
-        pass
-    if data["obscene_1"] == "1":
-        pass
-    else:
-        pass
-    if data["obscene_2"] == "1":
-        pass
-    else:
-        pass
-    if data["obscene_3"] == "1":
-        pass
-    else:
-        pass
-    if data["insult_1"] == "1":
-        pass
-    else:
-        pass
-    if data["insult_2"] == "1":
-        pass
-    else:
-        pass
-    if data["insult_3"] == "1":
-        pass
-    else:
-        pass
-    if data["racism_1"] == "1":
-        pass
-    else:
-        pass
-    if data["racism_2"] == "1":
-        pass
-    else:
-        pass
-    if data["racism_3"] == "1":
-        pass
-    else:
-        pass
-    if data["misogyny_1"] == "1":
-        pass
-    else:
-        pass
-    if data["misogyny_2"] == "1":
-        pass
-    else:
-        pass
-    if data["misogyny_3"] == "1":
-        pass
-    else:
-        pass
-    if data["xenophobia_1"] == "1":
-        pass
-    else:
-        pass
-    if data["xenophobia_2"] == "1":
-        pass
-    else:
-        pass
-    if data["xenophobia_3"] == "1":
-        pass
-    else:
-        pass
-    if data["obs_1"] == "1":
-        pass
-    else:
-        pass
-    if data["obs_2"] == "1":
-        pass
-    else:
-        pass
+        path = get_path(dir_fs, 'ToLD-Br',"ToLD-BR_alpha.csv")
+        data = random.choice(CSV(path))
+        # tokens, mask, c = tokenizer(data["text"], "Text", data['language'], None)
+        if data["homophobia"] == "1.0":
+            pass
+        else:
+            pass
+        if data["obscene"] == "1.0":
+            pass
+        else:
+            pass
+        if data["insult"] == "1.0":
+            pass
+        else:
+            pass
+        if data["racism"] == "1.0":
+            pass
+        else:
+            pass
+        if data["xenophobia"] == "1.0":
+            pass
+        else:
+            pass

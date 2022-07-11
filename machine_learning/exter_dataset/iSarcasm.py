@@ -17,7 +17,6 @@ def get_data():
     data = random.choice(cvs_test_dataset+cvs_dev_dataset)
     print("sarcasm_label:",data["sarcasm_label"])
     print("sarcasm_type:",data["sarcasm_type"])
-    print("tweet_id:",data["tweet_id"])
     if data["sarcasm_label"] == "not_sarcastic":
         pass
     elif data["sarcasm_label"] == "sarcastic":
@@ -35,3 +34,4 @@ def get_data():
         pass
     elif data["sarcasm_type"] == "rhetorical question":
         pass
+    data["tweet_id"]

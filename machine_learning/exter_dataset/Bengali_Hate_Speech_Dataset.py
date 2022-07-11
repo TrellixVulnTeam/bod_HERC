@@ -15,4 +15,7 @@ def get_data():
     bengali_hate1 = get_path(dir_fs, 'Bengali-Hate-Speech-Dataset',"bengali_hate_v1.0.csv")
     bengali_hate2 = get_path(dir_fs, 'Bengali-Hate-Speech-Dataset',"bengali_hate_v2.0.csv")
     path = random.choice([bengali_hate1,bengali_hate2])
-    pass
+    data_csv =  random.choice(CSV(path))
+    data_csv["text"]
+    data_csv["label"]
+    data_csv["target"]

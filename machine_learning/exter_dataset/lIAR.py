@@ -15,8 +15,15 @@ def get_data():
     valid_dataset = get_path(dir_fs, 'liar_dataset',"valid.tsv")
     path = random.choice([test_dataset,train_dataset,valid_dataset])
     data = random.choice(TSV(path,call=tsv_helper_triple))
-    if data[1] == "1":
+    if data[1] == "true":
         pass
-    else:
+    elif data[1] == "false":
         pass
-    data[2]
+    elif data[1] == "barely-true":
+        pass
+    elif data[1] == "half-true":
+        pass
+    elif data[1] == "pants-fire":
+        pass
+    text = data[2]
+    topic = data[3].split(",")

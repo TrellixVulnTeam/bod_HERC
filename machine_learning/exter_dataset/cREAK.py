@@ -19,3 +19,4 @@ def get_data():
     data["entity"] 
     data["sentence"] 
     data["explanation"] 
+    data["en_wiki_pageid"] 

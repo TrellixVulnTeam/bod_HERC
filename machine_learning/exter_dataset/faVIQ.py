@@ -1,5 +1,9 @@
+import random
+from machine_learning.exter_dataset.uitls.decode_data import load_jsonl
 from machine_learning.exter_dataset.uitls.download import file_download, zip_download
 import os
+
+from machine_learning.exter_dataset.uitls.get_path import get_path
 
 urls_a_zip = "https://nlp.cs.washington.edu/ambigqa/data/faviq_a_set_v1.2.zip"
 urls_b_zip = "https://nlp.cs.washington.edu/ambigqa/data/faviq_r_set_v1.2.zip"
@@ -16,4 +20,6 @@ zip_download(dir_fs,"faviq",urlc_b_zip,name="fact_correction_r_set")
 
 
 def get_data():
-    pass
+    train  = get_path(dir_fs, 'faviq',"faviq_a_set_v1.jsonl")
+    path = random.choice([train])
+    data = random.choice(load_jsonl(path))

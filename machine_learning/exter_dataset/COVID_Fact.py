@@ -35,3 +35,4 @@ def get_data():
     elif data["flair"] == "Epidemiology":
         pass
     # tokens, mask, c = tokenizer(data["gold_source"] , "Text", "unknown", None)
+    # tokens, mask, c = tokenizer(evidence , "Text", "unknown", None)

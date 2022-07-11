@@ -20,5 +20,6 @@ def get_data():
     snopes_query_article_interaction = get_path(dir_fs, 'retweet',"formatted_data/Snopes/query_article_interaction.csv")
     snopes_query_mapped = get_path(dir_fs, 'retweet',"formatted_data/Snopes/query_mapped.json")
     path = random.choice([politifact_article_mapped,politifact_articles_content,politifact_queries_content,politifact_query_article_interaction,politifact_query_mapped ,snopes_article_mapped,snopes_articles_content,snopes_queries_content,snopes_query_article_interaction,snopes_query_mapped])
-    print(path)
+   
+    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     

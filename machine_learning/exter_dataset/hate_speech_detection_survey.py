@@ -20,5 +20,4 @@ def get_data():
     elif data["Label"]== "0":
         Hate.NoHate
     data["Youtube_ID"]
-    data["Speech"]
     # tokens, mask, c = tokenizer(test_dataset_csv["Speech"] , "Text", "unknown", None)

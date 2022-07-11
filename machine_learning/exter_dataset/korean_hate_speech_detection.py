@@ -13,4 +13,10 @@ def get_data():
     dev_dataset = get_path(dir_fs, 'LAMA',"korean-hate-speech-detection/dataset/dev.hate.csv")
     test_dataset = get_path(dir_fs, 'LAMA',"korean-hate-speech-detection/dataset/train.hate.csv")
     cvs_dev_dataset = random.choice(CSV(random.choice([dev_dataset,test_dataset])))
-    
+    cvs_dev_dataset["comments"]
+    if cvs_dev_dataset["label"] == "none":
+        pass
+    elif cvs_dev_dataset["label"] == "offensive":
+        pass
+    elif cvs_dev_dataset["label"] == "hate":
+        pass

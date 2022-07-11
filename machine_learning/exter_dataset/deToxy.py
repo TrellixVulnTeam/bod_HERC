@@ -17,7 +17,6 @@ def get_data():
     valid_split = get_path(dir_fs, 'deToxy',"trigger_test.csv")
     path = random.choice([train_split,test_split,valid_split])
     data = random.choice(CSV(path))
-    data["text"]
     # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     if data["label2a"] == "1":
         # is toix

@@ -11,7 +11,6 @@ git_download(dir_fs, 'Ethos',url)
 
 
 def get_data():
-    # ;
     path_join_testset_levelbhate_speech_and_offensive_language  = get_path(dir_fs, 'Ethos',"ethos/hs_data/hate-speech-and-offensive-language.csv")
     path_join_testset_levelbEthos_Dataset_Multi_Label  = get_path(dir_fs, 'Ethos',"ethos/ethos_data/Ethos_Dataset_Multi_Label.csv")
     path_join_testset_levelbEthos_Dataset_Binary  = get_path(dir_fs, 'Ethos',"ethos/ethos_data/Ethos_Dataset_Binary.csv")

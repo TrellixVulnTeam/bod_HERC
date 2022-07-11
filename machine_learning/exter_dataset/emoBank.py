@@ -16,5 +16,4 @@ def get_data():
     valence = data["V"]
     arousal = data["A"]
     dominance = data["D"]
-    text =  data["text"]
     # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)

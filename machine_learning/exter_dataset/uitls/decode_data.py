@@ -83,29 +83,37 @@ def tsv_helper_triple (file,delimiter):
 
 
 def de_zip(base_path,dataset_name,name,where= ""):
-    print("de_zip")
     zip_path = os.path.join(base_path,"repo",dataset_name,name)
     output_path = os.path.join(base_path,"repo",dataset_name,where)
+    if os.path.isdir(output_path) and os.path.exists(output_path):
+        if len(os.listdir(output_path)) > 0:
+            return
+    else:
+        os.mkdir(output_path)
     with zipfile.ZipFile(zip_path,"r") as zip_ref:
         zip_ref.extractall(output_path)
 
 
 
 def de_gz_tar(base_path,dataset_name,zip_path,output_path):
-    print("de_gz_tar")
     zip_path = os.path.join(base_path,"repo",dataset_name,zip_path)
     output_path = os.path.join(base_path,"repo",dataset_name,output_path)
+    if os.path.isdir(output_path) and os.path.exists(output_path):
+        if len(os.listdir(output_path)) > 0:
+            return
+    else:
+        os.mkdir(output_path)
     with tarfile.open(zip_path) as zip_ref:
         zip_ref.extractall(path=output_path)
 
 def de_gz(base_path,dataset_name,zip_path,output_path):
-    print("de_gz")
     zip_path = os.path.join(base_path,"repo",dataset_name,zip_path)
     output_path = os.path.join(base_path,"repo",dataset_name,output_path)
-    with gzip.open(zip_path,'rb') as fin:    
-        file_content = fin.read()
-        with open(output_path,mode="wb") as file :
-            file.write(file_content)
+    if not os.path.isdir(output_path) and os.path.exists(output_path):
+        with gzip.open(zip_path,'rb') as fin:    
+            file_content = fin.read()
+            with open(output_path,mode="wb") as file :
+                file.write(file_content)
 
 def list_file(mypath):
     files =[]
