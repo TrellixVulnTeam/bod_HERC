@@ -1,6 +1,7 @@
 import json
 import os
 import random
+from machine_learning.data_url import load_url
 from machine_learning.exter_dataset.uitls.decode_data import CSV, load_jsonl
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
@@ -22,12 +23,10 @@ def get_data():
     data["response"]
     data["data_type"]
     for evidence in data["evidence_list"]:
-        # name
-        evidence[0]
-        #URL
-        evidence[1]
-        evidence[2]
-        evidence[3]
+        title = evidence[0]
+        text = load_url(evidence[1])
+        evidence = evidence[2]
+        
     
     data["response_label"]
     data["type_label"]

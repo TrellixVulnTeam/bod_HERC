@@ -12,7 +12,7 @@ try:
     git_download(dir_fs, 'mLMA_Hate_Speech',url)
 except:
     pass
-de_zip(dir_fs,'mLMA_Hate_Speech',url)
+de_zip(dir_fs,'mLMA_Hate_Speech',"hate_speech_mlma.zip","hate_speech_mlma")
 
 def get_data():
     db = Memory_Handler()

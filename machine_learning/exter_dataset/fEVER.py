@@ -27,5 +27,6 @@ def get_data():
     data["id"]
     data["verifiable"]
     data["label"]
-    data["claim"]
-    data["evidence"]
+    claim = data["claim"]
+    evidence = data["evidence"]
+    db.hash_add(evidence)

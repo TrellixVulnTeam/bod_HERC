@@ -44,5 +44,5 @@ def get_data():
         else:
             pass
         text= data["text"]
-        # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
+        # tokens, mask, c = text_encoder(data["text"], "Text", "unknown", None)
         id_str= data["id_str"]

@@ -17,4 +17,4 @@ def get_data():
     elif data["label"] == "fake":
         pass
     data["tweet"] 
-    # tokens, mask, c = tokenizer(data["tweet"] , "Text", "unknown", None)
+    # tokens, mask, c = text_encoder(data["tweet"] , "Text", "unknown", None)

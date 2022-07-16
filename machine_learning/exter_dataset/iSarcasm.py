@@ -3,6 +3,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.service.twitter import tweet_downloader
 
 url = "https://github.com/silviu-oprea/iSarcasm"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -32,4 +33,4 @@ def get_data():
         pass
     elif data["sarcasm_type"] == "rhetorical question":
         pass
-    data["tweet_id"]
+    text = tweet_downloader(data["tweet_id"])

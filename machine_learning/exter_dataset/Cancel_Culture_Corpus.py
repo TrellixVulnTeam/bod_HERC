@@ -5,6 +5,7 @@ from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 from machine_learning.exter_dataset.uitls.lalble_key import CancelCulture
+from machine_learning.service.twitter import tweet_downloader
 
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -38,7 +39,8 @@ def get_data():
     paths = [alisoneroman,armiehammer,bobbaffert,carson_king,dojacat,gabcake,ginacarano,goya,jamescharles,jimmyfallon,jk_rowling,lana,Lin_Manuel,morgan_wallen,pepe_le_pew,pepsi,projared,sebastian_stan,seuss,shane_gillis,starbucks,UnburntWitch]
     path = random.choice(paths)
     data = random.choice(CSV(path))
-    data["id"]
+    tweet_downloader(data["id"])
+    nsfw_prob = data['nsfw_prob']
     data["Datetime"]
     if data["canceled"] == "False":
         CancelCulture.not_CancelCulture
