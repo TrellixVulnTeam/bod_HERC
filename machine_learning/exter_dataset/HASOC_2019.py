@@ -4,6 +4,7 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.service_scrap.modules.text import text_encoder
 
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -34,7 +35,7 @@ def get_data():
         pass
     if data["task_1"] == "NOT":
         pass
-    
+    text_encoder(data["text"], "Text", "unknown", None)
     # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
     data["text"] 
 

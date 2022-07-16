@@ -1,5 +1,6 @@
 import glob
 import importlib
+import json
 from pathlib import Path
 from sqlite3 import paramstyle
 import sys
@@ -22,11 +23,16 @@ with alive_bar(count) as bar:
                 start_start2= time.time_ns()
                 try:
                     start_end2= time.time_ns()
-                    a.get_data()
-                    no_errors.append(("get_data",module,start_end2-start_start2,i))
+                    x = a.get_data()
+                    if x is None:
+                        errors.append(("get_data_return_none",module,start_end2-start_start2,i))
+                    else:
+                        no_errors.append(("get_data_safe",module,"","","",start_end2-start_start2,i))
                 except:
                     start_start2= time.time_ns()
-                    errors.append(("get_data_error",module,start_end2-start_start2,i))
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    errors.append(("get_data_error",module,exc_type, fname, exc_tb.tb_lineno,start_end2-start_start2,str(e)))
             start_end = time.time_ns()
             no_errors.append(("loader",module,start_end-start_start))
             print(module)
@@ -62,3 +68,10 @@ no_errors.sort(key=noErrors_time)
 print("NO ERROR")
 for no_error in no_errors:
     print(no_error)
+
+
+
+data = json.dumps({"no_error":no_error,"error":error})
+with  open("results.text","w") as file:
+    file.write(data)
+file.close()

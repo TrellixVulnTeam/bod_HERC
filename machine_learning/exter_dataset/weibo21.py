@@ -14,4 +14,3 @@ def get_data():
     paths.append("MDFEND-Weibo21/data/val.pkl")
     path = get_path(dir_fs, 'x-fact',random.choice(paths))
     c = load_pickle (path)
-    print(c)

@@ -13,4 +13,5 @@ git_download(dir_fs, 'grover',url)
 def get_data():
     path = get_path(dir_fs, 'grover',"realnews/domain_to_allowed_subdomains.json")
     d = load_json(path)
-    print(d.keys())
+    for key in d.keys():
+        pass

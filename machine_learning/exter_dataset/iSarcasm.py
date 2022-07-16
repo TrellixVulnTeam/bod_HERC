@@ -15,8 +15,6 @@ def get_data():
     cvs_dev_dataset = CSV(dev_dataset)
     cvs_test_dataset = CSV(test_dataset)
     data = random.choice(cvs_test_dataset+cvs_dev_dataset)
-    print("sarcasm_label:",data["sarcasm_label"])
-    print("sarcasm_type:",data["sarcasm_type"])
     if data["sarcasm_label"] == "not_sarcastic":
         pass
     elif data["sarcasm_label"] == "sarcastic":

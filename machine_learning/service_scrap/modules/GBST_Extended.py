@@ -100,7 +100,7 @@ class GBST_Extended(nn.Module):
     def forward(self, x, x_type,x_lang, mask = None):
         b, n, block_mult, ds_factor, device = *x.shape, self.block_pad_multiple, self.downsample_factor, x.device
         m = next_divisible_length(n, ds_factor)
-        x = self.token_emb(x) + self.type_emb(x_type) + self.lang_emb(x_lang)
+        x = self.token_emb(x)# + self.type_emb(x_type) + self.lang_emb(x_lang)
         x = self.pos_conv(x)
         x = pad_to_multiple(x, block_mult, seq_dim = 1, dim = -2)
         if exists(mask):

@@ -295,33 +295,25 @@ class CompressiveTransformer(nn.Module):
         mem_len = default(mem_len, seq_len)
         cmem_len = default(cmem_len, mem_len // cmem_ratio)
         memory_layers = default(memory_layers, list(range(1, depth + 1)))
-
         assert mem_len >= seq_len, 'length of memory should be at least the sequence length'
         assert cmem_len >= (mem_len // cmem_ratio), f'length of compressed memory should be at least the memory length divided by the compression ratio {int(mem_len // cmem_ratio)}'
         assert all([layer > 0 and layer <= depth for layer in memory_layers]), 'one of the indicated memory layers is invalid'
-
         self.seq_len = seq_len
-
         self.depth = depth
         self.memory_layers = list(memory_layers)
         self.enhanced_recurrence = enhanced_recurrence
-
         self.to_model_dim = nn.Linear(dim, dim)
-
         seq_and_mem_len = seq_len + mem_len + cmem_len
         self.pos_emb = nn.Parameter(torch.zeros(heads, seq_and_mem_len, dim // heads))
         self.to_logits = nn.Sequential( nn.Identity(),nn.Linear(dim, emb_dim))
         wrapper = partial(GRUGating, dim, mogrify = mogrify_gru) if gru_gated_residual else Residual
-
         self.attn_layers = nn.ModuleList([wrapper(PreNorm(dim, SelfAttention(dim, seq_len, mem_len, cmem_len, cmem_ratio, heads, dropout = attn_layer_dropout, attn_dropout = attn_dropout, reconstruction_attn_dropout = reconstruction_attn_dropout))) for _ in range(depth)])
         self.ff_layers = nn.ModuleList([wrapper(PreNorm(dim, FeedForward(dim, dropout = ff_dropout, glu = ff_glu))) for _ in range(depth)])
-
         self.reconstruction_loss_weight = reconstruction_loss_weight
 
     def forward(self, x, memories = None, mask = None):
         x = self.to_model_dim(x)
         b, t, d = x.shape
-        
         memories = default(memories, (None, None))
         mem, cmem = memories
 
@@ -348,7 +340,7 @@ class CompressiveTransformer(nn.Module):
             use_memory = layer_num in self.memory_layers
             memories = (next(mem_iter), next(cmem_iter)) if use_memory else None
 
-            x, (mem_out, cmem_out), layer_aux_loss = attn(x, memories = memories, calc_memory = use_memory, input_mask = mask)#, pos_emb = pos_emb
+            x, (mem_out, cmem_out), layer_aux_loss = attn(x, memories = memories, calc_memory = use_memory, input_mask = mask)
             x,  = ff(x)
 
             aux_loss = aux_loss + layer_aux_loss
@@ -359,7 +351,86 @@ class CompressiveTransformer(nn.Module):
             next_mem.append(mem_out)
             next_cmem.append(cmem_out)
 
-        out = self.to_logits(x)
+        out = x
+        # out = self.to_logits(x)
+        next_mem, next_cmem = map(torch.stack, (next_mem, next_cmem))
+        next_mem, next_cmem = map(torch.detach, (next_mem, next_cmem))
+
+        aux_loss = aux_loss * self.reconstruction_loss_weight / num_memory_layers
+        return out, Memory(mem = next_mem, compressed_mem = next_cmem), aux_loss
+    
+    
+    
+    
+    
+    
+    
+class MiddleTransformer(nn.Module):
+    def __init__(self,dim,seq_len,depth,emb_dim = None,memory_layers = None,enhanced_recurrence = True,mem_len = None,cmem_len = None,cmem_ratio = 4,heads = 8,gru_gated_residual = True,mogrify_gru = False,attn_dropout = 0.,ff_glu = False,ff_dropout = 0.,attn_layer_dropout = 0.,reconstruction_attn_dropout = 0.,reconstruction_loss_weight = 1.):
+            super().__init__() 
+            emb_dim = default(emb_dim, dim)
+            mem_len = default(mem_len, seq_len)
+            cmem_len = default(cmem_len, mem_len // cmem_ratio)
+            memory_layers = default(memory_layers, list(range(1, depth + 1)))
+
+            assert mem_len >= seq_len, 'length of memory should be at least the sequence length'
+            assert cmem_len >= (mem_len // cmem_ratio), f'length of compressed memory should be at least the memory length divided by the compression ratio {int(mem_len // cmem_ratio)}'
+            assert all([layer > 0 and layer <= depth for layer in memory_layers]), 'one of the indicated memory layers is invalid'
+
+            self.seq_len = seq_len
+
+            self.depth = depth
+            self.memory_layers = list(memory_layers)
+            self.enhanced_recurrence = enhanced_recurrence
+
+            self.to_model_dim = nn.Linear(dim, dim)
+
+            seq_and_mem_len = seq_len + mem_len + cmem_len
+            self.pos_emb = nn.Parameter(torch.zeros(heads, seq_and_mem_len, dim // heads))
+            self.to_logits = nn.Sequential( nn.Identity(),nn.Linear(dim, emb_dim))
+            wrapper = partial(GRUGating, dim, mogrify = mogrify_gru) if gru_gated_residual else Residual
+
+            self.attn_layers = nn.ModuleList([wrapper(PreNorm(dim, SelfAttention(dim, seq_len, mem_len, cmem_len, cmem_ratio, heads, dropout = attn_layer_dropout, attn_dropout = attn_dropout, reconstruction_attn_dropout = reconstruction_attn_dropout))) for _ in range(depth)])
+            self.ff_layers = nn.ModuleList([wrapper(PreNorm(dim, FeedForward(dim, dropout = ff_dropout, glu = ff_glu))) for _ in range(depth)])
+
+            self.reconstruction_loss_weight = reconstruction_loss_weight
+
+    def forward(self, x, memories = None, mask = None):
+        x = self.to_model_dim(x)
+        b, t, d = x.shape
+        memories = default(memories, (None, None))
+        mem, cmem = memories
+        num_memory_layers = len(self.memory_layers)
+        init_empty_mem = lambda: torch.empty(num_memory_layers, b, 0, d, **to(x))
+        mem = default(mem, init_empty_mem)
+        cmem = default(cmem, init_empty_mem)        
+        next_mem = []
+        next_cmem = []
+        aux_loss = torch.tensor(0., requires_grad = True, **to(x))
+
+        if self.enhanced_recurrence:
+            mem = torch.roll(mem, -1, 0)
+            cmem = torch.roll(cmem, -1, 0)
+
+        mem_iter, cmem_iter = map(iterate_tensor, (mem, cmem))
+
+        for ind, (attn, ff) in enumerate(zip(self.attn_layers, self.ff_layers)):
+            layer_num = ind + 1
+
+            use_memory = layer_num in self.memory_layers
+            memories = (next(mem_iter), next(cmem_iter)) if use_memory else None
+            x, (mem_out, cmem_out), layer_aux_loss = attn(x, memories = memories, calc_memory = use_memory, input_mask = mask)
+            x,  = ff(x)
+            aux_loss = aux_loss + layer_aux_loss
+            if not use_memory:
+                continue
+
+            next_mem.append(mem_out)
+            next_cmem.append(cmem_out)
+
+        # out = self.to_logits(x)
+
+        out = x
 
         next_mem, next_cmem = map(torch.stack, (next_mem, next_cmem))
         next_mem, next_cmem = map(torch.detach, (next_mem, next_cmem))

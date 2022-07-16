@@ -17,11 +17,11 @@ def get_data():
     data = random.choice(TSV(path,call=tsv_helper_triple))
     if data[1] == "true":
         pass
-    elif data[1] == "false":
-        pass
     elif data[1] == "barely-true":
         pass
     elif data[1] == "half-true":
+        pass
+    elif data[1] == "false":
         pass
     elif data[1] == "pants-fire":
         pass

@@ -1,5 +1,6 @@
 url = "https://github.com/utahnlp/x-fact"
 import os
+from machine_learning.data_url import load_url
 from machine_learning.exter_dataset.uitls.decode_data import TSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
@@ -12,11 +13,13 @@ import random
 
 from machine_learning.exter_dataset.uitls.modle import midline, or_diff
 from machine_learning.exter_dataset.uitls.output import output_bool
+from machine_learning.service_scrap.modules.retrieval import Memory_Handler
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'x-fact',url)
 
 def get_data():
+    db = Memory_Handler()
     paths = []
     paths.append("data/x-fact/dev.all.tsv")
     paths.append("data/x-fact/ood.tsv")
@@ -41,33 +44,27 @@ def get_data():
         pass
     elif data["label"] == "false":
         pass
-    	
     data['language']
     data['site']
     data['claim']
     # tokens, mask, c = tokenizer(data['claim'], "Text", data['language'], None)
     # evidence
-    data['link_1']
-    data['evidence_1']
-    # tokens, mask, c = tokenizer(data['evidence_1'], "Text", data['language'], None)
-    data['language']
+    text = load_url(data['link_1'])
+    db.hash_add(value=data['evidence_1'],mode = "TEXT", language = data['language'])
 
-    data['link_2']
-    data['evidence_2']
-    # tokens, mask, c = tokenizer(data['evidence_2'], "Text", data['language'], None)
+    text = load_url(data['link_2'])
     data['language']
+    db.hash_add(value=data['evidence_2'],mode = "TEXT", language = data['language'])
 
-    data['link_3']
-    data['evidence_3']
+    text = load_url(data['link_3'])
     # tokens, mask, c = tokenizer(data['evidence_3'], "Text", data['language'], None)
     data['language']
+    db.hash_add(value=data['evidence_3'],mode = "TEXT", language = data['language'])
 
-    data['link_4']
-    data['evidence_4']
+    text = load_url(data['link_4'])
     # tokens, mask, c = tokenizer(data['evidence_4'], "Text", data['language'], None)
-    data['language']
+    db.hash_add(value=data['evidence_4'],mode = "TEXT",type="TEXT", language = data['language'])
 
-    data['link_5']
-    data['evidence_5']
+    text = load_url(data['link_5'])
     # tokens, mask, c = tokenizer(data['evidence_5'], "Text", data['language'], None)
-    data['language']
+    db.hash_add(value=data['evidence_5'],mode = "TEXT", language = data['language'])
