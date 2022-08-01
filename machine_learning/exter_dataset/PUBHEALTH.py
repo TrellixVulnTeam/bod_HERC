@@ -1,7 +1,11 @@
 import os
-from machine_learning.exter_dataset.uitls.decode_data import CSV
+import random
+from time import pthread_getcpuclockid
+from machine_learning.data_url import load_url
+from machine_learning.exter_dataset.uitls.decode_data import CSV, TSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.service_scrap.modules.retrieval import Memory_Handler, Retrieval
 from machine_learning.service_scrap.modules.retrieval import Memory_Handler
 
 
@@ -13,25 +17,12 @@ git_download(dir_fs, 'Health-Fact-Checking',url)
 
 
 def get_data():
-    db = Memory_Handler()
-    dev_dataset = get_path(dir_fs, 'Health-Fact-Checking/data/PUBHEALTH',"dev.tsv")
-    dev_dataset = get_path(dir_fs, 'Health-Fact-Checking/data/PUBHEALTH',"test.tsv")
-    dev_dataset = get_path(dir_fs, 'Health-Fact-Checking/data/PUBHEALTH',"train.tsv")
-    data = CSV(dev_dataset)
-    explanation= data["explanation"]
-    main_text=data["main_text"]
-    sources=data["sources"]
-    if data["lable"] == "mixture":
-        pass
-    if data["lable"] == "unproven":
-        pass
-    if data["lable"] == "true":
-        pass
-    if data["lable"] == "false":
-        pass
-
-    pass
-    
-    # tokens, mask, c = tokenizer(data["claim"] "Text", "unknown", None)
-    # tokens, mask, c = tokenizer(data["explanation"] "Text", "unknown", None)
-    # tokens, mask, c = tokenizer(data["main_text"] "Text", "unknown", None)
+    dev_dataset = get_path(dir_fs, 'Health-Fact-Checking/PUBHEALTH',"dev.tsv")
+    test_dataset = get_path(dir_fs, 'Health-Fact-Checking/PUBHEALTH',"test.tsv")
+    train_dataset = get_path(dir_fs, 'Health-Fact-Checking/PUBHEALTH',"train.tsv")
+    data = random.choice(TSV(random.choice([train_dataset,test_dataset,dev_dataset])))
+    for source in data["sources"].split(","):
+            try:
+                text = load_url(source)
+            except:
+                continue

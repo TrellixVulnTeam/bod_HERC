@@ -4,6 +4,7 @@ from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 from machine_learning.service.twitter import tweet_downloader
+from transformers import BertTokenizer
 
 url = "https://github.com/silviu-oprea/iSarcasm"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -11,6 +12,7 @@ git_download(dir_fs, 'iSarcasm',url)
 
 
 def get_data():
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     dev_dataset = get_path(dir_fs, 'iSarcasm',"isarcasm_test.csv")
     test_dataset = get_path(dir_fs, 'iSarcasm',"isarcasm_train.csv")
     cvs_dev_dataset = CSV(dev_dataset)
@@ -34,3 +36,4 @@ def get_data():
     elif data["sarcasm_type"] == "rhetorical question":
         pass
     text = tweet_downloader(data["tweet_id"])
+    inputs = tokenizer(text, return_tensors="pt")

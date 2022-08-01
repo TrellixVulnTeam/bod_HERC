@@ -5,12 +5,18 @@ import random
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+
+
+from transformers import BertTokenizer
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'EntailmentBank',url1)
 # need to add google dive maybe
 
 
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    
     task_1_test  = get_path(dir_fs, 'EntailmentBank',"dataset/task_1/test.jsonl")
     task_1_dev  = get_path(dir_fs, 'EntailmentBank',"dataset/task_1/dev.jsonl")
     task_1_train  = get_path(dir_fs, 'EntailmentBank',"dataset/task_1/train.jsonl")

@@ -6,6 +6,8 @@ from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 import pandas as pd
 
+
+from transformers import BertTokenizer
 from machine_learning.exter_dataset.uitls.lalble_key import Hate, HateOrOffensive
 
 
@@ -15,6 +17,8 @@ git_download(dir_fs, 'Automated-Hate-Tweet-Detection',url)
 
 
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     pick = 0
     if pick == 0:
         path = get_path(dir_fs, 'Automated-Hate-Tweet-Detection',"data/original/hasoc2019_en_test-2919.tsv")

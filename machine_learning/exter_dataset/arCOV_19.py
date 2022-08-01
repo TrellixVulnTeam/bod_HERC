@@ -1,9 +1,11 @@
 import os
 import random
+import re
 from machine_learning.exter_dataset.uitls.decode_data import TSV, list_file
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 from machine_learning.exter_dataset.uitls.lalble_key import BinaryFacts
+from transformers import BertTokenizer
 url = "https://gitlab.com/bigirqu/ArCOV-19"
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -11,6 +13,8 @@ git_download(dir_fs, 'ArCOV-19',url)
 
 
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     all_tweets = get_path(dir_fs, 'ArCOV-19',"dataset/all_tweets")
     top_tweets = get_path(dir_fs, 'ArCOV-19',"dataset/top_tweets")
     path = list_file(random.choice([all_tweets,top_tweets]))
@@ -22,23 +26,26 @@ def get_data():
     
     if random.choice([True,False]):
         data = random.choice(TSV(path_tweet_verification))
+        
         if data["label"]== "False":
-            BinaryFacts.NO
-            pass
+            boolen_factCheck = False
         elif data["label"]== "True":
-            BinaryFacts.YES
+            boolen_factCheck = True
             pass
         elif data["label"]== "Other":
-            pass
-        data["tweetText"]
-        # tokens, mask, c = tokenizer(data["tweetText"] , "Text", "unknown", None)
+            return None
         data["tweetID"]
+        return {
+            "input":data["tweetText"],
+            "boolen_factCheck":boolen_factCheck
+        }
+
     else:
         data = random.choice(TSV(path_tweet_verification))
         if data["ClaimLabel"]== "False":
-            BinaryFacts.NO
+            boolen_factCheck = False
         elif data["ClaimLabel"]== "True":
-            BinaryFacts.YES
+            boolen_factCheck = True
         
         if data["Category"]== "Entertainment":
             # Entertainment
@@ -58,8 +65,11 @@ def get_data():
         elif data["Category"]== "Religious":
             # Religious
             pass
-        # tokens, mask, c = tokenizer(data["Claim"] , "Text", "unknown", None)
         
+        return {
+            "input":data["tweetText"],
+            "boolen_factCheck":boolen_factCheck
+        }
     
     
     

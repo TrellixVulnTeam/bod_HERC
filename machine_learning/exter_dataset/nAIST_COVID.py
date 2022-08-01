@@ -5,11 +5,10 @@ from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 from machine_learning.exter_dataset.uitls.input import input_twitter_post, output_classifier
 url = "https://github.com/sociocom/covid19_dataset"
-try:
-    dir_fs = os.path.dirname(os.path.realpath(__file__))
-    git_download(dir_fs, 'covid19_dataset',url)
-except:
-    pass
+
+dir_fs = os.path.dirname(os.path.realpath(__file__))
+git_download(dir_fs, 'covid19_dataset',url)
+
 
 
 def get_data():
@@ -23,5 +22,5 @@ def get_data():
     a_list = []
     for topic in a["keywords"].split(","):
         a_list.append(output_classifier(topic,"topic"))
-    input_twitter_post(a["id"],None)
+    print(a["id"])
     

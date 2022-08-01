@@ -8,12 +8,15 @@ from machine_learning.exter_dataset.uitls.lalble_key import CancelCulture
 from machine_learning.service.twitter import tweet_downloader
 
 
+from transformers import BertTokenizer
+
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'Cancel-Culture-Corpus',url)
 
 
 
 def get_data():
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     alisoneroman = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/alisoneroman.csv")
     armiehammer = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/armiehammer.csv")
     bobbaffert = get_path(dir_fs, 'Cancel-Culture-Corpus',"data/bobbaffert.csv")

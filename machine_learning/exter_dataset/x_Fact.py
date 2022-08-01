@@ -18,6 +18,10 @@ from machine_learning.service_scrap.modules.retrieval import Memory_Handler
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'x-fact',url)
 
+value_4_factCheck = ["False", "Mostly false",
+                     "Half true", "Mostly true", "True"]
+
+
 def get_data():
     db = Memory_Handler()
     paths = []
@@ -34,37 +38,33 @@ def get_data():
     paths.append("data/x-fact-including-en/zeroshot.tsv")
     path = get_path(dir_fs, 'x-fact',random.choice(paths))
     data = random.choice(TSV (path))
+    ## FACT CHECK
+    fact_check = 0
     if data["label"] == "partly true/misleading":
-        pass
+        fact_check = 2
     elif data["label"] == "mostly true":
-        pass
+        fact_check = 3
     elif data["label"] == "mostly false":
-        pass
+        fact_check = 1
     elif data["label"] == "true":
-        pass
+        fact_check = 4
     elif data["label"] == "false":
-        pass
-    data['language']
-    data['site']
-    data['claim']
-    # tokens, mask, c = tokenizer(data['claim'], "Text", data['language'], None)
-    # evidence
+        fact_check = 0
+    inputs = data['claim']
+    
     text = load_url(data['link_1'])
-    db.hash_add(value=data['evidence_1'],mode = "TEXT", language = data['language'])
-
+    db.hash_add(text,data['link_1'],type = "web", lang = data['language'])
     text = load_url(data['link_2'])
-    data['language']
-    db.hash_add(value=data['evidence_2'],mode = "TEXT", language = data['language'])
-
+    db.hash_add(text,data['link_2'],type = "web", lang = data['language'])
     text = load_url(data['link_3'])
-    # tokens, mask, c = tokenizer(data['evidence_3'], "Text", data['language'], None)
-    data['language']
-    db.hash_add(value=data['evidence_3'],mode = "TEXT", language = data['language'])
-
+    db.hash_add(text,data['link_3'],type = "web", lang = data['language'])
     text = load_url(data['link_4'])
-    # tokens, mask, c = tokenizer(data['evidence_4'], "Text", data['language'], None)
-    db.hash_add(value=data['evidence_4'],mode = "TEXT",type="TEXT", language = data['language'])
-
+    db.hash_add(text,data['link_4'],type = "web", lang = data['language'])
     text = load_url(data['link_5'])
-    # tokens, mask, c = tokenizer(data['evidence_5'], "Text", data['language'], None)
-    db.hash_add(value=data['evidence_5'],mode = "TEXT", language = data['language'])
+    db.hash_add(text,data['link_5'],type = "web", lang = data['language'])
+    return {
+        "db":db,
+        "language":data['language'],
+        "input":inputs,
+        "boolen_toxicity":fact_check
+    }

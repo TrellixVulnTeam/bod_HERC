@@ -5,6 +5,7 @@ from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
 from machine_learning.service_scrap.modules.text import text_encoder
+from transformers import BertTokenizer
 
 
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -13,6 +14,7 @@ git_download(dir_fs, 'HASOC-2019',url)
 
 
 def get_data():
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     HASOC_2019 = get_path(dir_fs, 'HASOC-2019',"data/labeled_data.csv")
     data = random.choice(CSV(HASOC_2019))
     if data["task_3"] == "UNT":
@@ -35,7 +37,7 @@ def get_data():
         pass
     if data["task_1"] == "NOT":
         pass
-    text_encoder(data["text"], "Text", "unknown", None)
-    # tokens, mask, c = tokenizer(data["text"], "Text", "unknown", None)
-    data["text"] 
+    
+    inputs = tokenizer(data["text"], return_tensors="pt")
+    
 

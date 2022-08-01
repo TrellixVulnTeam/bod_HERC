@@ -6,6 +6,18 @@ from git import Repo
 import git
 from kaggle.api.kaggle_api_extended import KaggleApi
 from datasets import load_dataset
+from __future__ import print_function
+import os.path
+import io
+import google.auth
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaIoBaseDownload
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 try:
     from kaggle import KaggleApi
@@ -168,3 +180,44 @@ def kaggle_download(base_path,user,dataset_name,file_name):
         text= api.datasets_download_file(user,dataset_name,file_name=file_name)
         with open(dir_name,mode="wb") as file :
                 file.write(text)
+
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+
+
+
+def google_download_file(base_path,dataset_name,real_file_id,file_name):
+    dir_name = os.path.join(base_path,"repo",dataset_name)
+    if not os.path.isdir(dir_name):
+        os.mkdir(dir_name)
+    file_path = os.path.join(base_path,"repo",dataset_name,file_name)
+    if not os.path.isdir(file_path) and os.path.exists(file_path):
+        return False
+    creds, _ = google.auth.default()
+
+    try:
+        # create drive api client
+        service = build('drive', 'v3', credentials=creds)
+
+        file_id = real_file_id
+
+        # pylint: disable=maybe-no-member
+        request = service.files().get_media(fileId=file_id)
+        with open(file_path, 'w') as file:
+            downloader = MediaIoBaseDownload(file, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                print(F'Download {int(status.progress() * 100)}.')
+
+    except HttpError as error:
+        print(F'An error occurred: {error}')
+        file = None
+
+    return file.getvalue()
+
+def download_googledrive_folder():
+        # create drive api client
+        pass
+creds, _ = google.auth.default()
+service = build('drive', 'v3', credentials=creds)
+resource = service.files()

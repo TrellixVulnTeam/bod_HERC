@@ -8,7 +8,11 @@ dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'COVID_Fact',url)
 
 
+from transformers import BertTokenizer
+
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     COVIDFACT_dataset = get_path(dir_fs, 'COVID_Fact',"COVIDFACT_dataset.jsonl")
     data = random.choice(load_jsonl(COVIDFACT_dataset))
     # tokens, mask, c = text_encoder(data["claim"] , "Text", "unknown", None)

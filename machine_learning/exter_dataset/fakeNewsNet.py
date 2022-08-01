@@ -4,6 +4,7 @@ from machine_learning.data_url import load_url
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.download import git_download
 from machine_learning.exter_dataset.uitls.get_path import get_path
+from machine_learning.service.twitter import tweet_downloader
 from machine_learning.service_scrap.modules.retrieval import Memory_Handler
 url = "https://github.com/KaiDMML/FakeNewsNet"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
@@ -20,4 +21,4 @@ def get_data():
     isfake = "fake" in file
     text = load_url(data["news_url"])
     for tweet_id in tweet_ids:
-        pass
+        text = tweet_downloader(tweet_id)

@@ -7,7 +7,7 @@ class ModeBox(nn.Module):
     def __init__(self):
         super().__init__()
         pass
-    def forward(self,x,mode=None,**keywords):
+    def forward(self,x,mode="TEXT",**keywords):
         if mode == "TEXT":
             d = modes[mode](x,**keywords)
         return d

@@ -8,7 +8,11 @@ dir_fs = os.path.dirname(os.path.realpath(__file__))
 git_download(dir_fs, 'COVID_19_Disinfo',url)
 
 
+from transformers import BertTokenizer
+
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     if random.choice([True,False]):
         covid19_disinfo_english_binary_dev = get_path(dir_fs, 'COVID_19_Disinfo',"covid19_disinfo_english_binary_dev.tsv")
         covid19_disinfo_english_binary_test = get_path(dir_fs, 'COVID_19_Disinfo',"covid19_disinfo_english_binary_test.tsv")

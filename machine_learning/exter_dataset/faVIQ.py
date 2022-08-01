@@ -23,3 +23,7 @@ def get_data():
     train  = get_path(dir_fs, 'faviq',"faviq_a_set_v1.jsonl")
     path = random.choice([train])
     data = random.choice(load_jsonl(path))
+    data["claim"]
+    data["label"]
+    data["question"]
+    data["answer"]

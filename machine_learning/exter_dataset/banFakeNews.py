@@ -3,6 +3,8 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 from machine_learning.exter_dataset.uitls.decode_data import CSV
 from machine_learning.exter_dataset.uitls.get_path import get_path
 
+
+from transformers import BertTokenizer
 name = "cryptexcode/banfakenews"
 dir_fs = os.path.dirname(os.path.realpath(__file__))
 dir_fs = os.path.join(dir_fs,"repo", 'banFakeNews')
@@ -16,6 +18,8 @@ api.dataset_download_files(name,path=dir_fs, unzip=True)
 import random
 
 def get_data():
+    
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     c = random.randint(0,4)
     if c == 0:
         Authentic = get_path(dir_fs, 'banFakeNews',"Authentic-48K.csv")
